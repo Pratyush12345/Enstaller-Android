@@ -29,6 +29,8 @@ class AppStrings {
   static const GAS='GAS';
   static const appointment='APPOINTMENT';
   static const APPOINTMENTS='APPOINTMENTS';
+  static const emailnotification='Email Notification';
+  static const SMSnotification='SMS Notification';
   static const DOCUMNETS = 'DOCUMENTS';
   static const APPOINTMENT_DETAILS='APPOINTMENT DETAILS';
   static const workType='Work Type';
@@ -126,6 +128,24 @@ class AppStrings {
   static const dashboard='DASHBOARD';
   static const time='Time';
   static const APPOINTMENT_COMMENTS='APPOINTMENT COMMENTS';
+
+  //email Notification
+  static const Date ='Date';
+  static const appointmentNo='Appointment No';
+  static const Email = "Email";
+  static const Customer = "Customer";
+  static const Page = "Page";
+  static const Supplier = "Supplier";
+  static const Engineer = "Engineer";
+  static const ActionBy = "Action By";
+  static const hash = "#"; 
+  static const viewemail = "View Email";
+
+  //SMS Notification
+  static const bookingRefNo = "Booking Ref. No";
+  static const sendto = "Send To";
+  static const sms = "SMS";
+  static const smsstatus = "Status";
 
 
 }

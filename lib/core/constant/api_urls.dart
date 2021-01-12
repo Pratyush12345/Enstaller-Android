@@ -17,4 +17,6 @@ class ApiUrls{
   static String getAppointmentByEngineerIdUrl='appointments/GetAppointmentByEngineerId';
   static String getSurveyQuestionAnswerDetailUrl='SurveyQuestionAnswer/GetSurveyQuestionAnswerDetail';
   static String getSupplierDocument = 'SupplierDocument/GetSupplierDocumentListUserwise';
+  static String getEmailTemplateSenderHistoryUserWise = 'EmailTemplateSenderHistory/GetEmailTemplateSenderHistoryUserWise';
+  static String getSMSClickSendNotificationUserWise = 'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
 }

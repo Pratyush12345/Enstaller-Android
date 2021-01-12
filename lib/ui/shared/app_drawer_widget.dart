@@ -8,6 +8,8 @@ import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
+import 'package:enstaller/ui/screen/email_notification.dart';
+import 'package:enstaller/ui/screen/sms_notification.dart';
 import 'package:enstaller/ui/screen/document.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:enstaller/ui/screen/profile_screen.dart';
@@ -140,10 +142,19 @@ class AppDrawerWidget extends StatelessWidget {
                 },
               ),
               DrawerRowWidget(
-                title: 'Notification',
+                title: 'Email Notification',
                 assetPath: ImageFile.notification,
                 onTap: (){
-                  Navigator.pop(context);
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => EmailNotificationScreen()));
+                },
+              ),
+              DrawerRowWidget(
+                title: 'SMS Notification',
+                assetPath: ImageFile.notification,
+                onTap: (){
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => SMSNotificationScreen()));
                 },
               ),
               DrawerRowWidget(

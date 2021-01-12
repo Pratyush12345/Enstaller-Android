@@ -5,6 +5,8 @@ import 'package:enstaller/core/model/app_table.dart';
 import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/comment_model.dart';
+import 'package:enstaller/core/model/sms_notification_model.dart';
+import 'package:enstaller/core/model/email_notification_model.dart';
 import 'package:enstaller/core/model/customer_details.dart';
 import 'package:enstaller/core/model/document_model.dart';
 import 'package:enstaller/core/model/electric_and_gas_metter_model.dart';
@@ -43,6 +45,22 @@ class ApiService extends BaseApi{
      return (json.decode(response.body) as List).map((e) => Appointment.fromJson(e)).toList();
 
    }, 'id=$userID') ;
+  }
+  Future <dynamic> getEmailNotificationList(String userID){
+   return getRequestWithParam(ApiUrls.getEmailTemplateSenderHistoryUserWise,
+           (response) {
+     print(response.body);
+     return (json.decode(response.body) as List).map((e) => EmailNotificationModel.fromJson(e)).toList();
+
+   }, 'intUserId=$userID') ;
+  }
+  Future <dynamic> getSMSNotificationList(String userID){
+   return getRequestWithParam(ApiUrls.getSMSClickSendNotificationUserWise,
+           (response) {
+     print(response.body);
+     return (json.decode(response.body) as List).map((e) => SMSNotificationModel.fromJson(e)).toList();
+
+   }, 'intUserId=$userID') ;
   }
   Future <dynamic> getActivityLogsAppointmentId(String appointmentID){
     return getRequestWithParam(ApiUrls.getActivityLogsAppointmentIdUrl,
