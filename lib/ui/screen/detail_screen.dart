@@ -19,7 +19,6 @@ import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/flutter_google_maps.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,7 +40,39 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   bool isToShowBottomBar = false;
-
+  Map<String, String> _processid = {
+    "EMREM" : "6",
+    "GMREM" : "81",
+    "GICOM" : "79",
+    "EICOM" : "1"
+  };
+  Map<int, String> _smest2displaybutton = {
+  0: "EMREM",
+  1: "GMREM",
+  2: "EMREM GMREM",
+  3: "EMREM",
+  4: "EICOM",
+  5: "GICON",
+  6: "EICOM GICOM",
+  7: "EICOM"
+  };
+  Map<String, Map<String, int>> _appointmentandjobtype = {
+    "Meter removal, Scheduled Exchange, Emergency Exchange": 
+    {
+      "SMETS2 1ph Elec": 0,
+      "SMETS2 Gas": 1,
+      "SMETS2 Dual": 2,
+      "SMETS2 3ph Elec": 3,
+    },
+    "New Connection" : {
+      "SMETS2 1ph Elec": 4,
+      "SMETS2 Gas" : 5,
+      "SMETS2 Dual" : 6,
+      "SMETS2 3ph Elec" : 7
+    }
+  };
+  
+  
 
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -263,6 +294,10 @@ class _DetailScreenState extends State<DetailScreen> {
                   SizedBox(
                     height: 20,
                   ),
+                  _getDisplayButton(_checkbuttonindex(model), model),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Padding(
                     padding: SizeConfig.sidepadding,
                     child: Container(
@@ -334,7 +369,70 @@ class _DetailScreenState extends State<DetailScreen> {
       },
     );
   }
+  int _checkbuttonindex(DetailsScreenViewModel model){
+     int id;
+    _appointmentandjobtype.forEach((key, value) { 
+      if(key.contains(model.appointmentDetails.appointment.strAppointmentType)){
+        id = value[model.appointmentDetails.appointment.strJobType];
+      }
+    });
+    return id;
+  }
 
+  Widget _getDisplayButton(int id, DetailsScreenViewModel model){
+   if(id!=null){ 
+   return Column(
+     children: [
+       (id!=2 && id!=6)?
+       Padding(
+                    padding:SizeConfig.sidepadding,
+                    child: AppButton(
+                      height: 40,
+                      color: AppColors.darkBlue, 
+                      buttonText: _smest2displaybutton[id],
+                      radius: 15,
+                      textStyle: TextStyle(color: AppColors.whiteColor),
+                      onTap: (){
+                        model.onRaiseButtonPressed(widget.arguments.customerID, _processid[_smest2displaybutton[id]]);
+                      },
+                    ),
+                  ):
+       Column(
+         children: [
+           Padding(
+                        padding:SizeConfig.sidepadding,
+                        child: AppButton(
+                          height: 40,
+                          color: AppColors.darkBlue, 
+                          buttonText: _smest2displaybutton[id].split(" ")[0],
+                          radius: 15,
+                          textStyle: TextStyle(color: AppColors.whiteColor),
+                          onTap: (){
+                            model.onRaiseButtonPressed(widget.arguments.customerID, _processid[_smest2displaybutton[id]].split(" ")[0]);
+                          },
+                        ),
+                      ),
+          SizedBox(height: 20.0,),            
+          Padding(
+                        padding:SizeConfig.sidepadding,
+                        child: AppButton(
+                          height: 40,
+                          color: AppColors.darkBlue, 
+                          buttonText: _smest2displaybutton[id].split(" ")[1],
+                          radius: 15,
+                          textStyle: TextStyle(color: AppColors.whiteColor),
+                          onTap: (){
+                            model.onRaiseButtonPressed(widget.arguments.customerID, _processid[_smest2displaybutton[id]].split(" ")[1]);
+                            },
+                        ),
+                      ),            
+         ],
+       )           
+     ],
+   );
+   }
+   return Container();
+  }
   // engineer info
   Widget _engineerInfo(DetailsScreenViewModel model) {
     return Padding(

@@ -19,4 +19,5 @@ class ApiUrls{
   static String getSupplierDocument = 'SupplierDocument/GetSupplierDocumentListUserwise';
   static String getEmailTemplateSenderHistoryUserWise = 'EmailTemplateSenderHistory/GetEmailTemplateSenderHistoryUserWise';
   static String getSMSClickSendNotificationUserWise = 'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
+  static String getMAICheckProcess = 'DCCMAI/GetMAICheckProcess';
 }

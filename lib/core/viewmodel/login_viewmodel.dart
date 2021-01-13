@@ -9,6 +9,7 @@ import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInViewModel extends BaseModel{
 
@@ -52,6 +53,8 @@ class LogInViewModel extends BaseModel{
 
 
       Prefs.setUserProfile(response.userDetails);
+      final SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('ups', passwordController.text);
 
       Navigator.of(context).pushNamed("/home");
     }

@@ -15,7 +15,8 @@ class SMSNotificationViewModel extends BaseModel{
   void getSMSNotificationList()async{
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
-    _smsNotificationList =await _apiService.getSMSNotificationList("20030");
+    
+    _smsNotificationList =await _apiService.getSMSNotificationList(user.id.toString());
     smsNotificationList = _smsNotificationList;  
     setState(ViewState.Idle);
   }

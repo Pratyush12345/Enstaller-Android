@@ -12,7 +12,11 @@ import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:encrypt/encrypt.dart' as AESencrypt;
+import 'dart:convert' as convert;
 import 'package:geocoder/geocoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DetailsScreenViewModel extends BaseModel{
@@ -48,8 +52,8 @@ class DetailsScreenViewModel extends BaseModel{
   void initializeData(String appointmentID,String customerID)async{
     setState(ViewState.Busy);
     activityDetailsList=await _apiService.getActivityLogsAppointmentId(appointmentID);
-    appointmentDetails=await _apiService.getAppointmentDetails(appointmentID);
-    electricGasMeterList=await _apiService.getCustomerMeterListByCustomer(customerID);
+    appointmentDetails=await _apiService.getAppointmentDetails('35');
+    electricGasMeterList=await _apiService.getCustomerMeterListByCustomer('1');
     customerDetails =await _apiService.getCustomerById(customerID);
     user=await Prefs.getUser();
     if(statusList.contains(appointmentDetails.appointment.appointmentEventType)){
@@ -65,7 +69,7 @@ class DetailsScreenViewModel extends BaseModel{
 
     setState(ViewState.Idle);
   }
-
+  
   void onUpdateStatus(BuildContext context,String appointmentID)async{
    
     setState(ViewState.Busy);
@@ -86,5 +90,85 @@ class DetailsScreenViewModel extends BaseModel{
     }
 
     setState(ViewState.Idle);
+  }
+    void onRaiseButtonPressed(String customerid, String processId) async {
+     setState(ViewState.Busy);
+    UserModel userModel=await  Prefs.getUser();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String ups = preferences.getString('ups');
+    ResponseModel responseModel=await _apiService.getMAICheckProcess(customerid , processId);
+    if(responseModel.statusCode==1){
+      
+    }
+    else{
+      if(processId=="79" ||processId == "81" ){
+        startGasProcess(processId, userModel, ups, customerid);
+      }
+      else{
+        startElecProcess(processId, userModel, ups, customerid);
+      }
+    }
+    setState(ViewState.Idle);
+  }
+
+    startElecProcess(String processId, UserModel userModel, String ups, String customerID) {
+   
+    var custId = customerID;
+    var DCCMAIWebUrl = 'https://mai.enpaas.com/';
+  
+    ElectricAndGasMeterModel model= electricGasMeterList.firstWhere((element) => element.strFuel=="ELECTRICITY") ;
+    var mpan = model.strMpan;
+    var em = userModel.email.toString();
+    var sessionId = userModel.id.toString();
+    if (mpan == null || mpan == '' ) {
+        
+    }
+    else {
+        var strUrl = '';
+        var strPara = '';
+        var strEncrypt;
+        strPara += 'Enstaller/' + custId + '/' + processId + '/' + mpan + '/' + '12345' + '/' + sessionId + '/' + '108' + '/' + em;
+        
+        strEncrypt = encryption(strPara);
+        strUrl += '' + DCCMAIWebUrl + '?returnUrl=' + strEncrypt + '';
+        
+        launchurl(strUrl);
+    }
+
+}
+  startGasProcess(String processId, UserModel userModel, String ups, String customerID) {
+    var custId = customerID;
+    ElectricAndGasMeterModel model= electricGasMeterList.firstWhere((element) => element.strFuel=="GAS") ;
+    var mpan = model.strMpan;
+    var em = userModel.email.toString();
+    var sessionId = userModel.id.toString();
+    var DCCMAIWebUrl = 'https://mai.enpaas.com/';
+    if (mpan == null || mpan == '') {
+  
+    }
+    else {
+        var strUrl = '';
+        var strEncrypt;
+        var strPara = '';
+        strPara += 'Enstaller/' + custId + '/' + processId + '/' + mpan + '/' + ups + '/' + sessionId + '/' + '109' + '/' + em;
+        strEncrypt = encryption(strPara);
+        strUrl += '' + DCCMAIWebUrl + '?returnUrl=' + strEncrypt + '';
+        launchurl(strUrl);
+           }}
+  encryption(String value){
+   final key = AESencrypt.Key.fromUtf8('8080808080808080');
+   final iv = AESencrypt.IV.fromUtf8('8080808080808080');
+   final encrypter = AESencrypt.Encrypter(AESencrypt.AES( key, mode: AESencrypt.AESMode.cbc, padding: 'PKCS7'  ));
+
+   final encrypted = encrypter.encrypt(value, iv: iv );
+        
+   return encrypted.base64.toString().replaceAll('/', 'SLH').replaceAll('+', 'PLS').replaceAll('/', 'SLH').replaceAll('/', 'SLH').replaceAll('/', 'SLH').replaceAll('/', 'SLH').replaceAll('+', 'PLS').replaceAll('+', 'PLS').replaceAll('+', 'PLS').replaceAll('+', 'PLS');
+  }
+  launchurl(String url) async{
+    if (await canLaunch(url)) {
+                        await launch(url);
+                        } else {
+                        throw 'Could not open the map.';
+                        }
   }
 }

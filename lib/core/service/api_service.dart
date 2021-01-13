@@ -208,7 +208,6 @@ class ApiService extends BaseApi{
 
   }
   Future<dynamic> submitListSurveyAnswer(List<AnswerCredential> credentials){
-
     return postRequestList(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
       final response = json.decode(r.body);
       print('response$response');
@@ -247,5 +246,21 @@ class ApiService extends BaseApi{
         }, 'today=$date'+'&intId=$engeenerID') ;
   }
 
-
+  Future<dynamic> getMAICheckProcess(String customerID, String processId ){
+    return getRequestWithParam(ApiUrls.getMAICheckProcess,
+            (r) {
+      final response = json.decode(r.body);
+      if (response.toString().toLowerCase() == 'true' ) {
+        return ResponseModel(
+            statusCode: 1,
+            response: 'Successfully Updated'
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: 'Please try again'
+        );
+      }
+        }, 'intcustomerid=$customerID'+'&strProcessid=$processId') ;
+  }
 }

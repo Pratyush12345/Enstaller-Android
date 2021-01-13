@@ -15,7 +15,7 @@ class EmailNotificationViewModel extends BaseModel{
   void getEmailNotificationList()async{
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
-    _emailNotificationList =await _apiService.getEmailNotificationList("20030");
+    _emailNotificationList =await _apiService.getEmailNotificationList(user.id.toString());
     emailNotificationList = _emailNotificationList;  
   
     setState(ViewState.Idle);
