@@ -52,8 +52,8 @@ class DetailsScreenViewModel extends BaseModel{
   void initializeData(String appointmentID,String customerID)async{
     setState(ViewState.Busy);
     activityDetailsList=await _apiService.getActivityLogsAppointmentId(appointmentID);
-    appointmentDetails=await _apiService.getAppointmentDetails('35');
-    electricGasMeterList=await _apiService.getCustomerMeterListByCustomer('1');
+    appointmentDetails=await _apiService.getAppointmentDetails(appointmentID);
+    electricGasMeterList=await _apiService.getCustomerMeterListByCustomer(customerID);
     customerDetails =await _apiService.getCustomerById(customerID);
     user=await Prefs.getUser();
     if(statusList.contains(appointmentDetails.appointment.appointmentEventType)){
