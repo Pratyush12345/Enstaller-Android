@@ -146,7 +146,7 @@ class AppStrings {
   static const sendto = "Send To";
   static const sms = "SMS";
   static const smsstatus = "Status";
-
+  
 
 }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 
 class AppColors{
-
+  static const Color disablebuttonColor = Color(0xFFb3e6ff);
   static const Color primaryColor = Color(0xFF27BB8B);
   static  Color yellow=Color(0xFFFC00).withOpacity(1);
   static  Color  backgroundColor = Color(0xFFEDEDEB);
