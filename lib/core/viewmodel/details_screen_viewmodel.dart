@@ -127,6 +127,7 @@ class DetailsScreenViewModel extends BaseModel {
 
   startElecProcess(
       String processId, UserModel userModel, String ups, String customerID) {
+    try{
     var custId = customerID;
     var DCCMAIWebUrl = 'https://mai.enpaas.com/';
 
@@ -160,11 +161,18 @@ class DetailsScreenViewModel extends BaseModel {
 
       launchurl(strUrl);
     }
+    }
+      catch(err){
+      print(err);
+    }
+    
   }
 
   startGasProcess(
       String processId, UserModel userModel, String ups, String customerID) {
     var custId = customerID;
+    try{
+      
     ElectricAndGasMeterModel model =
         electricGasMeterList.firstWhere((element) => element.strFuel == "GAS");
     var mpan = model.strMpan;
@@ -193,6 +201,10 @@ class DetailsScreenViewModel extends BaseModel {
       strEncrypt = encryption(strPara);
       strUrl += '' + DCCMAIWebUrl + '?returnUrl=' + strEncrypt + '';
       launchurl(strUrl);
+    }
+      }
+    catch(err){
+      print(err);
     }
   }
 

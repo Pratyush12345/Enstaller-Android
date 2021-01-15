@@ -502,8 +502,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             ? () {
                                 model.onRaiseButtonPressed(
                                     widget.arguments.customerID,
-                                    _processid[_smest2displaybutton[id]]
-                                        .split(" ")[0]);
+                                    _processid[_smest2displaybutton[id].split("+")[0]]
+                                        );
                               }
                             : () {},
                       ),
@@ -530,8 +530,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             ? () {
                                 model.onRaiseButtonPressed(
                                     widget.arguments.customerID,
-                                    _processid[_smest2displaybutton[id]]
-                                        .split(" ")[1]);
+                                    _processid[_smest2displaybutton[id].split("+")[1]]
+                                        );
                               }
                             : () {},
                       ),
