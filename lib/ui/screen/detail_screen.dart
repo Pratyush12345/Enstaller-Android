@@ -22,12 +22,15 @@ import 'package:flutter_google_maps/flutter_google_maps.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DetailScreenArguments{
+class DetailScreenArguments {
   String appointmentID;
   String strBookingReference;
   String customerID;
-  DetailScreenArguments({this.appointmentID,this.strBookingReference,this.customerID,});
-
+  DetailScreenArguments({
+    this.appointmentID,
+    this.strBookingReference,
+    this.customerID,
+  });
 }
 
 class DetailScreen extends StatefulWidget {
@@ -41,56 +44,62 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   bool isToShowBottomBar = false;
   Map<String, String> _processid = {
-    "EMREM" : "6",
-    "GMREM" : "81",
-    "GICOM" : "79",
-    "EICOM" : "1"
+    "EMREM": "6",
+    "GMREM": "81",
+    "GICOM": "79",
+    "EICOM": "1"
   };
   Map<int, String> _smest2displaybutton = {
-  0: "EMREM",
-  1: "GMREM",
-  2: "EMREM GMREM",
-  3: "EMREM",
-  4: "EICOM",
-  5: "GICON",
-  6: "EICOM GICOM",
-  7: "EICOM"
+    0: "EMREM",
+    1: "GMREM",
+    2: "EMREM+GMREM",
+    3: "EMREM",
+    4: "EICOM",
+    5: "GICON",
+    6: "EICOM+GICOM",
+    7: "EICOM"
+  };
+  Map<int, String> _disablesmest2displaybutton = {
+    0: "EMREM for Electricity Generated",
+    1: "GMREM for Gas Generated",
+    2: "EMREM for Electricity Generated+GMREM for Gas Generated",
+    3: "EMREM for Electricity Generated",
+    4: "EICOM for Electricity Generated",
+    5: "GICON for Gas Generated",
+    6: "EICOM for Electricity Generated+GICOM for Gas Generated",
+    7: "EICOM for Electricity Generated"
   };
   Map<String, Map<String, int>> _appointmentandjobtype = {
-    "Meter removal, Scheduled Exchange, Emergency Exchange": 
-    {
+    "Meter removal, Scheduled Exchange, Emergency Exchange": {
       "SMETS2 1ph Elec": 0,
       "SMETS2 Gas": 1,
       "SMETS2 Dual": 2,
       "SMETS2 3ph Elec": 3,
     },
-    "New Connection" : {
+    "New Connection": {
       "SMETS2 1ph Elec": 4,
-      "SMETS2 Gas" : 5,
-      "SMETS2 Dual" : 6,
-      "SMETS2 3ph Elec" : 7
+      "SMETS2 Gas": 5,
+      "SMETS2 Dual": 6,
+      "SMETS2 3ph Elec": 7
     }
   };
-  
-  
 
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selected;
 
-
-
   @override
   Widget build(BuildContext context) {
     return BaseView<DetailsScreenViewModel>(
-      onModelReady: (model)=>model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID),
-      builder: (context,model,child){
+      onModelReady: (model) => model.initializeData(
+          widget.arguments.appointmentID, widget.arguments.customerID),
+      builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: AppColors.scafoldColor,
+            backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
             drawer: Drawer(
-              child:AppDrawerWidget(),
+              child: AppDrawerWidget(),
             ),
             appBar: AppBar(
               backgroundColor: AppColors.green,
@@ -101,17 +110,22 @@ class _DetailScreenState extends State<DetailScreen> {
                       _scaffoldKey.currentState.openDrawer();
                     },
                     child: Image.asset(
-                      ImageFile.menuIcon,color: AppColors.whiteColor,
+                      ImageFile.menuIcon,
+                      color: AppColors.whiteColor,
                     )),
               ),
-              title: Text("${AppStrings.APPOINTMENT_DETAILS}",style: TextStyle(
-                color: AppColors.whiteColor
-              ),),
+              title: Text(
+                "${AppStrings.APPOINTMENT_DETAILS}",
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
               centerTitle: true,
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(ImageFile.notification,color: AppColors.whiteColor,),
+                  child: Image.asset(
+                    ImageFile.notification,
+                    color: AppColors.whiteColor,
+                  ),
                 ),
               ],
             ),
@@ -151,297 +165,391 @@ class _DetailScreenState extends State<DetailScreen> {
 //                  ),
 //                ))
 //                : SizedBox(),
-            body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():
-            SingleChildScrollView(
-              child: Column(
-                children: [
-
-                  _engineerInfo(model),
-                  model.appointmentDetails.appointment.appointmentEventType!=AppStrings.completed?Padding(
-                    padding: SizeConfig.sidepadding,
-                    child: AppButton(
-                      height: 40,
-                      radius: 15,
-                      color: AppColors.green,
-                      textStyle: TextStyle(color: AppColors.whiteColor),
-                      buttonText: AppStrings.updateStatusC,
-                      onTap: (){
-                        AppConstants.showAppDialog(
-                            context: context,
-                            child: UpdateStatusDialogWidget(model: model,appointmentID: widget.arguments.appointmentID,)
-                        );
-
-                      },
-                    ),
-                  ):Container(),
-                  _surveyInfo(model),
-                  Padding(
-                    padding: SizeConfig.padding,
-                    child: ListView.builder(
-                        key:  Key('builder ${selected.toString()}'),
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 5,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return
-                            ConfigurableExpansionTile(
-                                key:Key(index.toString()),
-                                initiallyExpanded: index  == selected,
-                                header: Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 20, top: 20, bottom: 10,right: 20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          _getHeaderText(index),
-                                          style: getTextStyle(
-                                              color: Colors.white,
-                                              isBold: true,
-                                              fontSize: 16.0),
-                                        ),
-                                        Icon(Icons.add,color: AppColors.whiteColor,)
-                                      ],
-                                    ),
-                                  ),
+            body: model.state == ViewState.Busy
+                ? AppConstants.circulerProgressIndicator()
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _engineerInfo(model),
+                        model.appointmentDetails.appointment
+                                    .appointmentEventType !=
+                                AppStrings.completed
+                            ? Padding(
+                                padding: SizeConfig.sidepadding,
+                                child: AppButton(
+                                  height: 40,
+                                  radius: 15,
+                                  color: AppColors.green,
+                                  textStyle:
+                                      TextStyle(color: AppColors.whiteColor),
+                                  buttonText: AppStrings.updateStatusC,
+                                  onTap: () {
+                                    AppConstants.showAppDialog(
+                                        context: context,
+                                        child: UpdateStatusDialogWidget(
+                                          model: model,
+                                          appointmentID:
+                                              widget.arguments.appointmentID,
+                                        ));
+                                  },
                                 ),
-                                headerBackgroundColorStart: AppColors.green,
-                                headerBackgroundColorEnd: AppColors.green,
-                                onExpansionChanged: (value) {
-                                  if(value){
-                                    setState(() {
-                                      selected=index;
-                                    });
-                                    if (value == true && index == 4) {
-                                      setState(() {
-                                        isToShowBottomBar = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        isToShowBottomBar = false;
-                                      });
-                                    }
-                                  }else{
-                                    setState(() {
-                                      isToShowBottomBar = false;
-                                      selected=-1;
-                                    });
-                                  }
-
-                                },
-                                headerExpanded: Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 20, top: 20, bottom: 10,right: 20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          _getHeaderText(index),
-                                          style: getTextStyle(
-                                              color: Colors.white,
-                                              isBold: true,
-                                              fontSize: 16.0),
+                              )
+                            : Container(),
+                        _surveyInfo(model),
+                        Padding(
+                          padding: SizeConfig.padding,
+                          child: ListView.builder(
+                              key: Key('builder ${selected.toString()}'),
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: 5,
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                return ConfigurableExpansionTile(
+                                    key: Key(index.toString()),
+                                    initiallyExpanded: index == selected,
+                                    header: Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 20,
+                                            bottom: 10,
+                                            right: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              _getHeaderText(index),
+                                              style: getTextStyle(
+                                                  color: Colors.white,
+                                                  isBold: true,
+                                                  fontSize: 16.0),
+                                            ),
+                                            Icon(
+                                              Icons.add,
+                                              color: AppColors.whiteColor,
+                                            )
+                                          ],
                                         ),
-                                        RotatedBox(
-                                            quarterTurns: 2,
-                                            child: Icon(Icons.remove,color: AppColors.whiteColor,))
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                children: [_getChildrenWidget(selected,model)]
-                            );
-                        }),
-                  ),
-                  SizedBox(height: 20,),
-                  Padding(
-                    padding:SizeConfig.sidepadding,
-                    child: AppButton(
-                      height: 40,
-                      color: AppColors.darkBlue,  
-                      buttonText: AppStrings.abort_text,
-                      radius: 15,
-                      textStyle: TextStyle(color: AppColors.whiteColor),
-                      onTap: (){
-                        AppConstants.showAppDialog( 
-                            context: context,
-                            child: AbortAppoinmentWidget(appointmentID: widget.arguments.appointmentID,)
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  Padding(
-                    padding:SizeConfig.sidepadding,
-                    child: AppButton(
-                      height: 40,
-                      color: AppColors.darkBlue, 
-                      buttonText: AppStrings.ADD_COMMENT,
-                      radius: 15,
-                      textStyle: TextStyle(color: AppColors.whiteColor),
-                      onTap: (){
-                        AppConstants.showAppDialog(
-                            context: context,
-                            child: CommentDialogWidget(appointmentID: widget.arguments.appointmentID,)
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _getDisplayButton(_checkbuttonindex(model), model),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: SizeConfig.sidepadding,
-                    child: Container(
-                      height: 300,
-                      child: GoogleMap(
-                        markers: {
-                          Marker(
-                            GeoCoord(34.0469058, -118.3503948),
+                                    headerBackgroundColorStart: AppColors.green,
+                                    headerBackgroundColorEnd: AppColors.green,
+                                    onExpansionChanged: (value) {
+                                      if (value) {
+                                        setState(() {
+                                          selected = index;
+                                        });
+                                        if (value == true && index == 4) {
+                                          setState(() {
+                                            isToShowBottomBar = true;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            isToShowBottomBar = false;
+                                          });
+                                        }
+                                      } else {
+                                        setState(() {
+                                          isToShowBottomBar = false;
+                                          selected = -1;
+                                        });
+                                      }
+                                    },
+                                    headerExpanded: Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 20,
+                                            bottom: 10,
+                                            right: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              _getHeaderText(index),
+                                              style: getTextStyle(
+                                                  color: Colors.white,
+                                                  isBold: true,
+                                                  fontSize: 16.0),
+                                            ),
+                                            RotatedBox(
+                                                quarterTurns: 2,
+                                                child: Icon(
+                                                  Icons.remove,
+                                                  color: AppColors.whiteColor,
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    children: [
+                                      _getChildrenWidget(selected, model)
+                                    ]);
+                              }),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "AVAILABLE ACTION",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: AppButton(
+                            height: 40,
+                            color: AppColors.darkBlue,
+                            buttonText: AppStrings.abort_text,
+                            radius: 15,
+                            textStyle: TextStyle(color: AppColors.whiteColor),
+                            onTap: () {
+                              AppConstants.showAppDialog(
+                                  context: context,
+                                  child: AbortAppoinmentWidget(
+                                    appointmentID:
+                                        widget.arguments.appointmentID,
+                                  ));
+                            },
                           ),
-                        },
-                        initialZoom: 12,
-                        initialPosition: GeoCoord(34.0469058, -118.3503948),
-                        // Los Angeles, CA
-                        mapType: MapType.roadmap,
-                        interactive: true,
-                        mobilePreferences: const MobileMapPreferences(
-                          trafficEnabled: true,
-                          zoomControlsEnabled: false,
                         ),
-                      ),
-                    ),
-                  ),
-                  SizeConfig.verticalSpaceSmall(),
-                  Padding(
-                    padding: SizeConfig.sidepadding,
-                    child: InkWell(
-                      onTap: ()async{
-                        final url = Uri.encodeFull('https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
-//                  String googleUrl = 'https://www.google.com/maps/search/?api=1&query=${model.currentLocation.latitude},${model.currentLocation.longitude}';
-                        if (await canLaunch(url)) {
-                        await launch(url);
-                        } else {
-                        throw 'Could not open the map.';
-                        }
-
-                      },
-                      child: Container(
-                        width: SizeConfig.screenWidth,
-                        height: 40,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: SizeConfig.screenHeight*.02,
-                                width: SizeConfig.screenHeight*.02,
-                                child: Image.asset(ImageFile.direction)),
-                            SizedBox(
-                              width: 10,
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: AppButton(
+                            height: 40,
+                            color: AppColors.darkBlue,
+                            buttonText: AppStrings.ADD_COMMENT,
+                            radius: 15,
+                            textStyle: TextStyle(color: AppColors.whiteColor),
+                            onTap: () {
+                              AppConstants.showAppDialog(
+                                  context: context,
+                                  child: CommentDialogWidget(
+                                    appointmentID:
+                                        widget.arguments.appointmentID,
+                                  ));
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _getDisplayButton(_checkbuttonindex(model), model),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: Container(
+                            height: 300,
+                            child: GoogleMap(
+                              markers: {
+                                Marker(
+                                  GeoCoord(34.0469058, -118.3503948),
+                                ),
+                              },
+                              initialZoom: 12,
+                              initialPosition:
+                                  GeoCoord(34.0469058, -118.3503948),
+                              // Los Angeles, CA
+                              mapType: MapType.roadmap,
+                              interactive: true,
+                              mobilePreferences: const MobileMapPreferences(
+                                trafficEnabled: true,
+                                zoomControlsEnabled: false,
+                              ),
                             ),
-                            Text(AppStrings.GET_DIRECTIONS,
-                            style: TextStyle(fontWeight: FontWeight.w500,color: AppColors.whiteColor),),
-                          ],
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                            color: AppColors.green,
-                            borderRadius: BorderRadius.circular(15)
+                        SizeConfig.verticalSpaceSmall(),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: InkWell(
+                            onTap: () async {
+                              final url = Uri.encodeFull(
+                                  'https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
+//                  String googleUrl = 'https://www.google.com/maps/search/?api=1&query=${model.currentLocation.latitude},${model.currentLocation.longitude}';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not open the map.';
+                              }
+                            },
+                            child: Container(
+                              width: SizeConfig.screenWidth,
+                              height: 40,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                      height: SizeConfig.screenHeight * .02,
+                                      width: SizeConfig.screenHeight * .02,
+                                      child: Image.asset(ImageFile.direction)),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    AppStrings.GET_DIRECTIONS,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.whiteColor),
+                                  ),
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                  color: AppColors.green,
+                                  borderRadius: BorderRadius.circular(15)),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                      ],
                     ),
-                  ),
-
-                  SizedBox(
-                    height: 60,
-                  ),
-                ],
-              ),
-            ));
+                  ));
       },
     );
   }
-  int _checkbuttonindex(DetailsScreenViewModel model){
-     int id;
-    _appointmentandjobtype.forEach((key, value) { 
-      if(key.contains(model.appointmentDetails.appointment.strAppointmentType)){
+
+  int _checkbuttonindex(DetailsScreenViewModel model) {
+    int id;
+    _appointmentandjobtype.forEach((key, value) {
+      if (key
+          .contains(model.appointmentDetails.appointment.strAppointmentType)) {
         id = value[model.appointmentDetails.appointment.strJobType];
       }
     });
     return id;
   }
 
-  Widget _getDisplayButton(int id, DetailsScreenViewModel model){
-   if(id!=null){ 
-   return Column(
-     children: [
-       (id!=2 && id!=6)?
-       Padding(
-                    padding:SizeConfig.sidepadding,
-                    child: AppButton(
-                      height: 40,
-                      color: AppColors.darkBlue, 
-                      buttonText: _smest2displaybutton[id],
-                      radius: 15,
-                      textStyle: TextStyle(color: AppColors.whiteColor),
-                      onTap: (){
-                        model.onRaiseButtonPressed(widget.arguments.customerID, _processid[_smest2displaybutton[id]]);
-                      },
+  Widget _getDisplayButton(int id, DetailsScreenViewModel model) {
+    if (id != null) {
+      return Column(
+        children: [
+          (id != 2 && id != 6)
+              ? Column(
+                  children: [
+                    Text(
+                      "SMETS2 XICOM ACTION",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontWeight: FontWeight.normal),
                     ),
-                  ):
-       Column(
-         children: [
-           Padding(
-                        padding:SizeConfig.sidepadding,
-                        child: AppButton(
-                          height: 40,
-                          color: AppColors.darkBlue, 
-                          buttonText: _smest2displaybutton[id].split(" ")[0],
-                          radius: 15,
-                          textStyle: TextStyle(color: AppColors.whiteColor),
-                          onTap: (){
-                            model.onRaiseButtonPressed(widget.arguments.customerID, _processid[_smest2displaybutton[id]].split(" ")[0]);
-                          },
-                        ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: AppButton(
+                        height: 40,
+                        color: !model.isformfilled
+                            ? AppColors.darkBlue
+                            : AppColors.disablebuttonColor,
+                        buttonText: !model.isformfilled
+                            ? _smest2displaybutton[id]
+                            : _disablesmest2displaybutton[id],
+                        radius: 15,
+                        textStyle: TextStyle(
+                            color: !model.isformfilled
+                                ? AppColors.whiteColor
+                                : AppColors.black),
+                        onTap: !model.isformfilled
+                            ? () {
+                                model.onRaiseButtonPressed(
+                                    widget.arguments.customerID,
+                                    _processid[_smest2displaybutton[id]]);
+                              }
+                            : () {},
                       ),
-          SizedBox(height: 20.0,),            
-          Padding(
-                        padding:SizeConfig.sidepadding,
-                        child: AppButton(
-                          height: 40,
-                          color: AppColors.darkBlue, 
-                          buttonText: _smest2displaybutton[id].split(" ")[1],
-                          radius: 15,
-                          textStyle: TextStyle(color: AppColors.whiteColor),
-                          onTap: (){
-                            model.onRaiseButtonPressed(widget.arguments.customerID, _processid[_smest2displaybutton[id]].split(" ")[1]);
-                            },
-                        ),
-                      ),            
-         ],
-       )           
-     ],
-   );
-   }
-   return Container();
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    Text(
+                      "SMETS2 XICOM ACTION",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: AppButton(
+                        height: 40,
+                        color: !model.isformfilled
+                            ? AppColors.darkBlue
+                            : AppColors.disablebuttonColor,
+                        buttonText: !model.isformfilled
+                            ? _smest2displaybutton[id].split("+")[0]
+                            : _disablesmest2displaybutton[id].split("+")[0],
+                        radius: 15,
+                        textStyle: TextStyle(
+                            color: !model.isformfilled
+                                ? AppColors.whiteColor
+                                : AppColors.black),
+                        onTap: !model.isformfilled
+                            ? () {
+                                model.onRaiseButtonPressed(
+                                    widget.arguments.customerID,
+                                    _processid[_smest2displaybutton[id].split("+")[0]]
+                                        );
+                              }
+                            : () {},
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: AppButton(
+                        height: 40,
+                        color: !model.isformfilled
+                            ? AppColors.darkBlue
+                            : AppColors.disablebuttonColor,
+                        buttonText: !model.isformfilled
+                            ? _smest2displaybutton[id].split("+")[1]
+                            : _disablesmest2displaybutton[id].split("+")[1],
+                        radius: 15,
+                        textStyle: TextStyle(
+                            color: !model.isformfilled
+                                ? AppColors.whiteColor
+                                : AppColors.black),
+                        onTap: !model.isformfilled
+                            ? () {
+                                model.onRaiseButtonPressed(
+                                    widget.arguments.customerID,
+                                    _processid[_smest2displaybutton[id].split("+")[1]]
+                                        );
+                              }
+                            : () {},
+                      ),
+                    ),
+                  ],
+                )
+        ],
+      );
+    }
+    return Container();
   }
+
   // engineer info
   Widget _engineerInfo(DetailsScreenViewModel model) {
     return Padding(
       padding: SizeConfig.padding,
       child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor
-        ),
-
+        decoration: BoxDecoration(color: AppColors.whiteColor),
         child: Column(
           children: [
             AppointmentDetailsRowWidget(
@@ -453,30 +561,35 @@ class _DetailScreenState extends State<DetailScreen> {
                     height: 20,
                     width: 20,
                     child: SvgPicture.asset(
-                        AppConstants.getStatusImageUrl(model.appointmentDetails.appointment.appointmentEventType),
-                        semanticsLabel: 'Status'
-                    ),
+                        AppConstants.getStatusImageUrl(model.appointmentDetails
+                            .appointment.appointmentEventType),
+                        semanticsLabel: 'Status'),
                   ),
                   SizeConfig.horizontalSpaceSmall(),
-
                   Text(
-                    (model.appointmentDetails.appointment.appointmentEventType ?? "") ,
-                    style: getTextStyle(color: AppColors.statusColor(model.appointmentDetails.appointment.appointmentEventType), isBold: true),
+                    (model.appointmentDetails.appointment
+                            .appointmentEventType ??
+                        ""),
+                    style: getTextStyle(
+                        color: AppColors.statusColor(model.appointmentDetails
+                            .appointment.appointmentEventType),
+                        isBold: true),
                   ),
                 ],
               ),
             ),
-
             AppointmentDetailsRowWidget(
               firstText: AppStrings.assignedEngineer,
-              secondText: model.appointmentDetails.appointment.engineerName ?? "",
+              secondText:
+                  model.appointmentDetails.appointment.engineerName ?? "",
             ),
             AppointmentDetailsRowWidget(
               borderEnable: false,
               firstText: AppStrings.bookingReference,
-              secondText: model.appointmentDetails.appointment.strBookingReference ?? "",
+              secondText:
+                  model.appointmentDetails.appointment.strBookingReference ??
+                      "",
             ),
-
           ],
         ),
       ),
@@ -488,10 +601,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Padding(
       padding: SizeConfig.padding,
       child: Container(
-        decoration: BoxDecoration(
-            color: AppColors.whiteColor
-        ),
-
+        decoration: BoxDecoration(color: AppColors.whiteColor),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -500,7 +610,9 @@ class _DetailScreenState extends State<DetailScreen> {
               secondChild: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ViewAppImage(imageUrl: 'https://enstaller.enpaas.com/Upload/Supplier/'+model.appointmentDetails.appointment.strLogo,
+                  ViewAppImage(
+                    imageUrl: 'https://enstaller.enpaas.com/Upload/Supplier/' +
+                        model.appointmentDetails.appointment.strLogo,
                     height: 20,
                     width: 50,
                   ),
@@ -515,16 +627,19 @@ class _DetailScreenState extends State<DetailScreen> {
                   AppButton(
                     color: AppColors.green,
                     height: 30,
-                    width: SizeConfig.screenWidth*.23,
+                    width: SizeConfig.screenWidth * .23,
                     buttonText: AppStrings.SURVEY,
                     textStyle: TextStyle(color: AppColors.whiteColor),
                     radius: 15,
-                    onTap: (){
-                      Navigator.of(context).pushNamed(SurveyScreen.routeName,arguments:
-                      SurveyArguments(appointmentID: widget.arguments.appointmentID,
-                          edit: model.appointmentDetails.appointment.surveyReceived==AppStrings.yes?true:false));
-
-
+                    onTap: () {
+                      Navigator.of(context).pushNamed(SurveyScreen.routeName,
+                          arguments: SurveyArguments(
+                              appointmentID: widget.arguments.appointmentID,
+                              edit: model.appointmentDetails.appointment
+                                          .surveyReceived ==
+                                      AppStrings.yes
+                                  ? true
+                                  : false));
                     },
                   ),
                 ],
@@ -598,7 +713,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   //get widgets data  as per text
-  Widget _getChildrenWidget(int index,DetailsScreenViewModel model) {
+  Widget _getChildrenWidget(int index, DetailsScreenViewModel model) {
     switch (index) {
       case 0:
         return _basicInfo(model);
@@ -606,9 +721,6 @@ class _DetailScreenState extends State<DetailScreen> {
       case 1:
         return _customerDetail(model);
       case 2:
-
-
-
         return _electricityInfo(model);
       case 3:
         return gasMeterData(model);
@@ -622,32 +734,37 @@ class _DetailScreenState extends State<DetailScreen> {
   //_demo data
   Widget _basicInfo(DetailsScreenViewModel model) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.expandedColor
-      ),
+      decoration: BoxDecoration(color: AppColors.expandedColor),
       child: Column(
         children: [
           AppointmentDataRow(
             firstText: AppStrings.date,
-            secondText: AppConstants.formattedSingeDate(DateTime.parse(model.appointmentDetails.appointment?.dteBookedDate)) ?? "",
+            secondText: AppConstants.formattedSingeDate(DateTime.parse(
+                    model.appointmentDetails.appointment?.dteBookedDate)) ??
+                "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.timeSlot,
-            secondText:  model.appointmentDetails.appointment?.strBookedTime ?? "",
+            secondText:
+                model.appointmentDetails.appointment?.strBookedTime ?? "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.workType,
-            secondText:  model.appointmentDetails.appointment.strAppointmentType+ ">" +model.appointmentDetails.appointment?.strJobType ?? "",
+            secondText:
+                model.appointmentDetails.appointment.strAppointmentType +
+                        ">" +
+                        model.appointmentDetails.appointment?.strJobType ??
+                    "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.bookOn,
-            secondText:  AppConstants.formattedDate(DateTime.parse(model.appointmentDetails.appointment?.dteCreatedDate)),
+            secondText: AppConstants.formattedDate(DateTime.parse(
+                model.appointmentDetails.appointment?.dteCreatedDate)),
           ),
           AppointmentDataRow(
             firstText: AppStrings.bookBy,
-            secondText:   model.appointmentDetails.appointment?.strBookedBy ?? "",
+            secondText: model.appointmentDetails.appointment?.strBookedBy ?? "",
           ),
-
         ],
       ),
     );
@@ -692,9 +809,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: AppColors.green,
                   child: Center(
                       child: Text(
-                        AppStrings.dateAndTime,
-                        style: getTextStyle(color: Colors.white, isBold: true),
-                      )),
+                    AppStrings.dateAndTime,
+                    style: getTextStyle(color: Colors.white, isBold: true),
+                  )),
                 ),
               ),
               SizedBox(
@@ -707,9 +824,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: AppColors.green,
                   child: Center(
                       child: Text(
-                        AppStrings.user,
-                        style: getTextStyle(color: Colors.white, isBold: true),
-                      )),
+                    AppStrings.user,
+                    style: getTextStyle(color: Colors.white, isBold: true),
+                  )),
                 ),
               ),
               SizedBox(
@@ -722,9 +839,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: AppColors.green,
                   child: Center(
                       child: Text(
-                        AppStrings.comment,
-                        style: getTextStyle(color: Colors.white, isBold: true),
-                      )),
+                    AppStrings.comment,
+                    style: getTextStyle(color: Colors.white, isBold: true),
+                  )),
                 ),
               )
             ],
@@ -746,12 +863,16 @@ class _DetailScreenState extends State<DetailScreen> {
                         flex: 2,
                         child: Container(
                           height: 60,
-                          color:  Colors.grey[300],
+                          color: Colors.grey[300],
                           child: Center(
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(AppConstants.formattedDate(DateTime.parse(model.activityDetailsList[index].dteCreatedDate)),textAlign: TextAlign.center),
-                              )),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                                AppConstants.formattedDate(DateTime.parse(model
+                                    .activityDetailsList[index]
+                                    .dteCreatedDate)),
+                                textAlign: TextAlign.center),
+                          )),
                         ),
                       ),
                       SizedBox(
@@ -761,19 +882,21 @@ class _DetailScreenState extends State<DetailScreen> {
                         flex: 2,
                         child: Container(
                           height: 60,
-                          color:  Colors.grey[300],
-                          child: Center(child: Text(model.activityDetailsList[index].strUserName,textAlign: TextAlign.center)),
+                          color: Colors.grey[300],
+                          child: Center(
+                              child: Text(
+                                  model.activityDetailsList[index].strUserName,
+                                  textAlign: TextAlign.center)),
                         ),
                       ),
                       SizedBox(
                         width: 2,
                       ),
-
                       Expanded(
                         flex: 3,
                         child: Container(
                           height: 60,
-                          color:  Colors.grey[300],
+                          color: Colors.grey[300],
                           child: Row(
                             children: [
                               SizeConfig.horizontalSpaceSmall(),
@@ -781,18 +904,23 @@ class _DetailScreenState extends State<DetailScreen> {
                                 height: 10,
                                 width: 10,
                                 child: SvgPicture.asset(
-                                    AppConstants.getStatusImageUrl(AppConstants.getStatusFromStrEventType(model.activityDetailsList[index].strEventType, model.activityDetailsList[index].strComment)),
-                                    semanticsLabel: 'Status'
-                                ),
+                                    AppConstants.getStatusImageUrl(
+                                        AppConstants.getStatusFromStrEventType(
+                                            model.activityDetailsList[index]
+                                                .strEventType,
+                                            model.activityDetailsList[index]
+                                                .strComment)),
+                                    semanticsLabel: 'Status'),
                               ),
                               SizedBox(
                                 width: 5,
                               ),
                               Flexible(
                                 child: Text(
-                                  model.activityDetailsList[index].strComment,textAlign: TextAlign.center,
-                                  style:
-                                  getTextStyle(color: Colors.black, isBold: true),
+                                  model.activityDetailsList[index].strComment,
+                                  textAlign: TextAlign.center,
+                                  style: getTextStyle(
+                                      color: Colors.black, isBold: true),
                                 ),
                               ),
                             ],
@@ -807,30 +935,29 @@ class _DetailScreenState extends State<DetailScreen> {
         SizedBox(
           height: 20,
         ),
-
       ],
     );
   }
 
   Widget _customerDetail(DetailsScreenViewModel model) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.expandedColor
-      ),
+      decoration: BoxDecoration(color: AppColors.expandedColor),
       child: Column(
         children: [
-
           AppointmentDataRow(
             firstText: AppStrings.name,
-            secondText: AppStrings.mr+model.customerDetails.strContactName ?? "",
+            secondText:
+                AppStrings.mr + model.customerDetails.strContactName ?? "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.contactNumber,
-            secondText: model.customerDetails.strContactTelephone??'',
+            secondText: model.customerDetails.strContactTelephone ?? '',
           ),
           AppointmentDataRow(
             firstText: AppStrings.email,
-            secondText: model.customerDetails.strEmail!=null?model.customerDetails.strEmail:'',
+            secondText: model.customerDetails.strEmail != null
+                ? model.customerDetails.strEmail
+                : '',
           ),
           AppointmentDataRow(
             firstText: AppStrings.address,
@@ -844,32 +971,26 @@ class _DetailScreenState extends State<DetailScreen> {
             firstText: AppStrings.accountNumber,
             secondText: model.customerDetails.strAccountNumber ?? "",
           ),
-
-      ],
+        ],
       ),
     );
-
-
   }
+
   Widget gasMeterData(DetailsScreenViewModel model) {
     return Container(
-      decoration:  BoxDecoration(
-        color: AppColors.expandedColor
-      ),
+      decoration: BoxDecoration(color: AppColors.expandedColor),
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount:model.electricGasMeterList.length,
+        itemCount: model.electricGasMeterList.length,
         itemBuilder: (context, i) {
-          if(model.electricGasMeterList[i].strFuel==AppStrings.GAS){
-            return  Column(
+          if (model.electricGasMeterList[i].strFuel == AppStrings.GAS) {
+            return Column(
               children: [
-
                 AppointmentDataRow(
                   firstText: AppStrings.meterMode,
                   secondText: model.electricGasMeterList[i].strFuel ?? "",
                 ),
-
                 AppointmentDataRow(
                   firstText: AppStrings.meterMode,
                   secondText: model.electricGasMeterList[i].strFuel ?? "",
@@ -880,13 +1001,13 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
                 AppointmentDataRow(
                   firstText: AppStrings.meterSerialNo,
-                  secondText:model.electricGasMeterList[i].strMeterSerialNo ?? "",
+                  secondText:
+                      model.electricGasMeterList[i].strMeterSerialNo ?? "",
                 ),
                 AppointmentDataRow(
                   firstText: AppStrings.pressure,
-                  secondText:"",
+                  secondText: "",
                 ),
-
               ],
             );
           }
@@ -897,7 +1018,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 secondText: '',
               ),
               AppointmentDataRow(
-                firstText:AppStrings.mPAN,
+                firstText: AppStrings.mPAN,
                 secondText: '',
               ),
               AppointmentDataRow(
@@ -910,84 +1031,73 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ],
           );
-
         },
       ),
     );
-
-
-
   }
 
   Widget _electricityInfo(DetailsScreenViewModel model) {
-
-return Container(
-  decoration: BoxDecoration(
-    color: AppColors.expandedColor
-  ),
-  child:   ListView.builder(
-    shrinkWrap: true,
-    physics: NeverScrollableScrollPhysics(),
-    itemCount: model.electricGasMeterList.length,
-    itemBuilder: (context, i) {
-      if(model.electricGasMeterList[i].strFuel==AppStrings.ELECTRICITY){
-        return Column(
-          children: [
-
-            AppointmentDataRow(
-              firstText:AppStrings.meterMode ,
-              secondText:model.electricGasMeterList[i].strFuel ?? "" ,
-            ),
-            AppointmentDataRow(
-              firstText:AppStrings.mPAN ,
-              secondText:model.electricGasMeterList[i].strMpan ?? "",
-            ),
-            AppointmentDataRow(
-              firstText:AppStrings.meterSerialNo ,
-              secondText:model.electricGasMeterList[i].strMeterSerialNo ?? "",
-            ),
-            AppointmentDataRow(
-              firstText:AppStrings.profileClass ,
-              secondText: model.electricGasMeterList[i].strProfileClass ?? "",
-            ),
-            AppointmentDataRow(
-              firstText:AppStrings.sSC ,
-              secondText: model.electricGasMeterList[i].strSSC ?? "",
-            ),
-
-          ],
-        );
-      }
-      return Column(
-        children: [
-
-          AppointmentDataRow(
-            firstText: AppStrings.meterMode,
-            secondText: '',
-          ),
-          AppointmentDataRow(
-            firstText: AppStrings.mPAN,
-            secondText: '',
-          ),
-          AppointmentDataRow(
-            firstText: AppStrings.meterSerialNo,
-            secondText: '',
-          ),
-           AppointmentDataRow(
-             firstText:AppStrings.profileClass,
-             secondText: '',
-           ),
-          AppointmentDataRow(
-            firstText: AppStrings.sSC,
-            secondText: '',
-          ),
-        ],
-      );
-
-    },
-  ),
-);
-
-
+    return Container(
+      decoration: BoxDecoration(color: AppColors.expandedColor),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: model.electricGasMeterList.length,
+        itemBuilder: (context, i) {
+          if (model.electricGasMeterList[i].strFuel == AppStrings.ELECTRICITY) {
+            return Column(
+              children: [
+                AppointmentDataRow(
+                  firstText: AppStrings.meterMode,
+                  secondText: model.electricGasMeterList[i].strFuel ?? "",
+                ),
+                AppointmentDataRow(
+                  firstText: AppStrings.mPAN,
+                  secondText: model.electricGasMeterList[i].strMpan ?? "",
+                ),
+                AppointmentDataRow(
+                  firstText: AppStrings.meterSerialNo,
+                  secondText:
+                      model.electricGasMeterList[i].strMeterSerialNo ?? "",
+                ),
+                AppointmentDataRow(
+                  firstText: AppStrings.profileClass,
+                  secondText:
+                      model.electricGasMeterList[i].strProfileClass ?? "",
+                ),
+                AppointmentDataRow(
+                  firstText: AppStrings.sSC,
+                  secondText: model.electricGasMeterList[i].strSSC ?? "",
+                ),
+              ],
+            );
+          }
+          return Column(
+            children: [
+              AppointmentDataRow(
+                firstText: AppStrings.meterMode,
+                secondText: '',
+              ),
+              AppointmentDataRow(
+                firstText: AppStrings.mPAN,
+                secondText: '',
+              ),
+              AppointmentDataRow(
+                firstText: AppStrings.meterSerialNo,
+                secondText: '',
+              ),
+              AppointmentDataRow(
+                firstText: AppStrings.profileClass,
+                secondText: '',
+              ),
+              AppointmentDataRow(
+                firstText: AppStrings.sSC,
+                secondText: '',
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
