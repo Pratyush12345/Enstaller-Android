@@ -78,4 +78,10 @@ class CommonUtils {
 
 
   }
+  String formatDate2(DateTime dateTime){
+
+    return DateFormat('yyyy/MM/dd').format(dateTime);
+
+
+  }
 }

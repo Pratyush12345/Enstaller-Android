@@ -52,8 +52,10 @@ dependencies:
   encrypt: ^4.1.0
   cached_network_image: ^2.3.2+1
   flutter_statusbarcolor: ^0.2.3
+  select_form_field: ^1.1.0
   path_provider:
   flutter_pdfview:
+
 
 
 dev_dependencies:

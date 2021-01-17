@@ -9,6 +9,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
 import 'package:enstaller/ui/screen/email_notification.dart';
+import 'package:enstaller/ui/screen/order_screen.dart';
 import 'package:enstaller/ui/screen/sms_notification.dart';
 import 'package:enstaller/ui/screen/document.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
@@ -92,7 +93,7 @@ class AppDrawerWidget extends StatelessWidget {
           color: AppColors.green
         ),),
         Expanded(
-          child: Column(
+          child: ListView(
             children: [
               DrawerRowWidget(
                 title: 'Dashboard',
@@ -126,6 +127,16 @@ class AppDrawerWidget extends StatelessWidget {
                       builder: (context) => DocumentScreen()));
                 },
               ),
+
+              DrawerRowWidget(
+                title: 'Order',
+                assetPath: ImageFile.appointment,
+                onTap: (){
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => OrderScreen()));
+                },
+              ),
+             
               // DrawerRowWidget(
               //   title: 'Update Status',
               //   assetPath: ImageFile.updateStatus,
@@ -133,6 +144,7 @@ class AppDrawerWidget extends StatelessWidget {
               //     Navigator.of(context).pushNamed(UpdateStatusScreen.routeName);
               //   },
               // ),
+
               DrawerRowWidget(
                 title: 'My Profile',
                 assetPath: ImageFile.myProfile,

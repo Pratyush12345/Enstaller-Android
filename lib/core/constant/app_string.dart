@@ -33,6 +33,7 @@ class AppStrings {
   static const SMSnotification='SMS Notification';
   static const DOCUMNETS = 'DOCUMENTS';
   static const APPOINTMENT_DETAILS='APPOINTMENT DETAILS';
+  static const ADD_ORDER='ADD ORDER';
   static const workType='Work Type';
   static const bookOn='Booked On';
   static const bookBy='Booked By';
@@ -128,7 +129,10 @@ class AppStrings {
   static const dashboard='DASHBOARD';
   static const time='Time';
   static const APPOINTMENT_COMMENTS='APPOINTMENT COMMENTS';
-
+  static const SELECT = 'Select';
+  static const QUANTITY = 'Quantity';
+  static const UNABLE_TO_SAVE = 'Unable to save';
+  static const SAVED_SUCCESSFULLY = 'Saved successfully';
   //email Notification
   static const Date ='Date';
   static const appointmentNo='Appointment No';
@@ -140,6 +144,7 @@ class AppStrings {
   static const ActionBy = "Action By";
   static const hash = "#"; 
   static const viewemail = "View Email";
+  static const ADD_LINE_ITEM = "ADD LINE ITEM";
 
   //SMS Notification
   static const bookingRefNo = "Booking Ref. No";

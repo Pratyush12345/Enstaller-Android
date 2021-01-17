@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'package:enstaller/core/constant/api_urls.dart';
+import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/model/activity_details_model.dart';
 import 'package:enstaller/core/model/app_table.dart';
+import 'package:enstaller/core/model/contract_order_model.dart';
 import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/comment_model.dart';
+import 'package:enstaller/core/model/item_oder_model.dart';
+import 'package:enstaller/core/model/save_order.dart';
+import 'package:enstaller/core/model/save_order_line.dart';
 import 'package:enstaller/core/model/sms_notification_model.dart';
 import 'package:enstaller/core/model/email_notification_model.dart';
 import 'package:enstaller/core/model/customer_details.dart';
@@ -64,6 +69,9 @@ class ApiService extends BaseApi{
 
    }, 'intUserId=$userID') ;
   }
+
+
+
   Future <dynamic> getActivityLogsAppointmentId(String appointmentID){
     return getRequestWithParam(ApiUrls.getActivityLogsAppointmentIdUrl,
             (response) {
@@ -260,5 +268,63 @@ class ApiService extends BaseApi{
         );
       }
         }, 'intcustomerid=$customerID'+'&strProcessid=$processId') ;
+  }
+
+  Future <dynamic> getItemsForOrder(String userID){
+    print(userID);
+    return getRequestWithParam(ApiUrls.getItemsForOrder,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => ItemOrder.fromJson(e)).toList();
+
+        }, 'intUserId=20036') ;
+  }
+
+  Future <dynamic> getContractsForOrder(String userID){
+    return getRequestWithParam(ApiUrls.getContractsForOrder,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => ContractOrder.fromJson(e)).toList();
+
+        }, 'intUserId=$userID') ;
+  }
+
+
+  Future<dynamic> saveOrder(SaveOrder saveOrder){
+    return postRequest(ApiUrls.saveOrder, (r) {
+      final response = json.decode(r.body);
+      print(response.runtimeType);
+
+
+      if (response.runtimeType== int) {
+        return ResponseModel(
+            statusCode: 1,
+            response: response.toString()
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: AppStrings.UNABLE_TO_SAVE
+        );
+      }
+    },saveOrder.toJson());
+  }
+
+  Future<dynamic> saveOrderLine(SaveOrderLine saveOrderLine){
+    return postRequest(ApiUrls.saveOrderLine, (r) {
+      final response = json.decode(r.body);
+      print(response);
+      if (response) {
+        return ResponseModel(
+            statusCode: 1,
+            response: response.toString()
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: AppStrings.UNABLE_TO_SAVE
+        );
+      }
+    },saveOrderLine.toJson());
   }
 }
