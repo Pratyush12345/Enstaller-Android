@@ -127,6 +127,7 @@ class AppDrawerWidget extends StatelessWidget {
                       builder: (context) => DocumentScreen()));
                 },
               ),
+
               DrawerRowWidget(
                 title: 'Order',
                 assetPath: ImageFile.appointment,
@@ -135,13 +136,15 @@ class AppDrawerWidget extends StatelessWidget {
                       builder: (context) => OrderScreen()));
                 },
               ),
-              DrawerRowWidget(
-                title: 'Update Status',
-                assetPath: ImageFile.updateStatus,
-                onTap: (){
-                  Navigator.of(context).pushNamed(UpdateStatusScreen.routeName);
-                },
-              ),
+             
+              // DrawerRowWidget(
+              //   title: 'Update Status',
+              //   assetPath: ImageFile.updateStatus,
+              //   onTap: (){
+              //     Navigator.of(context).pushNamed(UpdateStatusScreen.routeName);
+              //   },
+              // ),
+
               DrawerRowWidget(
                 title: 'My Profile',
                 assetPath: ImageFile.myProfile,

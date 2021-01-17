@@ -1,4 +1,8 @@
 
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
+import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/question_answer_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
@@ -9,6 +13,9 @@ import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/model/survey_response_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SurveyScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
@@ -27,7 +34,9 @@ class SurveyScreenViewModel extends BaseModel {
   bool submitThirdBool=false;
   int selected=0;
   int enableIndex=0;
+  Set<String> _setofUnSubmittedForm = {};
   UserModel user;
+  final Connectivity _connectivity = Connectivity();
   List<AnswerCredential>answerList=[];
   List disableQuestions=[];
   List enableQuestions=[];
@@ -413,6 +422,7 @@ class SurveyScreenViewModel extends BaseModel {
   }
   void onAddAnswer(AnswerCredential credential){
     setState(ViewState.Busy);
+    
     answerList.add(credential);
     setState(ViewState.Idle);
   }
@@ -424,7 +434,7 @@ class SurveyScreenViewModel extends BaseModel {
     }
     setState(ViewState.Idle);
   }
-  void onSubmit() async{
+  void onSubmit(int selected, String appointmentid, BuildContext context) async{
     setState(ViewState.Busy);
 //    for (int i=0;i<answerList.length;i++){
 //      ResponseModel responseModel=await _apiService.submitSurveyAnswer(answerList[i]);
@@ -441,10 +451,14 @@ class SurveyScreenViewModel extends BaseModel {
 //      }
 //
 //    }
-    ResponseModel responseModel=await _apiService.submitListSurveyAnswer(answerList);
-    print(responseModel.response);
-    if(responseModel.statusCode==1){
-      setState(ViewState.Idle);
+     try {
+      ConnectivityResult  result = await _connectivity.checkConnectivity();
+      String status = _updateConnectionStatus(result);
+      if(status!="NONE"){
+       ResponseModel responseModel=await _apiService.submitListSurveyAnswer(answerList);
+       print(responseModel.response);
+       if(responseModel.statusCode==1){
+       setState(ViewState.Idle);
           if (selected < 2) {
             selected++;
             enableIndex++;
@@ -452,10 +466,32 @@ class SurveyScreenViewModel extends BaseModel {
             selected=-1;
           }
         }
+      }
+      else{
+        print("********online*****");
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        List<String> _list = [];
+        answerList.forEach((element) { 
+          _list.add(jsonEncode(element.toJson()));
+        });
+        if(preferences.getStringList("listOfUnSubmittedForm")!=null)
+        {
+          _setofUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm").toSet();
+        }
+        _setofUnSubmittedForm.add(appointmentid);
 
+        preferences.setStringList("listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
+        preferences.setStringList("key${selected.toString()}+$appointmentid", _list);
+        setState(ViewState.Idle);
+        AppConstants.showFailToast(context, "Submitted Offline");
+       
+      }
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    
     setState(ViewState.Idle);
-
-
   }
 
   void onValidation(){
@@ -468,6 +504,53 @@ class SurveyScreenViewModel extends BaseModel {
       submitThirdBool=true;
     }
     setState(ViewState.Idle);
+  }
+
+String _updateConnectionStatus(ConnectivityResult result)  {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  }
+
+  void onSubmitOffline(int selected, String appointmentid, List<AnswerCredential> _listofanswer) async{
+    print("**********offline********");
+     try {
+      ConnectivityResult  result = await _connectivity.checkConnectivity();
+      String status = _updateConnectionStatus(result);
+      if(status!="NONE"){
+       ResponseModel responseModel=await _apiService.submitListSurveyAnswer(_listofanswer);
+       print(responseModel.response);
+       
+      }
+      else{
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        List<String> _list = [];
+        _listofanswer.forEach((element) { 
+          _list.add(jsonEncode(element.toJson()));
+        });
+        if(preferences.getStringList("listOfUnSubmittedForm")!=null)
+        {
+          _setofUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm").toSet();
+        }
+        _setofUnSubmittedForm.add(appointmentid);
+
+        preferences.setStringList("listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
+        preferences.setStringList("key${selected.toString()}+$appointmentid", _list);
+      }
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
   }
 
 

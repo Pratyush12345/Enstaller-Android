@@ -283,7 +283,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         }
                         if(validateconter==questions.length){
 
-                          model.onSubmit();
+                          model.onSubmit(model.selected,widget.arguments.appointmentID, context);
                         }
                       }else{
                         model.incrementCounter();
