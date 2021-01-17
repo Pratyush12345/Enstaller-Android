@@ -1,12 +1,18 @@
 
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/home_screen_viewmodel.dart';
+import 'package:enstaller/core/viewmodel/survey_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/widget/homescreen/home_page_list_widget.dart';
 import 'package:enstaller/ui/screen/widget/homescreen/homepage_expandsion_widget.dart';
 import 'package:enstaller/ui/screen/widget/homescreen/view_appointment_list_widget.dart';
@@ -18,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,10 +34,70 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   DateTime selectedDate = DateTime.now();
   ScrollController _scrollController = new ScrollController();
+  SharedPreferences preferences;
 
+  _subscribeconnectivity() async{
+     preferences = await SharedPreferences.getInstance();
+     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_change);
+   
+  }
+  _change(ConnectivityResult result){
+  print("chaaaa");
+  String status =  _updateConnectionStatus(result);
+  String removeid;
+  if(status!="NONE" && preferences.getStringList("listOfUnSubmittedForm")!=null){
+  List<String> _listOfUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm");
+  _listOfUnSubmittedForm.forEach((appointmentid) { 
+    removeid = appointmentid;
+     for(int i=0;i<3;i++){
+       List<AnswerCredential> _answerlist = [];
+       List<String> _listofEachKey = preferences.getStringList("key${i.toString()}+$appointmentid");
+       if(_listofEachKey!=null){
+        _listofEachKey.forEach((element) { 
+           _answerlist.add(AnswerCredential.fromJson(jsonDecode(element)));
+        }); 
+        preferences.remove("key${i.toString()}+$appointmentid");
+        SurveyScreenViewModel().onSubmitOffline(i, appointmentid, _answerlist);
+       } 
+     }
+  });
+  _listOfUnSubmittedForm.remove(removeid);
+  }
+  }
+  String _updateConnectionStatus(ConnectivityResult result)  {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  }
+
+
+  @override
+  void initState() {
+    _subscribeconnectivity();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     

@@ -35,6 +35,7 @@ class AnswerCredential {
     data['intcreatedby'] = this.intcreatedby;
     data['"bisalive"'] = this.bisalive;
     data['strfilename'] = this.strfilename;
+    
     return data;
   }
 //  Map<String, dynamic> toJson() => <String, dynamic>{

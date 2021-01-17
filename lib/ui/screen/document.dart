@@ -8,13 +8,13 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/document_model.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/appointment_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/documnet_viewmodel.dart';
 import 'package:enstaller/ui/screen/detail_screen.dart';
+import 'package:enstaller/ui/screen/document_view.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
@@ -195,14 +195,14 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 flex: 3,
                 child: InkWell(
                     onTap: ()async {
-                      // File file = File(document?.strFileName ?? "");
-                      // PDFDocument doc = await PDFDocument.fromFile(file);
-                      // PDFViewer(document: doc);
+                      String _url = document.strValue+"Upload/SupplierDoc/"+document.strFileName;
+                      String doc= await model.pdfview(_url);
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DocumentView(doc: doc,)));
                       model.onPDFOpen(context, document?.intId.toString());
                     },
                     child: Text(  
                     document?.strFileName ?? "",
-                    style: TextStyle(color: AppColors.darkGrayColor, fontWeight: document.bisEngineerRead? FontWeight.normal: FontWeight.bold ),
+                    style: TextStyle(color: AppColors.darkGrayColor, fontWeight: (document.bisEngineerRead || model.isfileopened[document.intId.toString()])? FontWeight.normal: FontWeight.bold ),
                     textAlign: TextAlign.start,
 
                   ),

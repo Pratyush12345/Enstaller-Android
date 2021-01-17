@@ -47,6 +47,8 @@ class ApiService extends BaseApi{
    }, 'id=$userID') ;
   }
   Future <dynamic> getEmailNotificationList(String userID){
+    
+    
    return getRequestWithParam(ApiUrls.getEmailTemplateSenderHistoryUserWise,
            (response) {
      print(response.body);
@@ -203,10 +205,8 @@ class ApiService extends BaseApi{
           response: 'Successfully opened'
       );
     },pdFopenModel.toJson());
-
-
-
   }
+
   Future<dynamic> submitListSurveyAnswer(List<AnswerCredential> credentials){
     return postRequestList(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
       final response = json.decode(r.body);
@@ -216,10 +216,8 @@ class ApiService extends BaseApi{
           response: 'Successfully Updated'
       );
     },json.encoder.convert(credentials));
-
-
-
   }
+
   Future <dynamic> getCustomerById(String customerID){
     return getRequestWithParam(ApiUrls.getCustomerByIdUrl,
             (response) {
