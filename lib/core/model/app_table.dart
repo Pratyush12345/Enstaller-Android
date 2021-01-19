@@ -2,6 +2,7 @@ class AppTable {
   int intId;
   String strAppointmentType;
   String strJobType;
+  String dteBookedDate;
   String dteBookedDateStr;
   String strBookedTime;
   String strSiteAddress;
@@ -13,7 +14,7 @@ class AppTable {
   String strBookingReference;
   String strStatus;
   String strBookingStatusType;
-  String dteCreatedDateStr;
+  String dteCreatedDate;
   int intPriority;
   int intBookedBy;
   bool bisCustomerConfirmed;
@@ -23,23 +24,30 @@ class AppTable {
   String strBookedSlotType;
   bool bisIsEmailSendingEnabled;
   bool bisIsSmsSendingEnabled;
-  Null strBookingChannel;
-  Null dteClosedAt;
-  Null strCancellationComment;
-  Null strCancellationReason;
   String strContactName;
-  String strPostCode;
   String strCompanyName;
   String strLogo;
+  String dteCreatedDateStr;
   int intEngineerId;
   String engineerName;
+  String strPostCode;
+  String regionPatches;
   String patchCode;
+  String strBookedBy;
   String appointmentEventType;
+  int intTimeSlotId;
+  int intAppointmentTypeId;
+  int intJobTypeId;
+  String surveyReceived;
+  String strEmailActionby;
+  int intjumborequestid;
+  int intjumboresponseid;
 
   AppTable(
       {this.intId,
         this.strAppointmentType,
         this.strJobType,
+        this.dteBookedDate,
         this.dteBookedDateStr,
         this.strBookedTime,
         this.strSiteAddress,
@@ -51,7 +59,7 @@ class AppTable {
         this.strBookingReference,
         this.strStatus,
         this.strBookingStatusType,
-        this.dteCreatedDateStr,
+        this.dteCreatedDate,
         this.intPriority,
         this.intBookedBy,
         this.bisCustomerConfirmed,
@@ -61,23 +69,30 @@ class AppTable {
         this.strBookedSlotType,
         this.bisIsEmailSendingEnabled,
         this.bisIsSmsSendingEnabled,
-        this.strBookingChannel,
-        this.dteClosedAt,
-        this.strCancellationComment,
-        this.strCancellationReason,
         this.strContactName,
-        this.strPostCode,
         this.strCompanyName,
         this.strLogo,
+        this.dteCreatedDateStr,
         this.intEngineerId,
         this.engineerName,
+        this.strPostCode,
+        this.regionPatches,
         this.patchCode,
-        this.appointmentEventType});
+        this.strBookedBy,
+        this.appointmentEventType,
+        this.intTimeSlotId,
+        this.intAppointmentTypeId,
+        this.intJobTypeId,
+        this.surveyReceived,
+        this.strEmailActionby,
+        this.intjumborequestid,
+        this.intjumboresponseid});
 
   AppTable.fromJson(Map<String, dynamic> json) {
     intId = json['intId'];
     strAppointmentType = json['strAppointmentType'];
     strJobType = json['strJobType'];
+    dteBookedDate = json['dteBookedDate'];
     dteBookedDateStr = json['dteBookedDate_str'];
     strBookedTime = json['strBookedTime'];
     strSiteAddress = json['strSiteAddress'];
@@ -89,7 +104,7 @@ class AppTable {
     strBookingReference = json['strBookingReference'];
     strStatus = json['strStatus'];
     strBookingStatusType = json['strBookingStatusType'];
-    dteCreatedDateStr = json['dteCreatedDate_str'];
+    dteCreatedDate = json['dteCreatedDate'];
     intPriority = json['intPriority'];
     intBookedBy = json['intBookedBy'];
     bisCustomerConfirmed = json['bisCustomerConfirmed'];
@@ -99,18 +114,25 @@ class AppTable {
     strBookedSlotType = json['strBookedSlotType'];
     bisIsEmailSendingEnabled = json['bisIsEmailSendingEnabled'];
     bisIsSmsSendingEnabled = json['bisIsSmsSendingEnabled'];
-    strBookingChannel = json['strBookingChannel'];
-    dteClosedAt = json['dteClosedAt'];
-    strCancellationComment = json['strCancellationComment'];
-    strCancellationReason = json['strCancellationReason'];
     strContactName = json['strContactName'];
-    strPostCode = json['strPostCode'];
     strCompanyName = json['strCompanyName'];
     strLogo = json['strLogo'];
+    dteCreatedDateStr = json['dteCreatedDate_str'];
     intEngineerId = json['intEngineerId'];
     engineerName = json['engineerName'];
+    strPostCode = json['strPostCode'];
+    regionPatches = json['RegionPatches'];
     patchCode = json['patchCode'];
-    appointmentEventType = json['appointmentEventType']=='InRoute'?'En Route':json['appointmentEventType']=='On Route'?'En Route':json['appointmentEventType'];
+    strBookedBy = json['strBookedBy'];
+    appointmentEventType = json['appointmentEventType'];
+    intTimeSlotId = json['intTimeSlotId'];
+    intAppointmentTypeId = json['intAppointmentTypeId'];
+    intJobTypeId = json['intJobTypeId']; 
+    surveyReceived = json['surveyReceived'];
+    strEmailActionby = json['strEmailActionby'];
+    intjumborequestid = json['jumborequest_id'];
+    intjumboresponseid = json['jumboresponse_id'];
+    
   }
 
   Map<String, dynamic> toJson() {
@@ -118,6 +140,7 @@ class AppTable {
     data['intId'] = this.intId;
     data['strAppointmentType'] = this.strAppointmentType;
     data['strJobType'] = this.strJobType;
+    data['dteBookedDate'] = this.dteBookedDate;
     data['dteBookedDate_str'] = this.dteBookedDateStr;
     data['strBookedTime'] = this.strBookedTime;
     data['strSiteAddress'] = this.strSiteAddress;
@@ -129,7 +152,7 @@ class AppTable {
     data['strBookingReference'] = this.strBookingReference;
     data['strStatus'] = this.strStatus;
     data['strBookingStatusType'] = this.strBookingStatusType;
-    data['dteCreatedDate_str'] = this.dteCreatedDateStr;
+    data['dteCreatedDate'] = this.dteCreatedDate;
     data['intPriority'] = this.intPriority;
     data['intBookedBy'] = this.intBookedBy;
     data['bisCustomerConfirmed'] = this.bisCustomerConfirmed;
@@ -139,18 +162,31 @@ class AppTable {
     data['strBookedSlotType'] = this.strBookedSlotType;
     data['bisIsEmailSendingEnabled'] = this.bisIsEmailSendingEnabled;
     data['bisIsSmsSendingEnabled'] = this.bisIsSmsSendingEnabled;
-    data['strBookingChannel'] = this.strBookingChannel;
-    data['dteClosedAt'] = this.dteClosedAt;
-    data['strCancellationComment'] = this.strCancellationComment;
-    data['strCancellationReason'] = this.strCancellationReason;
     data['strContactName'] = this.strContactName;
-    data['strPostCode'] = this.strPostCode;
     data['strCompanyName'] = this.strCompanyName;
     data['strLogo'] = this.strLogo;
+    data['dteCreatedDate_str'] = this.dteCreatedDateStr;
     data['intEngineerId'] = this.intEngineerId;
     data['engineerName'] = this.engineerName;
+    data['strPostCode'] = this.strPostCode;
+    data['regionPatches'] = this.regionPatches;
     data['patchCode'] = this.patchCode;
+    data['strBookedBy'] = this.strBookedBy;
     data['appointmentEventType'] = this.appointmentEventType;
+    data['intTimeSlotId'] = this.intTimeSlotId;
+    data['intAppointmentTypeId'] = intAppointmentTypeId;
+    data['intJobTypeId'] = intJobTypeId ; 
+    data['surveyReceived'] = surveyReceived;
+    data['strEmailActionby'] = strEmailActionby ;
+    data['jumborequest_id'] = intjumborequestid;
+    data['jumboresponse_id'] = intjumboresponseid;
     return data;
   }
 }
+
+
+// Null strBookingChannel;
+  // Null dteClosedAt;
+  // Null strCancellationComment;
+  // Null strCancellationReason;
+  

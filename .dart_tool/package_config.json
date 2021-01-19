@@ -116,6 +116,12 @@
       "languageVersion": "2.3"
     },
     {
+      "name": "csslib",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/csslib-0.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-0.1.3",
       "packageUri": "lib/",
@@ -177,7 +183,7 @@
     },
     {
       "name": "flutter_cache_manager",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_cache_manager-2.1.0",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_cache_manager-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.6"
     },
@@ -186,6 +192,12 @@
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_google_maps-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.6"
+    },
+    {
+      "name": "flutter_html",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_html-0.9.6",
+      "packageUri": "lib/",
+      "languageVersion": "1.19"
     },
     {
       "name": "flutter_launcher_icons",
@@ -274,6 +286,18 @@
     {
       "name": "google_polyline_algorithm",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_polyline_algorithm-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "html",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.13.4+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "html_unescape",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/html_unescape-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
@@ -387,7 +411,7 @@
     },
     {
       "name": "path_provider_macos",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-0.0.4+4",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-0.0.4+8",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
@@ -500,6 +524,12 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "simple_html_css",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_html_css-2.0.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/src/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -513,13 +543,13 @@
     },
     {
       "name": "sqflite",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.3.1+1",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.3.2+2",
       "packageUri": "lib/",
-      "languageVersion": "2.7"
+      "languageVersion": "2.10"
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite_common-1.0.2+1",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite_common-1.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     },
@@ -614,6 +644,12 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "utf",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/utf-0.9.0+5",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "uuid",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/uuid-2.2.2",
       "packageUri": "lib/",
@@ -656,7 +692,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-01-19T12:15:25.056840Z",
+  "generated": "2021-01-19T12:30:33.158008Z",
   "generator": "pub",
   "generatorVersion": "2.10.4"
 }

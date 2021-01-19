@@ -57,7 +57,7 @@ class Appointment {
   String dteCreatedDateStr;
   int intEngineerId;
   String engineerName;
-  var strPostCode;
+  String strPostCode;
   String regionPatches;
   String patchCode;
   String strBookedBy;
@@ -66,7 +66,9 @@ class Appointment {
   int intAppointmentTypeId;
   int intJobTypeId;
   String surveyReceived;
-  var strEmailActionby;
+  String strEmailActionby;
+  int intjumborequestid;
+  int intjumboresponseid;
 
   Appointment(
       {this.intId,
@@ -109,7 +111,9 @@ class Appointment {
         this.intAppointmentTypeId,
         this.intJobTypeId,
         this.surveyReceived,
-        this.strEmailActionby});
+        this.strEmailActionby,
+        this.intjumborequestid,
+        this.intjumboresponseid});
 
   Appointment.fromJson(Map<String, dynamic> json) {
     intId = json['intId'];
@@ -147,12 +151,15 @@ class Appointment {
     regionPatches = json['regionPatches'];
     patchCode = json['patchCode'];
     strBookedBy = json['strBookedBy'];
-    appointmentEventType = json['appointmentEventType']=='OnRoute'?'En Route': json['appointmentEventType']=='InRoute'?'En Route': json['appointmentEventType'];
+    appointmentEventType = json['appointmentEventType'];
     intTimeSlotId = json['intTimeSlotId'];
     intAppointmentTypeId = json['intAppointmentTypeId'];
-    intJobTypeId = json['intJobTypeId'];
+    intJobTypeId = json['intJobTypeId']; 
     surveyReceived = json['surveyReceived'];
     strEmailActionby = json['strEmailActionby'];
+    intjumborequestid = json['jumborequest_id'];
+    intjumboresponseid = json['jumboresponse_id'];
+    
   }
 
   Map<String, dynamic> toJson() {
@@ -194,14 +201,15 @@ class Appointment {
     data['strBookedBy'] = this.strBookedBy;
     data['appointmentEventType'] = this.appointmentEventType;
     data['intTimeSlotId'] = this.intTimeSlotId;
-    data['intAppointmentTypeId'] = this.intAppointmentTypeId;
-    data['intJobTypeId'] = this.intJobTypeId;
-    data['surveyReceived'] = this.surveyReceived;
-    data['strEmailActionby'] = this.strEmailActionby;
+    data['intAppointmentTypeId'] = intAppointmentTypeId;
+    data['intJobTypeId'] = intJobTypeId ; 
+    data['surveyReceived'] = surveyReceived;
+    data['strEmailActionby'] = strEmailActionby ;
+    data['jumborequest_id'] = intjumborequestid;
+    data['jumboresponse_id'] = intjumboresponseid;
     return data;
   }
 }
-
 class Eventdata {
   String appointmentEventType;
   String dteCapturedAt;

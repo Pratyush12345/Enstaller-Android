@@ -6,15 +6,21 @@ import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/home_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/widget/homescreen/view_appointment_list_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'home_page_list_widget.dart';
 import 'homepage_expandsion_widget.dart';
 
 class ViewSingleDateWidget extends StatelessWidget {
   final String dateString;
-  ViewSingleDateWidget({this.dateString});
+  final int day;
+  final List<Appointment> appointmentList;
+  ViewSingleDateWidget({this.dateString, this.day, this.appointmentList});
   @override
   Widget build(BuildContext context) {
+    print("&&&&&&&&&&&&&&&&&&&&98888888");
+      print(appointmentList.length);
+      print("&&&&&&&&&&&&&&&&&&&&7777777777");
+      
     return HomePageExpansionWidget(
 
       showSecondWidget:true ,
@@ -27,7 +33,7 @@ class ViewSingleDateWidget extends StatelessWidget {
       secondWidget:  Container(
 //                                color:  AppColors.appbarColor,
         child: BaseView<HomeScreenViewModel>(
-          onModelReady: (model)=>model.getTable(dateString),
+          onModelReady: (model)=>model.getTable(day, appointmentList),
           builder: (context,secondModel,child){
             if(secondModel.state==ViewState.Busy){
               return AppConstants.circulerProgressIndicator();

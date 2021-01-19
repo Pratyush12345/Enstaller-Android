@@ -171,30 +171,30 @@ class _DetailScreenState extends State<DetailScreen> {
                     child: Column(
                       children: [
                         _engineerInfo(model),
-                        model.appointmentDetails.appointment
-                                    .appointmentEventType !=
-                                AppStrings.completed
-                            ? Padding(
-                                padding: SizeConfig.sidepadding,
-                                child: AppButton(
-                                  height: 40,
-                                  radius: 15,
-                                  color: AppColors.green,
-                                  textStyle:
-                                      TextStyle(color: AppColors.whiteColor),
-                                  buttonText: AppStrings.updateStatusC,
-                                  onTap: () {
-                                    AppConstants.showAppDialog(
-                                        context: context,
-                                        child: UpdateStatusDialogWidget(
-                                          model: model,
-                                          appointmentID:
-                                              widget.arguments.appointmentID,
-                                        ));
-                                  },
-                                ),
-                              )
-                            : Container(),
+                        // model.appointmentDetails.appointment
+                        //             .appointmentEventType !=
+                        //         AppStrings.completed
+                        //     ? Padding(
+                        //         padding: SizeConfig.sidepadding,
+                        //         child: AppButton(
+                        //           height: 40,
+                        //           radius: 15,
+                        //           color: AppColors.green,
+                        //           textStyle:
+                        //               TextStyle(color: AppColors.whiteColor),
+                        //           buttonText: AppStrings.updateStatusC,
+                        //           onTap: () {
+                        //             AppConstants.showAppDialog(
+                        //                 context: context,
+                        //                 child: UpdateStatusDialogWidget(
+                        //                   model: model,
+                        //                   appointmentID:
+                        //                       widget.arguments.appointmentID,
+                        //                 ));
+                        //           },
+                        //         ),
+                        //       )
+                        //     : Container(),
                         _surveyInfo(model),
                         Padding(
                           padding: SizeConfig.padding,
@@ -424,11 +424,15 @@ class _DetailScreenState extends State<DetailScreen> {
   int _checkbuttonindex(DetailsScreenViewModel model) {
     int id;
     _appointmentandjobtype.forEach((key, value) {
+      
       if (key
-          .contains(model.appointmentDetails.appointment.strAppointmentType)) {
-        id = value[model.appointmentDetails.appointment.strJobType];
+          .contains(model.appointmentDetails.appointment.strAppointmentType.trim())) {
+            
+        id = value[model.appointmentDetails.appointment.strJobType.trim()];
+        
       }
     });
+    
     return id;
   }
 

@@ -47,7 +47,7 @@ class ApiService extends BaseApi{
     },loginCredential.toJson());
   }
   Future <dynamic> getAppointmentList(String userID){
-   return getRequestWithParam(ApiUrls.getAppointMentListUrl,
+   return getRequestWithParam(ApiUrls.getappointmenttodaytomorrow,
            (response) {
      print(response.body);
      return (json.decode(response.body) as List).map((e) => Appointment.fromJson(e)).toList();
