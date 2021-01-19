@@ -36,6 +36,12 @@ class Appointment {
   String strBookedBy;
   String appointmentEventType;
   int intTimeSlotId;
+  int intAppointmentTypeId;
+  int intJobTypeId;
+  String surveyReceived;
+  String strEmailActionby;
+  int intjumborequestid;
+  int intjumboresponseid;
 
   Appointment(
       {this.intId,
@@ -74,7 +80,13 @@ class Appointment {
         this.patchCode,
         this.strBookedBy,
         this.appointmentEventType,
-        this.intTimeSlotId});
+        this.intTimeSlotId,
+        this.intAppointmentTypeId,
+        this.intJobTypeId,
+        this.surveyReceived,
+        this.strEmailActionby,
+        this.intjumborequestid,
+        this.intjumboresponseid});
 
   Appointment.fromJson(Map<String, dynamic> json) {
     intId = json['intId'];
@@ -114,6 +126,13 @@ class Appointment {
     strBookedBy = json['strBookedBy'];
     appointmentEventType = json['AppointmentEventType'];
     intTimeSlotId = json['intTimeSlotId'];
+    intAppointmentTypeId = json['intAppointmentTypeId'];
+    intJobTypeId = json['intJobTypeId']; 
+    surveyReceived = json['surveyReceived'];
+    strEmailActionby = json['strEmailActionby'];
+    intjumborequestid = json['jumborequest_id'];
+    intjumboresponseid = json['jumboresponse_id'];
+    
   }
 
   Map<String, dynamic> toJson() {
@@ -155,6 +174,12 @@ class Appointment {
     data['strBookedBy'] = this.strBookedBy;
     data['AppointmentEventType'] = this.appointmentEventType;
     data['intTimeSlotId'] = this.intTimeSlotId;
+    data['intAppointmentTypeId'] = intAppointmentTypeId;
+    data['intJobTypeId'] = intJobTypeId ; 
+    data['surveyReceived'] = surveyReceived;
+    data['strEmailActionby'] = strEmailActionby ;
+    data['jumborequest_id'] = intjumborequestid;
+    data['jumboresponse_id'] = intjumboresponseid;
     return data;
   }
 }

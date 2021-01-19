@@ -2,6 +2,7 @@ class ApiUrls{
   static String getAppointmentCode = "appointments/UpdateAppointmentStatus";
   static String logInUrl='users/login';
   static String getAppointMentListUrl='appointments/GetAppointmentByEngineerId';
+  static String getappointmenttodaytomorrow = 'appointments/GetAppointmentByEngineerIdTodayTomorrow';
   static String getActivityLogsAppointmentIdUrl='appointments/GetActivityLogsAppointmentId';
   static String getAppointmentCommentsByAppointmentUrl='AppointmentComments/GetAppointmentCommentsByAppointment';
   static String saveAppointmentComments='AppointmentComments/SaveAppointmentComments';

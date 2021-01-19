@@ -9,6 +9,7 @@ import 'package:enstaller/core/model/email_notification_model.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/email_notification_viewmodel.dart';
 import 'package:enstaller/ui/screen/detail_screen.dart';
+import 'package:enstaller/ui/screen/email_notification_view.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
@@ -120,10 +121,6 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
                       },
                     ),
                   ) : Center(child:Text(AppStrings.noDataFound))
-
-
-
-
               ),
             ));
       },
@@ -177,11 +174,7 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
             color: AppColors.green,
             textStyle: TextStyle(color: AppColors.whiteColor,fontWeight: FontWeight.bold),
             onTap: (){
-              // Navigator.of(context).pushNamed(DetailScreen.routeName,arguments:DetailScreenArguments(
-              //     appointmentID:  appointment.intId.toString(), 
-              //     strBookingReference:  appointment.strBookingReference,
-              //     customerID:   appointment.intCustomerId.toString()
-              // ));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EmailView(html:appointment?.strMailContent ?? "" ,)));
             },
           ),
         ),
