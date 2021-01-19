@@ -54,7 +54,7 @@ abstract class BaseApi {
   Future<dynamic> postRequestList(String path, Function(Response) success, [var body]) async {
     debugPrint(body);
 
-    var response = await http.post('https://enstallapi.enpaas.com/api/SurveyQuestionAnswer/AddSurveyQuestionAnswerDetail',
+    var response = await http.post('${BaseApi._ENDPOINT}/$path',
         // ignore: deprecated_member_use
         headers: {HttpHeaders.CONTENT_TYPE: "application/json"},
         body: body);

@@ -44,6 +44,7 @@ class OrderScreenViewModel extends BaseModel {
               'value': contractOrder.intId.toString()
             })
         .toList();
+    addOrderItem();
     setState(ViewState.Idle);
   }
 

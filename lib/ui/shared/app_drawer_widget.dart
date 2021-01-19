@@ -14,6 +14,7 @@ import 'package:enstaller/ui/screen/sms_notification.dart';
 import 'package:enstaller/ui/screen/document.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:enstaller/ui/screen/profile_screen.dart';
+import 'package:enstaller/ui/screen/stock_check_request_screen.dart';
 import 'package:enstaller/ui/screen/today_appointments.dart';
 import 'package:enstaller/ui/screen/update_status_screen.dart';
 import 'package:enstaller/ui/screen/widget/drawer_row_widget.dart';
@@ -133,6 +134,14 @@ class AppDrawerWidget extends StatelessWidget {
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => OrderScreen()));
+                },
+              ),
+              DrawerRowWidget(
+                title: 'Stock',
+                assetPath: ImageFile.appointment,
+                onTap: (){
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => StockCheckRequestScreen()));
                 },
               ),
               DrawerRowWidget(

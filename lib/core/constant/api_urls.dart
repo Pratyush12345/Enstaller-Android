@@ -20,8 +20,15 @@ class ApiUrls{
   static String getEmailTemplateSenderHistoryUserWise = 'EmailTemplateSenderHistory/GetEmailTemplateSenderHistoryUserWise';
   static String getSMSClickSendNotificationUserWise = 'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
   static String getMAICheckProcess = 'DCCMAI/GetMAICheckProcess';
+  //order
   static String getItemsForOrder  = 'Order/BindUserContractWiseItemModel';
   static String getContractsForOrder  = 'Location/GetStockContractList';
   static String saveOrder='Order/InsertUpdateDeleteOrder';
   static String saveOrderLine = 'Order/InsertUpdateDeleteOrderLineItems';
+  //stock check
+  static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
+  static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';
+  static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
+  static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
+
 }

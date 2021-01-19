@@ -10,6 +10,7 @@ import 'package:enstaller/core/model/comment_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
 import 'package:enstaller/core/model/save_order.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
+import 'package:enstaller/core/model/serial_model.dart';
 import 'package:enstaller/core/model/sms_notification_model.dart';
 import 'package:enstaller/core/model/email_notification_model.dart';
 import 'package:enstaller/core/model/customer_details.dart';
@@ -22,6 +23,8 @@ import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/model/send/appointmentStatusUpdateCredential.dart';
 import 'package:enstaller/core/model/send/comment_credential.dart';
+import 'package:enstaller/core/model/stock_check_model.dart';
+import 'package:enstaller/core/model/stock_request_reply_model.dart';
 import 'package:enstaller/core/model/update_status_model.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/service/base_api.dart';
@@ -279,7 +282,7 @@ class ApiService extends BaseApi{
           print(response.body);
           return (json.decode(response.body) as List).map((e) => ItemOrder.fromJson(e)).toList();
 
-        }, 'intUserId=20036') ;
+        }, 'intUserId=$userID') ;
   }
 
   Future <dynamic> getContractsForOrder(String userID){
@@ -329,4 +332,62 @@ class ApiService extends BaseApi{
       }
     },saveOrderLine.toJson());
   }
+
+  Future <dynamic> getStockCheckRequestList(String intEngineerId){
+    return getRequestWithParam(ApiUrls.getStockCheckRequestList,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => StockCheckModel.fromJson(e)).toList();
+
+        }, 'intEngineerId=$intEngineerId') ;
+  }
+
+  Future <dynamic> getSerialsByRequestId(String intRequestId){
+    return getRequestWithParam(ApiUrls.getSerialsByRequestId,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => SerialNoModel.fromJson(e)).toList();
+
+        }, 'intRequestId=$intRequestId') ;
+  }
+
+  Future<dynamic> validateSerialsForReply(List<SerialNoModel> list){
+    final Map<String, dynamic> map = new Map<String, dynamic>();
+    map['listSerialModel'] = list.map((e) => e.toJson()).toList();
+    print("map is: $map");
+    return postRequestList(ApiUrls.validateSerialsForReply, (r) {
+      final response = json.decode(r.body);
+      print(response);
+      if (response != null) {
+        return (response as List).map((e) => SerialNoModel.fromJson1(e)).toList() ;
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: AppStrings.UNABLE_TO_VALIDATE
+        );
+      }
+    },json.encode(map));
+  }
+
+  Future<dynamic> saveEngineerReply(StockRequestReplyModel stockRequestReplyModel){
+
+    return postRequestList(ApiUrls.saveEngineerReply, (r) {
+      final response = json.decode(r.body);
+      print(response);
+      if (response) {
+        return ResponseModel(
+            statusCode: 1,
+            response: response.toString()
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: AppStrings.UNABLE_TO_SAVE
+        );
+      }
+    },json.encode(stockRequestReplyModel.toJson()));
+  }
+
+
+
 }
