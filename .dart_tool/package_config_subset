@@ -126,10 +126,6 @@ flutter_google_maps
 2.6
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_google_maps-4.0.0/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_google_maps-4.0.0/lib/
-flutter_html
-1.19
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_html-0.9.6/
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_html-0.9.6/lib/
 flutter_launcher_icons
 2.2
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.7.4/
@@ -186,10 +182,6 @@ html
 2.0
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.13.4+2/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.13.4+2/lib/
-html_unescape
-2.1
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/html_unescape-1.0.2/
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/html_unescape-1.0.2/lib/
 http
 2.4
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.12.2/
@@ -342,10 +334,6 @@ shared_preferences_windows
 2.1
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-0.0.1+1/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-0.0.1+1/lib/
-simple_html_css
-2.1
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_html_css-2.0.0+3/
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_html_css-2.0.0+3/lib/
 source_span
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0-nullsafety.4/

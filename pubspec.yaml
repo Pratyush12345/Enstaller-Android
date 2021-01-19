@@ -55,9 +55,7 @@ dependencies:
   select_form_field: ^1.1.0
   path_provider:
   flutter_pdfview:
-  flutter_html:
   html:  
-  simple_html_css:
 
 
 
