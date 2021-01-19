@@ -483,6 +483,12 @@ class SurveyScreenViewModel extends BaseModel {
         preferences.setStringList("listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
         preferences.setStringList("key${selected.toString()}+$appointmentid", _list);
         setState(ViewState.Idle);
+        if (selected < 2) {
+            selected++;
+            enableIndex++;
+          }else {
+            selected=-1;
+          }
         AppConstants.showFailToast(context, "Submitted Offline");
        
       }
