@@ -8,7 +8,7 @@ class SaveOrderLine {
   int intContractId;
 
   SaveOrderLine(
-      {this.intId,
+      {this.intId = 0,
       this.intOrderId,
       this.intCreatedBy,
       this.bisAlive,
@@ -34,6 +34,7 @@ class SaveOrderLine {
     data["decQty"] = this.decQty.toString();
     data["intContractId"] = this.intContractId.toString();
     data["intItemId"] = this.intItemId.toString();
+    data['intId'] = this.intId.toString();
     return data;
   }
 }

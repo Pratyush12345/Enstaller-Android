@@ -15,7 +15,7 @@ class SaveOrder{
 
 
   SaveOrder(
-      {this.intId,
+      {this.intId = 0,
       this.intUserId,
       this.bisBulkUpload,
       this.intCreatedBy,
@@ -48,6 +48,7 @@ class SaveOrder{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["intUserId"] = this.intUserId.toString();
+    data["intId"] = this.intId.toString();
     data["bisBulkUpload"] = this.bisBulkUpload.toString();
     data["intCreatedBy"] = this.intCreatedBy.toString();
     data["dteCollectionDate"] = this.dteCollectionDate.toString();

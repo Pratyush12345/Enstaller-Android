@@ -19,6 +19,7 @@ class OrderScreenViewModel extends BaseModel {
   List<Map<String, dynamic>> itemList = [];
   List<Map<String, dynamic>> contractList = [];
   bool isSaving = false;
+  int intOrderId;
 
   ApiService _apiService = ApiService();
   List<OrderItem> orderItems = [];
@@ -90,7 +91,7 @@ class OrderScreenViewModel extends BaseModel {
     });
 
     if (isValid) {
-      for(OrderItem element in orderItems){
+      OrderItem element = orderItems[0];
         UserModel user = await Prefs.getUser();
         final SaveOrder saveOrder = SaveOrder(
             intUserId: int.parse(user.id),
@@ -112,33 +113,39 @@ class OrderScreenViewModel extends BaseModel {
         try {
           ResponseModel responseModel = await _apiService.saveOrder(saveOrder);
           if (responseModel.statusCode == 1) {
-            final intOrderId = int.parse(responseModel.response);
+            intOrderId = int.parse(responseModel.response);
             print('order id: ${responseModel.response}');
 
-            final SaveOrderLine saveOrderLine = SaveOrderLine(
-                intCreatedBy: int.parse(user.id),
-                intOrderId: intOrderId,
-                intItemId: element.saveOrderLine.intItemId,
-                intContractId: element.saveOrderLine.intContractId,
-                decQty: element.saveOrderLine.decQty,
-                bisAlive: true);
-            //post saveOrderOnline
-            try {
-              ResponseModel responseModelLine =
-                  await _apiService.saveOrderLine(saveOrderLine);
-              if (responseModelLine.statusCode == 1 &&
-                  responseModelLine.response.toLowerCase() == 'true') {
-                //saved successfully
-              } else {
-                AppConstants.showFailToast(context, responseModel.response);
+
+            for(OrderItem orderItem in orderItems){
+
+              final SaveOrderLine saveOrderLine = SaveOrderLine(
+                  intCreatedBy: int.parse(user.id),
+                  intOrderId: intOrderId,
+                  intItemId: orderItem.saveOrderLine.intItemId,
+                  intContractId: orderItem.saveOrderLine.intContractId,
+                  decQty: orderItem.saveOrderLine.decQty,
+                  bisAlive: true);
+              //post saveOrderOnline
+              try {
+                ResponseModel responseModelLine =
+                await _apiService.saveOrderLine(saveOrderLine);
+                if (responseModelLine.statusCode == 1 &&
+                    responseModelLine.response.toLowerCase() == 'true') {
+                  //saved successfully
+                } else {
+                  AppConstants.showFailToast(context, responseModel.response);
+                  setState(ViewState.Idle);
+                  return;
+                }
+              } catch (e) {
+                AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
                 setState(ViewState.Idle);
                 return;
               }
-            } catch (e) {
-              AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
-              setState(ViewState.Idle);
-              return;
+
             }
+
           } else {
             AppConstants.showFailToast(context, responseModel.response);
             setState(ViewState.Idle);
@@ -149,7 +156,7 @@ class OrderScreenViewModel extends BaseModel {
           setState(ViewState.Idle);
           return;
         }
-      }
+
     }else{
       isSaving= false;
       setState(ViewState.Idle);
