@@ -4,6 +4,7 @@ class AppStrings {
   static const String NO_DATA_FOUND = 'NO_DATA_FOUND';
   static const appTitle='enstallers';
   static const abort_text = "Abort Appointment";
+  static const abort_reason = "Select Abort Reason";
   static const logInTitle='Sign in to your account';
   static const userName='Username';
   static const password='Password';
@@ -132,7 +133,20 @@ class AppStrings {
   static const SELECT = 'Select';
   static const QUANTITY = 'Quantity';
   static const UNABLE_TO_SAVE = 'Unable to save';
+  static const UNABLE_TO_VALIDATE = 'Unable to validate';
   static const SAVED_SUCCESSFULLY = 'Saved successfully';
+  static const STOCK_REQUEST_CHECK = 'Stock Request Check';
+  static const MOP_USER = 'MOP User';
+  static const MOP_COMMENTS = 'MOP Comments';
+  static const ENGINEER_REPLY_COMMENTS = 'Engineer Reply Comments';
+  static const CURRENT_STATUS = 'Current Status';
+  static const REQUESTED_DATE = 'Requested Date';
+  static const VIEW_REPLY = 'View Reply';
+  static const GIVE_REPLY = 'Give Reply';
+  static const SERIAL_NUMBERS = 'SERIAL NUMBERS';
+  static const REPLY_TO_REQUEST = 'Reply To Request';
+  static const SEND = 'SEND';
+
   //email Notification
   static const Date ='Date';
   static const appointmentNo='Appointment No';

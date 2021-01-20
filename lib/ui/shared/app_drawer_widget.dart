@@ -14,6 +14,7 @@ import 'package:enstaller/ui/screen/sms_notification.dart';
 import 'package:enstaller/ui/screen/document.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:enstaller/ui/screen/profile_screen.dart';
+import 'package:enstaller/ui/screen/stock_check_request_screen.dart';
 import 'package:enstaller/ui/screen/today_appointments.dart';
 import 'package:enstaller/ui/screen/update_status_screen.dart';
 import 'package:enstaller/ui/screen/widget/drawer_row_widget.dart';
@@ -127,7 +128,6 @@ class AppDrawerWidget extends StatelessWidget {
                       builder: (context) => DocumentScreen()));
                 },
               ),
-
               DrawerRowWidget(
                 title: 'Order',
                 assetPath: ImageFile.appointment,
@@ -136,7 +136,14 @@ class AppDrawerWidget extends StatelessWidget {
                       builder: (context) => OrderScreen()));
                 },
               ),
-             
+              DrawerRowWidget(
+                title: 'Stock',
+                assetPath: ImageFile.appointment,
+                onTap: (){
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => StockCheckRequestScreen()));
+                },
+              ),
               // DrawerRowWidget(
               //   title: 'Update Status',
               //   assetPath: ImageFile.updateStatus,
@@ -144,7 +151,6 @@ class AppDrawerWidget extends StatelessWidget {
               //     Navigator.of(context).pushNamed(UpdateStatusScreen.routeName);
               //   },
               // ),
-
               DrawerRowWidget(
                 title: 'My Profile',
                 assetPath: ImageFile.myProfile,

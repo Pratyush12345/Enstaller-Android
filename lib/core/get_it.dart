@@ -11,6 +11,8 @@ import 'package:enstaller/core/viewmodel/home_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/login_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/order_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/show_appointmentbydate_viewmodel.dart';
+import 'package:enstaller/core/viewmodel/stock_chcek_request_viewmodel.dart';
+import 'package:enstaller/core/viewmodel/stock_request_reply_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/survey_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/today_appointment_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/update_status_viewmodel.dart';
@@ -48,6 +50,8 @@ void setupLocator() {
   getIt.registerFactory(() => EmailNotificationViewModel());
   getIt.registerFactory(() => SMSNotificationViewModel());
   getIt.registerFactory(() => OrderScreenViewModel());
+  getIt.registerFactory(() => StockCheckRequestViewModel());
+  getIt.registerFactory(() => StockRequestReplyViewModel());
   
 
 

@@ -3,6 +3,8 @@ class ApiUrls{
   static String logInUrl='users/login';
   static String getAppointMentListUrl='appointments/GetAppointmentByEngineerId';
   static String getappointmenttodaytomorrow = 'appointments/GetAppointmentByEngineerIdTodayTomorrow';
+  static String getReasonUserList = 'ReasonUserMap/GetReasonUserList';
+  static String updateAbortAppointment = 'appointments/UpdateAbortAppointment';
   static String getActivityLogsAppointmentIdUrl='appointments/GetActivityLogsAppointmentId';
   static String getAppointmentCommentsByAppointmentUrl='AppointmentComments/GetAppointmentCommentsByAppointment';
   static String saveAppointmentComments='AppointmentComments/SaveAppointmentComments';
@@ -21,8 +23,15 @@ class ApiUrls{
   static String getEmailTemplateSenderHistoryUserWise = 'EmailTemplateSenderHistory/GetEmailTemplateSenderHistoryUserWise';
   static String getSMSClickSendNotificationUserWise = 'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
   static String getMAICheckProcess = 'DCCMAI/GetMAICheckProcess';
+  //order
   static String getItemsForOrder  = 'Order/BindUserContractWiseItemModel';
   static String getContractsForOrder  = 'Location/GetStockContractList';
   static String saveOrder='Order/InsertUpdateDeleteOrder';
   static String saveOrderLine = 'Order/InsertUpdateDeleteOrderLineItems';
+  //stock check
+  static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
+  static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';
+  static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
+  static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
+
 }
