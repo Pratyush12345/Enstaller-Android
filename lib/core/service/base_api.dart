@@ -39,7 +39,7 @@ abstract class BaseApi {
 
   @protected
   Future<dynamic> postRequest(String path, Function(Response) success, [Map body]) async {
-    print(body);
+    //print(body);
     return _processResponse(
 
         await client.post(

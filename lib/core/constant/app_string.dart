@@ -4,6 +4,7 @@ class AppStrings {
   static const String NO_DATA_FOUND = 'NO_DATA_FOUND';
   static const appTitle='enstallers';
   static const abort_text = "Abort Appointment";
+  static const abort_reason = "Select Abort Reason";
   static const logInTitle='Sign in to your account';
   static const userName='Username';
   static const password='Password';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:enstaller/core/constant/api_urls.dart';
 import 'package:enstaller/core/constant/app_string.dart';
+import 'package:enstaller/core/model/abort_appointment_model.dart';
 import 'package:enstaller/core/model/activity_details_model.dart';
 import 'package:enstaller/core/model/app_table.dart';
 import 'package:enstaller/core/model/contract_order_model.dart';
@@ -54,9 +55,17 @@ class ApiService extends BaseApi{
 
    }, 'id=$userID') ;
   }
-  Future <dynamic> getEmailNotificationList(String userID){
-    
-    
+
+  Future <dynamic> getAbortAppointmentList(String userID){
+   return getRequestWithParam(ApiUrls.getReasonUserList,
+           (response) {
+     print(response.body);
+     return (json.decode(response.body) as List).map((e) => AbortAppointmentModel.fromJson(e)).toList();
+
+   }, 'UserId=$userID&type=Abort') ;
+  }
+
+  Future <dynamic> getEmailNotificationList(String userID){ 
    return getRequestWithParam(ApiUrls.getEmailTemplateSenderHistoryUserWise,
            (response) {
      print(response.body);
@@ -160,6 +169,25 @@ class ApiService extends BaseApi{
   Future<dynamic> updateAppointmentStatus(AppointmentStatusUpdateCredentials credentials){
     print(credentials.toJson());
     return postRequest(ApiUrls.updateAppointmentStatusUrl, (r) {
+      final response = json.decode(r.body);
+      if (response) {
+        
+        return ResponseModel(
+            statusCode: 1,
+            response: 'Successfully Updated'
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: 'Please try again'
+        );
+      }
+    },credentials.toJson());
+  }
+  Future<dynamic> confirmAbortAppointment(ConfirmAbortAppointment credentials){
+    print(credentials.toJson());
+
+    return postRequest(ApiUrls.updateAbortAppointment, (r) {
       final response = json.decode(r.body);
       if (response) {
         
