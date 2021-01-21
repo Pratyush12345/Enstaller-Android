@@ -9,6 +9,7 @@ import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/comment_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
+import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/model/save_order.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
 import 'package:enstaller/core/model/serial_model.dart';
@@ -412,6 +413,16 @@ class ApiService extends BaseApi{
         );
       }
     },json.encode(stockRequestReplyModel.toJson()));
+  }
+
+  Future <dynamic> getOrderListByEngId(String engId){
+    print(engId);
+    return getRequestWithParam(ApiUrls.getOrderListByEngId,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => OrderModel.fromJson(e)).toList();
+
+        }, 'intEngId=$engId') ;
   }
 
 

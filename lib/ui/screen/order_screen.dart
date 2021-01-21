@@ -4,11 +4,15 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/order_screen_viewmodel.dart';
+import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
+
+import 'add_order_screen.dart';
 
 class OrderScreen extends StatefulWidget {
   @override
@@ -17,18 +21,17 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
 
-
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return BaseView<OrderScreenViewModel>(
-      onModelReady: (model)=>model.initializeData(),
-      builder: (context,model,child){
+      onModelReady: (model) => model.initializeData(),
+      builder: (context, model, child) {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
             drawer: Drawer(
-              child:AppDrawerWidget(),
+              child: AppDrawerWidget(),
             ),
             appBar: AppBar(
               backgroundColor: AppColors.green,
@@ -39,70 +42,149 @@ class _OrderScreenState extends State<OrderScreen> {
                       _scaffoldKey.currentState.openDrawer();
                     },
                     child: Image.asset(
-                      ImageFile.menuIcon,color: AppColors.whiteColor,
+                      ImageFile.menuIcon,
+                      color: AppColors.whiteColor,
                     )),
               ),
-              title: Text("${AppStrings.ADD_ORDER}",style: TextStyle(
-                  color: AppColors.whiteColor
-              ),),
+              title: Text(
+                "${AppStrings.ORDERS}",
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
               centerTitle: true,
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(ImageFile.notification,color: AppColors.whiteColor,),
+                  child: GestureDetector(
+                    child: Text(
+                      AppStrings.ADD,
+                      style: TextStyle(
+                          color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                    ),
+                    onTap: (){
+                      Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (context) => AddOrderScreen()));
+                    },
+                  )
                 ),
               ],
             ),
-            body: model.state==ViewState.Busy && !model.isSaving?AppConstants.circulerProgressIndicator():
-            SingleChildScrollView(
-              child: Padding(
-                padding: SizeConfig.verticalBigPadding*2,
-                child: Column(
-                  children: [
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: model.orderItems.length  ,itemBuilder: (context, index){
-                      return model.orderItems[index];
-                    }),
-                    SizeConfig.verticalSpaceBigMedium(),
-                    Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: AppButton(
-                        height: 40,
-                        radius: 15,
-                        color: AppColors.green,
-                        textStyle: TextStyle(color: AppColors.whiteColor),
-                        buttonText: AppStrings.ADD_LINE_ITEM,
-                        onTap: (){
-                         //
-
-                          model.addOrderItem();
-                        },
-                      ),
+            body: model.state == ViewState.Busy
+                ? AppConstants.circulerProgressIndicator()
+                : SingleChildScrollView(
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height),
+                  child: (model.list.isNotEmpty)
+                      ? Padding(
+                    padding:
+                    SizeConfig.padding.copyWith(bottom: 100),
+                    child: ListView.builder(
+                      itemCount: model.list.length,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: SizeConfig.verticalC13Padding,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors
+                                    .appointmentBackGroundColor,
+                                borderRadius:
+                                BorderRadius.circular(10)),
+                            child: Column(
+                              children: [
+                                _orderModelWidget(
+                                    model.list[i], model)
+//                                Divider(
+//                                  color: AppColors.darkGrayColor,
+//                                  thickness: 1.0,
+//                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    SizeConfig.verticalSpace(12),
-                    model.state==ViewState.Busy && model.isSaving?AppConstants.circulerProgressIndicator():Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: AppButton(
-                        height: 40,
-                        radius: 15,
-                        color: AppColors.green,
-                        textStyle: TextStyle(color: AppColors.whiteColor),
-                        buttonText: AppStrings.save,
-                        onTap: (){
-                          //
-                          model.onSave(context);
-                        },
-                      ),
-                    )
-
-                  ],
-                ),
-              ),
-
+                  )
+                      : Center(child: Text(AppStrings.noDataFound))),
             ));
       },
+    );
+  }
+
+  // engineer info
+  Widget _orderModelWidget(
+      OrderModel orderModel, OrderScreenViewModel model) {
+    return Column(
+      children: [
+        AppointmentDataRow(
+          firstText: AppStrings.REFERENCE,
+          secondText: orderModel?.strRefrence ?? "",
+        ),
+        AppointmentDataRow(
+          firstText: AppStrings.status,
+          secondText: orderModel?.strStatus ?? "",
+        ),
+        AppointmentDataRow(
+          firstText: AppStrings.WAREHOUSE,
+          secondText: orderModel?.strWarehouseName ?? "",
+        ),
+        AppointmentDataRow(
+          firstText: AppStrings.CREATED_DATE,
+          secondText: orderModel?.createdDate ?? "",
+        ),
+
+        ClipRRect(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
+          child: Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  buttonText: AppStrings.DETAILS,
+                  color: AppColors.green,
+                  textStyle: TextStyle(
+                      color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                  onTap: () {
+
+                    // Navigator.of(context).push(new MaterialPageRoute(
+                    //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
+                    //
+                  },
+                ),
+              ),
+              SizeConfig.horizontalSpace(2),
+              Expanded(
+                child: AppButton(
+                  buttonText: AppStrings.edit,
+                  color: AppColors.green,
+                  textStyle: TextStyle(
+                      color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                  onTap: () {
+
+                    // Navigator.of(context).push(new MaterialPageRoute(
+                    //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
+                    //
+                  },
+                ),
+              ),
+              SizeConfig.horizontalSpace(2),
+              Expanded(
+                child: AppButton(
+                  buttonText: AppStrings.DELETE,
+                  color: AppColors.green,
+                  textStyle: TextStyle(
+                      color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                  onTap: () {
+
+                    // Navigator.of(context).push(new MaterialPageRoute(
+                    //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
+                    //
+                  },
+                ),
+              ),
+            ],
+          )
+        ),
+      ],
     );
   }
 }
