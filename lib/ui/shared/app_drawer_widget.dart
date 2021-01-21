@@ -9,6 +9,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
 import 'package:enstaller/ui/screen/email_notification.dart';
+import 'package:enstaller/ui/screen/add_order_screen.dart';
 import 'package:enstaller/ui/screen/order_screen.dart';
 import 'package:enstaller/ui/screen/sms_notification.dart';
 import 'package:enstaller/ui/screen/document.dart';

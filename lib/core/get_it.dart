@@ -9,6 +9,7 @@ import 'package:enstaller/core/viewmodel/documnet_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/home_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/login_viewmodel.dart';
+import 'package:enstaller/core/viewmodel/add_order_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/order_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/show_appointmentbydate_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/stock_chcek_request_viewmodel.dart';
@@ -17,7 +18,7 @@ import 'package:enstaller/core/viewmodel/survey_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/today_appointment_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/update_status_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/sms_notification_viewmodel.dart';
-import 'package:enstaller/ui/screen/order_screen.dart';
+import 'package:enstaller/ui/screen/add_order_screen.dart';
 import 'package:enstaller/ui/screen/widget/abort_appointment_widget.dart';
 import 'package:get_it/get_it.dart';
 
@@ -49,9 +50,10 @@ void setupLocator() {
   getIt.registerFactory(() => DocumnetViewModel());
   getIt.registerFactory(() => EmailNotificationViewModel());
   getIt.registerFactory(() => SMSNotificationViewModel());
-  getIt.registerFactory(() => OrderScreenViewModel());
+  getIt.registerFactory(() => AddOrderScreenViewModel());
   getIt.registerFactory(() => StockCheckRequestViewModel());
   getIt.registerFactory(() => StockRequestReplyViewModel());
+  getIt.registerFactory(() => OrderScreenViewModel());
   
 
 

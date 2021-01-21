@@ -35,6 +35,8 @@ class AppStrings {
   static const DOCUMNETS = 'DOCUMENTS';
   static const APPOINTMENT_DETAILS='APPOINTMENT DETAILS';
   static const ADD_ORDER='ADD ORDER';
+  static const ORDERS = 'ORDERS';
+  static const ADD = 'ADD';
   static const workType='Work Type';
   static const bookOn='Booked On';
   static const bookBy='Booked By';
@@ -146,6 +148,12 @@ class AppStrings {
   static const SERIAL_NUMBERS = 'SERIAL NUMBERS';
   static const REPLY_TO_REQUEST = 'Reply To Request';
   static const SEND = 'SEND';
+  static const REFERENCE = 'Reference';
+  static const WAREHOUSE = 'Warehouse';
+  static const CREATED_DATE = 'Created Date';
+  static const DETAILS = 'Details';
+  static const DELETE = 'Delete';
+
 
   //email Notification
   static const Date ='Date';
