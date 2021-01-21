@@ -11,6 +11,12 @@ import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 
 class AddOrderScreen extends StatefulWidget {
+
+  final intOrderId;
+ 
+
+  AddOrderScreen({this.intOrderId});
+
   @override
   _AddOrderScreenState createState() => _AddOrderScreenState();
 }
@@ -22,7 +28,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseView<AddOrderScreenViewModel>(
-      onModelReady: (model)=>model.initializeData(),
+      onModelReady: (model)=>model.initializeData(widget.intOrderId),
       builder: (context,model,child){
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
@@ -42,7 +48,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       ImageFile.menuIcon,color: AppColors.whiteColor,
                     )),
               ),
-              title: Text("${AppStrings.ADD_ORDER}",style: TextStyle(
+              title: Text( "${AppStrings.ADD_ORDER}",style: TextStyle(
                   color: AppColors.whiteColor
               ),),
               centerTitle: true,

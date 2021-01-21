@@ -3,6 +3,7 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/contract_order_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
+import 'package:enstaller/core/model/order_line_detail_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/save_order.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
@@ -24,7 +25,7 @@ class AddOrderScreenViewModel extends BaseModel {
   List<OrderItem> orderItems = [];
   List<ItemOrder> orders = [];
 
-  void initializeData() async {
+  void initializeData(int intId) async {
     setState(ViewState.Busy);
     //Fetch from api
     UserModel user = await Prefs.getUser();
@@ -32,8 +33,11 @@ class AddOrderScreenViewModel extends BaseModel {
         await _apiService.getItemsForOrder(user.id.toString());
     itemList.clear();
     itemList = iList
-        .map((ItemOrder itemOrder) =>
-            {'label': itemOrder.strName, 'value': itemOrder.intId.toString(), 'intContractId': itemOrder.intContractId.toString()})
+        .map((ItemOrder itemOrder) => {
+              'label': itemOrder.strName,
+              'value': itemOrder.intId.toString(),
+              'intContractId': itemOrder.intContractId.toString()
+            })
         .toList();
     List<ContractOrder> cList =
         await _apiService.getContractsForOrder(user.id.toString());
@@ -44,7 +48,32 @@ class AddOrderScreenViewModel extends BaseModel {
               'value': contractOrder.intId.toString()
             })
         .toList();
-    addOrderItem();
+    if (intId != null) {
+      intOrderId = intId;
+      //fetch orders
+      List<OrderLineDetailModel> orderLineDetailModel = await _apiService
+          .getStockOrderLineItemsByOrderId(this.intOrderId.toString());
+      orderLineDetailModel.forEach((element) {
+        SaveOrderLine saveOrderLine = SaveOrderLine(
+            intId: element.intId,
+            intOrderId: element.intOrderId,
+            intCreatedBy: element.intCreatedBy,
+            bisAlive: element.bisAlive,
+            decQty: element.decQty.toInt(),
+            intContractId: element.intContractId,
+            intItemId: element.intItemId);
+
+        orderItems.add(OrderItem(
+            key: GlobalKey(),
+            itemList: itemList,
+            contractList: contractList,
+            saveOrderLine: saveOrderLine,
+            onDelete: () => onDelete(saveOrderLine)));
+      });
+    } else {
+      addOrderItem();
+    }
+
     setState(ViewState.Idle);
   }
 
@@ -74,7 +103,7 @@ class AddOrderScreenViewModel extends BaseModel {
 
   Future<void> onSave(BuildContext context) async {
     setState(ViewState.Busy);
-    isSaving= true;
+    isSaving = true;
 
     //check length of items
     if (orderItems.length < 1) {
@@ -91,80 +120,79 @@ class AddOrderScreenViewModel extends BaseModel {
 
     if (isValid) {
       OrderItem element = orderItems[0];
-        UserModel user = await Prefs.getUser();
-        final SaveOrder saveOrder = SaveOrder(
-            intUserId: int.parse(user.id),
-            bisBulkUpload: false,
-            intCreatedBy: int.parse(user.id),
-            dteCollectionDate:
-                CommonUtils.commonUtilsInstance.formatDate2(DateTime.now()),
-            bisAlive: true,
-            intRegionId: 1,
-            strThirdParty: "a",
-            intContractId: element.saveOrderLine.intContractId,
-            intWarehouseId: 1,
-            isMerged: false,
-            strMarshallingLane: "a",
-            intModifiedBy: int.parse(user.id));
+      UserModel user = await Prefs.getUser();
+      final SaveOrder saveOrder = SaveOrder(
+          intUserId: int.parse(user.id),
+          bisBulkUpload: false,
+          intCreatedBy: int.parse(user.id),
+          dteCollectionDate:
+              CommonUtils.commonUtilsInstance.formatDate2(DateTime.now()),
+          bisAlive: true,
+          intRegionId: 1,
+          strThirdParty: "a",
+          intContractId: element.saveOrderLine.intContractId,
+          intWarehouseId: 1,
+          isMerged: false,
+          strMarshallingLane: "a",
+          intModifiedBy: int.parse(user.id));
 
-        //post saveOrder
+      //post saveOrder
 
-        try {
+      try {
+        if(intOrderId == null) {
           ResponseModel responseModel = await _apiService.saveOrder(saveOrder);
           if (responseModel.statusCode == 1) {
             intOrderId = int.parse(responseModel.response);
             print('order id: ${responseModel.response}');
+          }else {
+            AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
+            setState(ViewState.Idle);
+            return;
+          }
+        }
 
-
-            for(OrderItem orderItem in orderItems){
-
-              final SaveOrderLine saveOrderLine = SaveOrderLine(
-                  intCreatedBy: int.parse(user.id),
-                  intOrderId: intOrderId,
-                  intItemId: orderItem.saveOrderLine.intItemId,
-                  intContractId: orderItem.saveOrderLine.intContractId,
-                  decQty: orderItem.saveOrderLine.decQty,
-                  bisAlive: true);
-              //post saveOrderOnline
-              try {
-                ResponseModel responseModelLine =
-                await _apiService.saveOrderLine(saveOrderLine);
-                if (responseModelLine.statusCode == 1 &&
-                    responseModelLine.response.toLowerCase() == 'true') {
-                  //saved successfully
-                } else {
-                  AppConstants.showFailToast(context, responseModel.response);
-                  setState(ViewState.Idle);
-                  return;
-                }
-              } catch (e) {
+          for (OrderItem orderItem in orderItems) {
+            final SaveOrderLine saveOrderLine = SaveOrderLine(
+              intId: orderItem.saveOrderLine.intId,
+                intCreatedBy: int.parse(user.id),
+                intOrderId: intOrderId,
+                intItemId: orderItem.saveOrderLine.intItemId,
+                intContractId: orderItem.saveOrderLine.intContractId,
+                decQty: orderItem.saveOrderLine.decQty,
+                bisAlive: true);
+            //post saveOrderOnline
+            try {
+              ResponseModel responseModelLine =
+                  await _apiService.saveOrderLine(saveOrderLine);
+              if (responseModelLine.statusCode == 1 &&
+                  responseModelLine.response.toLowerCase() == 'true') {
+                //saved successfully
+              } else {
                 AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
                 setState(ViewState.Idle);
                 return;
               }
-
+            } catch (e) {
+              AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
+              setState(ViewState.Idle);
+              return;
             }
-
-          } else {
-            AppConstants.showFailToast(context, responseModel.response);
-            setState(ViewState.Idle);
-            return;
           }
-        } catch (e) {
-          AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
-          setState(ViewState.Idle);
-          return;
-        }
 
-    }else{
-      isSaving= false;
+      } catch (e) {
+        AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
+        setState(ViewState.Idle);
+        return;
+      }
+    } else {
+      isSaving = false;
       setState(ViewState.Idle);
       return;
     }
 
     AppConstants.showSuccessToast(context, AppStrings.SAVED_SUCCESSFULLY);
-    isSaving= false;
+    isSaving = false;
+    Navigator.of(context).pop();
     setState(ViewState.Idle);
-
   }
 }

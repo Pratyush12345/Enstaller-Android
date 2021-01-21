@@ -451,6 +451,16 @@ class ApiService extends BaseApi{
         }, 'intOrderId=$intOrderId') ;
   }
 
+  Future <dynamic> getStockOrderLineItemsByOrderId(String intOrderId){
+    print(intOrderId);
+    return getRequestWithParam(ApiUrls.getStockOrderLineItemsByOrderId,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => OrderLineDetailModel.fromJson(e)).toList();
+
+        }, 'intOrderId=$intOrderId') ;
+  }
+
 
 
 

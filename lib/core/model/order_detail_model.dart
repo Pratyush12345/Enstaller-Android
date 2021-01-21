@@ -60,7 +60,7 @@ class OrderDetailModel{
     intStatusId = json['intStatusId'] ?? 0;
     bisBulkUpload = json['bisBulkUpload']?? false;
     intCreatedBy = json['intCreatedBy']??0;
-    dteCreatedDate = DateFormat('yyyy-MM-dd').format(
+    dteCreatedDate = DateFormat('yyyy-MM-dd HH:MM').format(
         DateTime.parse(json['dteCreatedDate'])) ?? '';
     bisAlive = json['bisAlive']?? false;
     dteCollectionDate = DateFormat('yyyy-MM-dd HH:MM').format(
@@ -78,7 +78,7 @@ class OrderDetailModel{
     isMerged = json['isMerged']?? false;
     strMarshallingLane = json['strMarshallingLane']?? '';
     intModifiedBy = json['intModifiedBy']?? 0;
-    dteModifiedDate = DateFormat('yyyy-MM-dd').format(
+    dteModifiedDate = DateFormat('yyyy-MM-dd HH:MM').format(
         DateTime.parse(json['dteModifiedDate']))?? '';
   }
 

@@ -161,8 +161,8 @@ class _OrderScreenState extends State<OrderScreen> {
                       color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                   onTap: () {
 
-                    // Navigator.of(context).push(new MaterialPageRoute(
-                    //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => AddOrderScreen(intOrderId: orderModel.intOrderId,))).whenComplete(() => {model.initializeData()});
 
                   },
                 ),
