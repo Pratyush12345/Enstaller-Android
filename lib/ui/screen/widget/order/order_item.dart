@@ -35,6 +35,8 @@ class _OrderItemState extends State<OrderItem> {
   @override
   void initState() {
     super.initState();
+    if(widget.saveOrderLine.intContractId != null)
+    cValue = widget.saveOrderLine.intContractId.toString();
   }
 
   @override
@@ -52,7 +54,7 @@ class _OrderItemState extends State<OrderItem> {
                 padding: SizeConfig.sidepadding,
                 child: SelectFormField(
                   type: SelectFormFieldType.dropdown,
-                  initialValue: widget.itemList.isEmpty ? 'No items available' :AppStrings.SELECT,
+                  initialValue: widget.saveOrderLine.intItemId.toString() ?? '',
                   enabled: widget.itemList.isNotEmpty,
                   labelText:
                        'Items',
@@ -119,6 +121,7 @@ class _OrderItemState extends State<OrderItem> {
                   children: [
                     Expanded(
                         child: TextFormField(
+                          initialValue: widget.saveOrderLine.decQty?.toString() ?? '',
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: AppStrings.QUANTITY,

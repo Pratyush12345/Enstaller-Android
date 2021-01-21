@@ -36,5 +36,6 @@ class ApiUrls{
   static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';
   static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
   static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
+  static String getStockOrderLineItemsByOrderId= 'Order/GetStockOrderLineItemsByOrderId';
 
 }
