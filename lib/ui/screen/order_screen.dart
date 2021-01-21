@@ -63,7 +63,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                     onTap: (){
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (context) => AddOrderScreen()));
+                          builder: (context) => AddOrderScreen())).whenComplete(() => {model.initializeData()});
                     },
                   )
                 ),
