@@ -29,6 +29,8 @@ class ApiUrls{
   static String saveOrder='Order/InsertUpdateDeleteOrder';
   static String saveOrderLine = 'Order/InsertUpdateDeleteOrderLineItems';
   static String getOrderListByEngId = 'Order/GetOrderListByEngId';
+  static String getStockOrderById = 'Order/GetStockOrderById';
+  static String  getStockOrderLineDetails= 'Order/GetStockOrderLineDetails';
   //stock check
   static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
   static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';

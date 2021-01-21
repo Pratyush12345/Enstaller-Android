@@ -62,8 +62,7 @@ class _OrderItemState extends State<OrderItem> {
                   onChanged: (val) {
                     setState(() {
                       id = int.parse(val);
-                      cValue = null;
-
+                      cValue = widget.itemList.firstWhere((element) => element['value'] == val)['intContractId'].toString();
 
 
                       widget.saveOrderLine.intItemId = int.parse(val);
@@ -82,24 +81,27 @@ class _OrderItemState extends State<OrderItem> {
                   padding: SizeConfig.sidepadding,
                   child: DropdownButtonFormField<String>(
                     onChanged: (value) {
-                      setState(() {
-                        cValue =value;
-                      });
+
                       widget.saveOrderLine.intContractId = int.parse(value);
                     },
 
                     decoration: InputDecoration(
+                      hintText: cValue??'Select',
                       labelText: 'Contract',
                     ),
                     value: cValue,
-                    items: widget.contractList.map((e) =>
-
-                         DropdownMenuItem<String>(
-                          child: Text(e['label']),
-                          value: e['value'].toString(),
-                        )
-
-                    ).toList().where((element) => element.value == id.toString()).toList(),
+                    items: cValue == null? []:[DropdownMenuItem<String>(
+                        child: Text(widget.contractList.firstWhere((element) => element['value']== cValue)['label']),
+                        value: cValue.toString(),
+                      )],
+                    // items: widget.contractList.map((e) =>
+                    //
+                    //      DropdownMenuItem<String>(
+                    //       child: Text(e['label']),
+                    //       value: e['value'].toString(),
+                    //     )
+                    //
+                    // ).toList().where((element) => element.value == id.toString()).toList(),
                     onSaved: (val){
                       widget.saveOrderLine.intContractId = int.parse(val);
                     },

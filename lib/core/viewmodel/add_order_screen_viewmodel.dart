@@ -33,7 +33,7 @@ class AddOrderScreenViewModel extends BaseModel {
     itemList.clear();
     itemList = iList
         .map((ItemOrder itemOrder) =>
-            {'label': itemOrder.strName, 'value': itemOrder.intId.toString()})
+            {'label': itemOrder.strName, 'value': itemOrder.intId.toString(), 'intContractId': itemOrder.intContractId.toString()})
         .toList();
     List<ContractOrder> cList =
         await _apiService.getContractsForOrder(user.id.toString());
