@@ -13,6 +13,7 @@ import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 
 import 'add_order_screen.dart';
+import 'order_detail_screen.dart';
 
 class OrderScreen extends StatefulWidget {
   @override
@@ -145,9 +146,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                   onTap: () {
 
-                    // Navigator.of(context).push(new MaterialPageRoute(
-                    //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
-                    //
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => OrderDetailScreen(intId: orderModel.intOrderId,)));
+
                   },
                 ),
               ),
@@ -162,7 +163,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     // Navigator.of(context).push(new MaterialPageRoute(
                     //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
-                    //
+
                   },
                 ),
               ),

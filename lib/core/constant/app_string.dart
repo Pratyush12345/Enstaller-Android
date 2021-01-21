@@ -152,9 +152,18 @@ class AppStrings {
   static const WAREHOUSE = 'Warehouse';
   static const CREATED_DATE = 'Created Date';
   static const DETAILS = 'Details';
+  static const ORDER_DETAILS = 'ORDER DETAILS';
   static const DELETE = 'Delete';
-
-
+  static const ITEMS = 'ITEMS';
+  static const CONTRACT_NAME = 'Contract Name';
+  static const REGION = 'Region';
+  static const THIRD_PARTY = 'Third Party';
+  static const APPROVED = 'Approved';
+  static const MERGED = 'Merged';
+  static const MARSHALLING_LANE = 'Marshalling Lane';
+  static const CREATED = 'Created';
+  static const MODIFIED = 'Modified';
+  static const COLLECTION_DATE = 'Collection Date';
   //email Notification
   static const Date ='Date';
   static const appointmentNo='Appointment No';
@@ -167,6 +176,10 @@ class AppStrings {
   static const hash = "#"; 
   static const viewemail = "View Email";
   static const ADD_LINE_ITEM = "ADD LINE ITEM";
+  static const ITEM = 'Item';
+  static const DESCRIPTION = 'Description';
+  static const ORDER_QUANTITY = 'Order Quantity';
+  static const PENDING_QUANTITY = 'Pending Quantity';
 
   //SMS Notification
   static const bookingRefNo = "Booking Ref. No";

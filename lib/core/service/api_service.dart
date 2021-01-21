@@ -9,6 +9,7 @@ import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/comment_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
+import 'package:enstaller/core/model/order_detail_model.dart';
 import 'package:enstaller/core/model/order_line_detail_model.dart';
 import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/model/save_order.dart';
@@ -431,7 +432,7 @@ class ApiService extends BaseApi{
     return getRequestWithParam(ApiUrls.getStockOrderById,
             (response) {
           print(response.body);
-          return OrderLineDetailModel.fromJson(json.decode(response.body));
+          return OrderDetailModel.fromJson(json.decode(response.body));
 
         }, 'intId=$intId') ;
   }
