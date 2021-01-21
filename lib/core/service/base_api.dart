@@ -18,13 +18,13 @@ abstract class BaseApi {
 
 
 
-  //@protected
+  @protected
   Future<dynamic> getRequest(String path, Function(Response) success,var param) async {
 
     return _processResponse(await client.get(_ENDPOINT+'$path'+param,
         ), success);
   }
-  //@protected
+  @protected
   Future<dynamic> getRequestWithParam(String path, Function(Response) success,var param) async {
     return _processResponse(await http.get(_ENDPOINT+path+'?'+param,
 //        headers: {
@@ -37,7 +37,7 @@ abstract class BaseApi {
 
 
 
-  //@protected
+  @protected
   Future<dynamic> postRequest(String path, Function(Response) success, [Map body]) async {
     print(body);
     return _processResponse(
@@ -50,7 +50,7 @@ abstract class BaseApi {
         ), success
     );
   }
-  //@protected
+  @protected
   Future<dynamic> postRequestList(String path, Function(Response) success, [var body]) async {
     debugPrint(body);
 
@@ -76,7 +76,7 @@ abstract class BaseApi {
 //    );
   }
 
-  //@protected
+  @protected
   Future<dynamic> putRequest(String path, Function(Response) success, [Map body]) async {
     return _processResponse(
         await client.put(
@@ -87,7 +87,7 @@ abstract class BaseApi {
     );
   }
 
-  //@protected
+  @protected
   Future<dynamic> deleteRequest(String path, Function(Response) success) async {
     return _processResponse(await client.delete('${BaseApi._ENDPOINT}/$path'), success);
   }
