@@ -23,7 +23,7 @@ class OrderDetailModel{
   bool isApproved;
   bool isMerged;
   String strMarshallingLane;
-  String intModifiedBy;
+  int intModifiedBy;
   String dteModifiedDate;
 
   OrderDetailModel(
@@ -63,7 +63,7 @@ class OrderDetailModel{
     dteCreatedDate = DateFormat('yyyy-MM-dd').format(
         DateTime.parse(json['dteCreatedDate'])) ?? '';
     bisAlive = json['bisAlive']?? false;
-    dteCollectionDate = DateFormat('yyyy-MM-dd').format(
+    dteCollectionDate = DateFormat('yyyy-MM-dd HH:MM').format(
         DateTime.parse(json['dteCollectionDate']))?? '';
     strRefrence = json["strRefrence"]?? '';
     strStatus = json["strStatus"]?? '';

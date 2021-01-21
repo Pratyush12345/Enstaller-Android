@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 class CommonUtils {
   static CommonUtils _commonUtils = CommonUtils();
 

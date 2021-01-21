@@ -5,7 +5,7 @@ class OrderLineDetailModel {
   String strItemName;
   String strItemDescription;
   int intContractId;
-  int decQty;
+  double decQty;
   bool bisAlive;
   String dteCreatedDate;
   int intCreatedBy;
