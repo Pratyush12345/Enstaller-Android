@@ -181,6 +181,7 @@ class AppStrings {
   static const DESCRIPTION = 'Description';
   static const ORDER_QUANTITY = 'Order Quantity';
   static const PENDING_QUANTITY = 'Pending Quantity';
+  static const EDIT_ORDER = 'EDIT ORDER';
 
   //SMS Notification
   static const bookingRefNo = "Booking Ref. No";

@@ -48,7 +48,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       ImageFile.menuIcon,color: AppColors.whiteColor,
                     )),
               ),
-              title: Text( "${AppStrings.ADD_ORDER}",style: TextStyle(
+              title: Text((widget.intOrderId != null)?"${AppStrings.EDIT_ORDER}":'${AppStrings.ADD_ORDER}',style: TextStyle(
                   color: AppColors.whiteColor
               ),),
               centerTitle: true,
