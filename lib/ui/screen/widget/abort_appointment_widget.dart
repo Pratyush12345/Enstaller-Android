@@ -4,16 +4,9 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/abort_appointment_model.dart';
-import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/abort_appointment_viewmodel.dart';
-import 'package:enstaller/core/viewmodel/comment_dialog_viewmodel.dart';
-import 'package:enstaller/core/viewmodel/userprovider.dart';
-import 'package:enstaller/ui/shared/appbuttonwidget.dart';
-import 'package:enstaller/ui/util/text_util.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:select_form_field/select_form_field.dart';
 
 class AbortAppoinmentWidget extends StatefulWidget {
   final String appointmentID;
@@ -121,11 +114,11 @@ class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
                                     intAbortRequestedId: "1",
                                     isabort: "1",
                                     requestFrom: "Enstaller",
-                                    strCancellationComment: "",
-                                    strCancellationReason: abort_reason.trim());
+                                    strCancellationComment: "Comment",
+                                    strCancellationReason: abort_reason.trim() );
      
                                    model.onConfirmPressed(context, confirmAbortAppointment);
-                                   Navigator.of(context).pop();
+                                  
                                 },
                                   child: Container(
                                   height: 40,

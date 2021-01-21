@@ -21,6 +21,12 @@ class ImageFile{
   static String started = "asserts/icon/status/Started.svg";
   static String unscheduled = "asserts/icon/status/Unscheduled.svg";
   static String unscheduledGrey = "asserts/icon/status/Unscheduled-Grey.svg";
+  static String document = "asserts/icon/status/Document.svg";
+  static String email_notification = "asserts/icon/status/Email-Notification.svg";
+  static String sms_notification = "asserts/icon/status/notification.svg";
+  static String order = "asserts/icon/status/oder.svg";
+  static String stock_check_request = "asserts/icon/status/stock-check-request.svg";
+  
   static String rightArrow='asserts/icon/right-arrow.png';
   static String downArrow='asserts/icon/down-arrow.png';
   static String time='asserts/icon/time.png';

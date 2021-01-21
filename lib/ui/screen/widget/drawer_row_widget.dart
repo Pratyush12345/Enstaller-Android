@@ -1,6 +1,7 @@
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DrawerRowWidget extends StatelessWidget {
   final Function onTap;
@@ -24,10 +25,16 @@ class DrawerRowWidget extends StatelessWidget {
               SizedBox(
                 width: 20,
               ),
-              Image(
+              !assetPath.endsWith(".svg")? Image(
                   image: AssetImage(assetPath),
                   height: 40,
-                  width: 40),
+                  width: 40): Container(
+                    height: 40,
+                  width: 40,
+                    child: SvgPicture.asset(
+                                      assetPath,
+                                      ),
+                  ),
               SizedBox(
                 width: 20,
               ),
