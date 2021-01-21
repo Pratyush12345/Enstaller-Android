@@ -167,20 +167,20 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               ),
               SizeConfig.horizontalSpace(2),
-              Expanded(
-                child: AppButton(
-                  buttonText: AppStrings.DELETE,
-                  color: AppColors.green,
-                  textStyle: TextStyle(
-                      color: AppColors.whiteColor, fontWeight: FontWeight.bold),
-                  onTap: () {
+              // Expanded(
+              //   child: AppButton(
+              //     buttonText: AppStrings.DELETE,
+              //     color: AppColors.green,
+              //     textStyle: TextStyle(
+              //         color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+              //     onTap: () {
 
-                    // Navigator.of(context).push(new MaterialPageRoute(
-                    //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
-                    //
-                  },
-                ),
-              ),
+              //       // Navigator.of(context).push(new MaterialPageRoute(
+              //       //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
+              //       //
+              //     },
+              //   ),
+              // ),
             ],
           )
         ),
