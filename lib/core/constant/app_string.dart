@@ -165,6 +165,7 @@ class AppStrings {
   static const CREATED = 'Created';
   static const MODIFIED = 'Modified';
   static const COLLECTION_DATE = 'Collection Date';
+  static const DOWNLOAD = 'DOWNLOAD';
   //email Notification
   static const Date ='Date';
   static const appointmentNo='Appointment No';

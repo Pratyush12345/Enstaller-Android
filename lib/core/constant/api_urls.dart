@@ -31,6 +31,7 @@ class ApiUrls{
   static String getOrderListByEngId = 'Order/GetOrderListByEngId';
   static String getStockOrderById = 'Order/GetStockOrderById';
   static String  getStockOrderLineDetails= 'Order/GetStockOrderLineDetails';
+  static String getOrderExportCSVDetails = 'Order/OrderExportCSVDetails';
   //stock check
   static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
   static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';

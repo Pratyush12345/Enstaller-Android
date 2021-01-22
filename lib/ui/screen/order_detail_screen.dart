@@ -55,7 +55,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(ImageFile.notification,color: AppColors.whiteColor,),
+                  child:GestureDetector(
+                    child: Text(
+                      AppStrings.DOWNLOAD,
+                      style: TextStyle(
+                          color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                    ),
+                    onTap: (){
+                     //Download CSV
+                      model.downloadCSV(widget.intId, context);
+                    },
+                  )
                 ),
               ],
             ),

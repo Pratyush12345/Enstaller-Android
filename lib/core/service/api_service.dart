@@ -10,6 +10,7 @@ import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/comment_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
 import 'package:enstaller/core/model/order_detail_model.dart';
+import 'package:enstaller/core/model/order_export_model.dart';
 import 'package:enstaller/core/model/order_line_detail_model.dart';
 import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/model/save_order.dart';
@@ -460,6 +461,18 @@ class ApiService extends BaseApi{
 
         }, 'intOrderId=$intOrderId') ;
   }
+
+
+  Future <dynamic> getOrderExportCSVDetails(String intOrderId){
+    print(intOrderId);
+    return getRequestWithParam(ApiUrls.getOrderExportCSVDetails,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => OrderExportModel.fromJson(e)).toList();
+
+        }, 'intOrderId=$intOrderId') ;
+  }
+
 
 
 
