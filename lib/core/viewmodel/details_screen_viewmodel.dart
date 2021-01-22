@@ -124,7 +124,7 @@ class DetailsScreenViewModel extends BaseModel {
     }
     setState(ViewState.Idle);
   }
-
+  
   startElecProcess(
       String processId, UserModel userModel, String ups, String customerID) {
     try{

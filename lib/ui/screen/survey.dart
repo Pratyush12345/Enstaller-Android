@@ -10,6 +10,7 @@ import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/question_answer_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_view.dart';
+import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/survey_screen_viewmodel.dart';
 import 'package:enstaller/core/model/survey_response_model.dart';
 import 'package:enstaller/ui/screen/signature.dart';
@@ -28,7 +29,8 @@ import 'package:path/path.dart' as path;
 class SurveyArguments{
   String appointmentID;
   bool edit;
-  SurveyArguments({this.appointmentID,this.edit});
+  DetailsScreenViewModel dsmodel;
+  SurveyArguments({this.appointmentID,this.edit, this.dsmodel});
 }
 
 class SurveyScreen extends StatefulWidget {
@@ -283,7 +285,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         }
                         if(validateconter==questions.length){
 
-                          model.onSubmit(model.selected,widget.arguments.appointmentID, context);
+                          model.onSubmit(model.selected,widget.arguments.appointmentID, context, widget.arguments.dsmodel);
                         }
                       }else{
                         model.incrementCounter();
