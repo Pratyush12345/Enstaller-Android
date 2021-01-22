@@ -12,6 +12,7 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OrderDetailViewModel extends BaseModel {
 
@@ -43,14 +44,23 @@ class OrderDetailViewModel extends BaseModel {
       ];
       String csv = const ListToCsvConverter().convert(csvdata);
 
+      var storagePermission = await Permission.storage.status;
 
+      if(!storagePermission.isGranted){
+          await Permission.storage.request();
+      }
+      storagePermission = await Permission.storage.status;
+      if(storagePermission.isGranted){
+        final String dir = ( await DownloadsPathProvider.downloadsDirectory ).path;
+        print(dir);
+        final String path = '$dir/$intId.csv';
+        final File file = File(path);
+        await file.writeAsString(csv);
+        AppConstants.showSuccessToast(context, AppStrings.SAVED_SUCCESSFULLY);
+      }else{
+        AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
+      }
 
-      final String dir = ( await DownloadsPathProvider.downloadsDirectory ).path;
-      print(dir);
-      final String path = '$dir/$intId.csv';
-      final File file = File(path);
-      await file.writeAsString(csv);
-      AppConstants.showSuccessToast(context, AppStrings.SAVED_SUCCESSFULLY);
     }
 
 
