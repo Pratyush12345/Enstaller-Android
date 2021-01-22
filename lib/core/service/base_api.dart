@@ -40,6 +40,7 @@ abstract class BaseApi {
   @protected
   Future<dynamic> postRequest(String path, Function(Response) success, [Map body]) async {
     print(body);
+
     return _processResponse(
 
         await client.post(
@@ -50,6 +51,24 @@ abstract class BaseApi {
         ), success
     );
   }
+
+
+  @protected
+  Future<dynamic> postRequestMap(String path, Function(Response) success, [Map body]) async {
+    print(body);
+
+    return _processResponse(
+
+        await client.post(
+          _ENDPOINT+path,
+          headers: {HttpHeaders.CONTENT_TYPE: "application/json"},
+          body: body != null ? json.encode(body) : null,
+
+        ), success
+    );
+  }
+
+
   @protected
   Future<dynamic> postRequestList(String path, Function(Response) success, [var body]) async {
     debugPrint(body);

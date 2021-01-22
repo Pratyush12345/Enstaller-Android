@@ -24,6 +24,8 @@ class AddOrderScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
   List<OrderItem> orderItems = [];
   List<ItemOrder> orders = [];
+  List<OrderLineDetailModel> orderLineDetailModelList = [];
+  List<SaveOrderLine> saveOrderOnlineList = [];
 
   void initializeData(int intId) async {
     setState(ViewState.Busy);
@@ -51,9 +53,9 @@ class AddOrderScreenViewModel extends BaseModel {
     if (intId != null) {
       intOrderId = intId;
       //fetch orders
-      List<OrderLineDetailModel> orderLineDetailModel = await _apiService
+      orderLineDetailModelList = await _apiService
           .getStockOrderLineItemsByOrderId(this.intOrderId.toString());
-      orderLineDetailModel.forEach((element) {
+      orderLineDetailModelList.forEach((element) {
         SaveOrderLine saveOrderLine = SaveOrderLine(
             intId: element.intId,
             intOrderId: element.intOrderId,
@@ -151,15 +153,33 @@ class AddOrderScreenViewModel extends BaseModel {
           }
         }
 
-          for (OrderItem orderItem in orderItems) {
-            final SaveOrderLine saveOrderLine = SaveOrderLine(
+        for (OrderItem orderItem in orderItems) {
+          final SaveOrderLine saveOrderLine = SaveOrderLine(
               intId: orderItem.saveOrderLine.intId,
-                intCreatedBy: int.parse(user.id),
-                intOrderId: intOrderId,
-                intItemId: orderItem.saveOrderLine.intItemId,
-                intContractId: orderItem.saveOrderLine.intContractId,
-                decQty: orderItem.saveOrderLine.decQty,
-                bisAlive: true);
+              intCreatedBy: int.parse(user.id),
+              intOrderId: intOrderId,
+              intItemId: orderItem.saveOrderLine.intItemId,
+              intContractId: orderItem.saveOrderLine.intContractId,
+              decQty: orderItem.saveOrderLine.decQty,
+              bisAlive: true);
+          orderLineDetailModelList.removeWhere((element) => element.intId == saveOrderLine.intId);
+          saveOrderOnlineList.add(saveOrderLine);
+        }
+
+        orderLineDetailModelList.forEach((element) {
+          SaveOrderLine saveOrderLine = SaveOrderLine(
+              intId: element.intId,
+              intOrderId: element.intOrderId,
+              intCreatedBy: element.intCreatedBy,
+              bisAlive: false,
+              decQty: element.decQty.toInt(),
+              intContractId: element.intContractId,
+              intItemId: element.intItemId);
+          saveOrderOnlineList.add(saveOrderLine);
+        });
+
+          for (SaveOrderLine saveOrderLine in saveOrderOnlineList) {
+
             //post saveOrderOnline
             try {
               ResponseModel responseModelLine =
@@ -173,6 +193,7 @@ class AddOrderScreenViewModel extends BaseModel {
                 return;
               }
             } catch (e) {
+              print(e);
               AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
               setState(ViewState.Idle);
               return;

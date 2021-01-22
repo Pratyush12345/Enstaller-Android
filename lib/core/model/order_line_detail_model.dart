@@ -5,7 +5,7 @@ class OrderLineDetailModel {
   String strItemName;
   String strItemDescription;
   int intContractId;
-  double decQty;
+  int decQty;
   bool bisAlive;
   String dteCreatedDate;
   int intCreatedBy;
@@ -29,7 +29,7 @@ class OrderLineDetailModel {
     intItemId = json["intItemId"];
     intCreatedBy = json["intCreatedBy"];
     bisAlive = json["bisAlive"];
-    decQty = json["decQty"];
+    decQty = json["decQty"].toInt();
     intContractId = json["intContractId"];
     strItemName = json['strItemName']??'';
     strItemDescription = json['strItemDescription']?? '';

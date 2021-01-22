@@ -345,7 +345,7 @@ class ApiService extends BaseApi{
   }
 
   Future<dynamic> saveOrderLine(SaveOrderLine saveOrderLine){
-    return postRequest(ApiUrls.saveOrderLine, (r) {
+    return postRequestMap(ApiUrls.saveOrderLine, (r) {
       final response = json.decode(r.body);
       print(response);
       if (response) {

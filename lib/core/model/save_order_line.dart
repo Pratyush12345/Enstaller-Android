@@ -26,11 +26,13 @@ class SaveOrderLine {
     intItemId = json["intItemId"];
   }
 
+
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["intOrderId"] = this.intOrderId.toString();
     data["intCreatedBy"] = this.intCreatedBy.toString();
-    data["bisAlive"] = this.bisAlive.toString();
+    data["bisAlive"] = this.bisAlive? 1: 0;
     data["decQty"] = this.decQty.toString();
     data["intContractId"] = this.intContractId.toString();
     data["intItemId"] = this.intItemId.toString();
