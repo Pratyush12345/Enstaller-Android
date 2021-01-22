@@ -123,15 +123,15 @@ class AppDrawerWidget extends StatelessWidget {
               ),
               DrawerRowWidget(
                 title: 'Document',
-                assetPath: ImageFile.appointment,
+                assetPath: ImageFile.document,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => DocumentScreen()));
                 },
               ),
               DrawerRowWidget(
-                title: 'Order',
-                assetPath: ImageFile.appointment,
+                title: 'Orders',
+                assetPath: ImageFile.order,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => OrderScreen()));
@@ -139,7 +139,7 @@ class AppDrawerWidget extends StatelessWidget {
               ),
               DrawerRowWidget(
                 title: 'Stock',
-                assetPath: ImageFile.appointment,
+                assetPath: ImageFile.stock_check_request,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => StockCheckRequestScreen()));
@@ -162,7 +162,7 @@ class AppDrawerWidget extends StatelessWidget {
               ),
               DrawerRowWidget(
                 title: 'Email Notification',
-                assetPath: ImageFile.notification,
+                assetPath: ImageFile.email_notification,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => EmailNotificationScreen()));
@@ -170,7 +170,7 @@ class AppDrawerWidget extends StatelessWidget {
               ),
               DrawerRowWidget(
                 title: 'SMS Notification',
-                assetPath: ImageFile.notification,
+                assetPath: ImageFile.sms_notification,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => SMSNotificationScreen()));

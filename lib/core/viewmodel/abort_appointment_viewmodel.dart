@@ -37,8 +37,9 @@ class AbortAppointmentViewModel extends BaseModel{
       if (response.statusCode == 1) {
         AppConstants.showFailToast(context, "Abort Appointment Successfull");
       } else {
-        AppConstants.showFailToast(context, "Abort Appointment failed");
+        AppConstants.showSuccessToast(context, "Abort Appointment failed");
       }
+       Navigator.of(context).pop();
 
     setState(ViewState.Idle);
   }

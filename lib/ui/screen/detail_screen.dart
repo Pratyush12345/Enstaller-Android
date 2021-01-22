@@ -638,6 +638,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     onTap: () {
                       Navigator.of(context).pushNamed(SurveyScreen.routeName,
                           arguments: SurveyArguments(
+                             dsmodel: model,
                               appointmentID: widget.arguments.appointmentID,
                               edit: model.appointmentDetails.appointment
                                           .surveyReceived ==

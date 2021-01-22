@@ -35,6 +35,7 @@ class AppStrings {
   static const DOCUMNETS = 'DOCUMENTS';
   static const APPOINTMENT_DETAILS='APPOINTMENT DETAILS';
   static const ADD_ORDER='ADD ORDER';
+  static const UPDATE_ORDER='ADD ORDER';
   static const ORDERS = 'ORDERS';
   static const ADD = 'ADD';
   static const workType='Work Type';

@@ -1,21 +1,22 @@
 
 import 'dart:convert';
-
+import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/question_answer_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
-
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/model/survey_response_model.dart';
+import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SurveyScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
@@ -434,7 +435,7 @@ class SurveyScreenViewModel extends BaseModel {
     }
     setState(ViewState.Idle);
   }
-  void onSubmit(int selected, String appointmentid, BuildContext context) async{
+  void onSubmit(int selected, String appointmentid, BuildContext context, DetailsScreenViewModel dsmodel) async{
     setState(ViewState.Busy);
 //    for (int i=0;i<answerList.length;i++){
 //      ResponseModel responseModel=await _apiService.submitSurveyAnswer(answerList[i]);
@@ -464,6 +465,7 @@ class SurveyScreenViewModel extends BaseModel {
             enableIndex++;
           }else {
             selected=-1;
+            _openJumboTab(dsmodel, appointmentid);
           }
         }
       }
@@ -488,6 +490,7 @@ class SurveyScreenViewModel extends BaseModel {
             enableIndex++;
           }else {
             selected=-1;
+             _openJumboTab(dsmodel, appointmentid);
           }
         AppConstants.showFailToast(context, "Submitted Offline");
        
@@ -499,7 +502,74 @@ class SurveyScreenViewModel extends BaseModel {
     
     setState(ViewState.Idle);
   }
+  _openJumboTab(DetailsScreenViewModel dsmodel, String appointmentid) async{
+   var AppointmentType = dsmodel.appointmentDetails.appointment.strAppointmentType.trim();
+   var MPAN;
+   var MPRN;
+   
+   if(dsmodel.electricGasMeterList.isEmpty){
+     MPRN = "";
+     MPAN = "";
+   }
+   else{
+     dsmodel.electricGasMeterList.forEach((element) {
+       if(element.strFuel=="ELECTRICITY"){
+         MPAN = element.strMpan;
+         MPRN = "";
+       }
+       else if(element.strFuel=="GAS"){
+         MPRN = element.strMpan;
+         MPAN = "";
+       }
+      });
+   }
+   if (AppointmentType == "Scheduled Exchange" || AppointmentType == "Emergency Exchange" || AppointmentType == "New Connection" || AppointmentType == "Meter Removal") {
+       if (MPAN != "" &&  MPRN != "") {
+           //alert(MPAN + '-' + MPRN);
+           
+       }
+       else if ( MPAN != "" &&  MPRN == "") {
+           var appointId = encryption(appointmentid);
+           var url = 'https://enstaller.enpaas.com/jmbCloseJob/AddElectricityCloseJob?intAppointmentId=' + appointId;
+           launchurl(url);
+       }
+       else if ( MPRN != "" &&  MPAN == "") {
+           var appointId = encryption(appointmentid);
+           var url = 'https://enstaller.enpaas.com/jmbCloseJob/AddGasCloseJob?intAppointmentId=' + appointId;
+           launchurl(url);
+       }
+   }
+  }
 
+  encryption(String value) {
+    final key = AESencrypt.Key.fromUtf8('8080808080808080');
+    final iv = AESencrypt.IV.fromUtf8('8080808080808080');
+    final encrypter = AESencrypt.Encrypter(
+        AESencrypt.AES(key, mode: AESencrypt.AESMode.cbc, padding: 'PKCS7'));
+
+    final encrypted = encrypter.encrypt(value, iv: iv);
+
+    return encrypted.base64
+        .toString()
+        .replaceAll('/', 'SLH')
+        .replaceAll('+', 'PLS')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS');
+  }
+
+  launchurl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
   void onValidation(){
     setState(ViewState.Busy);
     if(selected==0){
