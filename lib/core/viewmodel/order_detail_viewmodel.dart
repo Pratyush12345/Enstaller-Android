@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:csv/csv.dart';
-import 'package:downloads_path_provider/downloads_path_provider.dart';
+
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
@@ -12,6 +12,8 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
+import 'package:ext_storage/ext_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class OrderDetailViewModel extends BaseModel {
@@ -51,8 +53,7 @@ class OrderDetailViewModel extends BaseModel {
       }
       storagePermission = await Permission.storage.status;
       if(storagePermission.isGranted){
-        final String dir = ( await DownloadsPathProvider.downloadsDirectory ).path;
-        print(dir);
+        final String dir = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
         final String path = '$dir/$intId.csv';
         final File file = File(path);
         await file.writeAsString(csv);
