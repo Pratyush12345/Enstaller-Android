@@ -7,8 +7,8 @@ import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:flutter/cupertino.dart';
- 
-class CommentDialogViewModel extends BaseModel{ 
+
+class CommentDialogViewModel extends BaseModel{
   ApiService _apiService=ApiService();
   List<CommentModel>comments=[];
   TextEditingController commentController=TextEditingController();

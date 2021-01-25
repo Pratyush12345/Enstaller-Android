@@ -3,7 +3,7 @@ import 'package:enstaller/core/model/serial_model.dart';
 class StockRequestReplyModel{
   List<SerialNoModel> listSerials;
   int intRequestId;
-  String strComments; 
+  String strComments;
 
   StockRequestReplyModel(
       {this.listSerials, this.intRequestId, this.strComments});

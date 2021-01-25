@@ -7,7 +7,6 @@ class PaymentList {
     'payment_slips': payments,
   };
 }
- 
 class Payment {
   Payment({this.name, this.personalId});
 

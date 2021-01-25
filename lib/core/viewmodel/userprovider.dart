@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 class UserProvider extends BaseModel{
   UserModel _user;
- 
   UserProvider(this._user);
 
   UserModel get logInUser =>_user;

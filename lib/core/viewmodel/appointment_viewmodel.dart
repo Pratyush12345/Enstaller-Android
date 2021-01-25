@@ -10,7 +10,7 @@ class AppointmentViewModel extends BaseModel{
   List<Appointment>appointmentList=[];
   List<Appointment>_appointmentList=[];
 
-  bool searchBool=false; 
+  bool searchBool=false;
 
   void getAppointmentList()async{
     setState(ViewState.Busy);

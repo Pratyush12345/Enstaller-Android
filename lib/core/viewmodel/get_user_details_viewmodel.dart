@@ -4,7 +4,6 @@ import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 
 class GetUserDetailsViewModel extends BaseModel{
- 
 
   UserModel user;
   void getUserDetails()async{

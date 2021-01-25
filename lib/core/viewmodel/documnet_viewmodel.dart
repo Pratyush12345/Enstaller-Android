@@ -10,7 +10,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http ;
-import 'dart:io'; 
+import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 

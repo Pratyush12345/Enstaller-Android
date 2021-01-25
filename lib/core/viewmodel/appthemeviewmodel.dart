@@ -9,7 +9,7 @@ class AppThemeViewModel extends BaseModel{
 
   getTheme()=>_themeData;
   setTheme(ThemeData theme){
-    _themeData=theme; 
+    _themeData=theme;
     setState(ViewState.Idle);
   }
 }

@@ -7,7 +7,7 @@ class SaveOrder{
   bool bisAlive;
   int intRegionId;
   String strThirdParty;
-  int intContractId; 
+  int intContractId;
   int intWarehouseId;
   bool isMerged;
   String strMarshallingLane;

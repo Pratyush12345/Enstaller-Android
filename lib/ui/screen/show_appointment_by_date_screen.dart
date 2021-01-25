@@ -10,7 +10,7 @@ import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/appointment_viewmodel.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart'; 
+import 'package:flutter_svg/svg.dart';
 
 import 'detail_screen.dart';
 

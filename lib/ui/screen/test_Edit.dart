@@ -10,7 +10,7 @@ class _loginDesignState extends State<loginDesign> {
   var globalKeyForForm = GlobalKey<FormState>();
   TextEditingController waiterEmail, hotelEmail, waiterPassword;
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(

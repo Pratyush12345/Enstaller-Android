@@ -11,7 +11,7 @@ import 'package:enstaller/core/viewmodel/sms_notification_viewmodel.dart';
 import 'package:enstaller/ui/screen/detail_screen.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
-import 'package:enstaller/ui/shared/appbuttonwidget.dart'; 
+import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';

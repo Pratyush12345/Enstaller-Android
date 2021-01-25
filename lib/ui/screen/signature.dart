@@ -11,7 +11,7 @@ class SignatureScreen extends StatefulWidget {
   
   @override
   _SignatureScreenState createState() => _SignatureScreenState();
-} 
+}
 
 class _WatermarkPaint extends CustomPainter {
   final String price;

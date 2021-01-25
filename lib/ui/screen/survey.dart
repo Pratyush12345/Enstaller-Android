@@ -97,7 +97,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               expanded: model.selected==index,
                               firstChild:InkWell(
                                 child: Container(
-                                  color:AppColors.green ,
+                                  color:AppColors.green,
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                         left: 20, top: 20, bottom: 10),

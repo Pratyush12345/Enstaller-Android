@@ -7,7 +7,7 @@ class StatusModel {
   String dteBookedDate;
   String strBookedTime;
   String strSiteAddress;
-  String strSiteDateConsent; 
+  String strSiteDateConsent;
   String strSiteCustomerPassword;
   String strSiteCustomerComment;
   int intTimeOnSite;

@@ -50,7 +50,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
               title: Text(
                 "${AppStrings.STOCK_REQUEST_CHECK}",
                 style: TextStyle(color: AppColors.whiteColor),
-              ), 
+              ),
               centerTitle: true,
               actions: [
                 Padding(
@@ -142,7 +142,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
             onTap: () {
               if (stockCheckModel?.strCurrentStatus == 'Request Pending') {
                 Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (context) => StockRequestReplyScreen(intRequestId: stockCheckModel.intId,)));
+                    builder: (context) => StockRequestReplyScreen(intRequestId: stockCheckModel.intId,))).whenComplete(() => {model.initializeData()});
               } else {
                 AppConstants.showAppDialog(
                     context: context,
