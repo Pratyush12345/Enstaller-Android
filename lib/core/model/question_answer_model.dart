@@ -6,7 +6,7 @@ class QuestionAnswer {
   String strQuestionText;
   String strAnswer;
   String strFileName;
-  String strSectionName;
+  String strSectionName; 
   String strQuestiontype;
   int intCreatedby;
   int intSectionID;

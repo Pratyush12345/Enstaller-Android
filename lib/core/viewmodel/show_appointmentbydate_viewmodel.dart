@@ -11,7 +11,7 @@ class ShowAppointmentByDateViewmodel extends BaseModel{
   ApiService _apiService=ApiService();
   List<Appointment>appointmentList=[];
   List<Appointment>_appointmentList=[];
-
+ 
   void getAppoinmentList()async{
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();

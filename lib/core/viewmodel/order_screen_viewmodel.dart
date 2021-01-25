@@ -8,7 +8,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 
 class OrderScreenViewModel extends BaseModel {
 
-  List<OrderModel> list = [];
+  List<OrderModel> list = []; 
 
   ApiService _apiService = ApiService();
 

@@ -11,7 +11,7 @@ import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/ui/screen/widget/abort_appointment_widget.dart';
 import 'package:flutter/cupertino.dart';
-
+ 
 class AbortAppointmentViewModel extends BaseModel{
   ApiService _apiService=ApiService();
   List<AbortAppointmentModel>abortlist=[];

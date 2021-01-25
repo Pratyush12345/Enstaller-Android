@@ -6,7 +6,7 @@ class OrderModel {
   String strStatus;
   String strRefrence;
   String strWarehouseName;
-  String createdDate;
+  String createdDate; 
 
   OrderModel(
       {this.intOrderId,

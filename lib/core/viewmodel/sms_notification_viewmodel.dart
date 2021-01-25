@@ -9,7 +9,7 @@ class SMSNotificationViewModel extends BaseModel{
   ApiService _apiService=ApiService();
   List<SMSNotificationModel>smsNotificationList=[];
   List<SMSNotificationModel>_smsNotificationList=[];
-
+ 
   bool searchBool=false;
 
   void getSMSNotificationList()async{

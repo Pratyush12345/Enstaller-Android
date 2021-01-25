@@ -123,7 +123,7 @@ class DetailsScreenViewModel extends BaseModel {
   int _checkbuttonindex(appointmentDetails) {
     int id;
     _appointmentandjobtype.forEach((key, value) {
-      
+       
       if (key
           .contains(appointmentDetails.appointment.strAppointmentType.trim())) {
             

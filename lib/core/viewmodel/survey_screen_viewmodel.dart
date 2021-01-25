@@ -196,7 +196,7 @@ class SurveyScreenViewModel extends BaseModel {
         }
       });
     }
-
+ 
 
     setState(ViewState.Idle);
   }

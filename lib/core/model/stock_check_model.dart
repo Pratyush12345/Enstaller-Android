@@ -5,7 +5,7 @@ class StockCheckModel{
   String strComments;
   String strEngReplyComments;
   String strCurrentStatus;
-  String strRequestedDate;
+  String strRequestedDate; 
 
   StockCheckModel(
       {this.intId,

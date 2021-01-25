@@ -7,7 +7,7 @@ class UserModel {
   String name;
   String role;
   String intEngineerId;
-  String strEngineerName;
+  String strEngineerName; 
   String issued;
   String expires;
   String email;

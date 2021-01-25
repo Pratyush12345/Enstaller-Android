@@ -7,7 +7,7 @@ import 'package:enstaller/core/model/stock_request_reply_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/ui/screen/widget/validate_list_dialog_widget.dart';
-
+ 
 class StockRequestReplyViewModel extends BaseModel {
   int intRequestId;
   String comment;

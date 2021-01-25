@@ -289,7 +289,7 @@ class ApiService extends BaseApi{
           return (json.decode(response.body)['table'] as List).map((e) => Appointment.fromJson(e)).toList();
 
         }, 'today=$date'+'&intId=$engeenerID') ;
-  }
+  } 
 
   Future<dynamic> getMAICheckProcess(String customerID, String processId ){
     return getRequestWithParam(ApiUrls.getMAICheckProcess,

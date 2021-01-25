@@ -9,7 +9,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 class StockCheckRequestViewModel extends BaseModel{
 
   List<StockCheckModel> stockCheckList = [];
-
+ 
   ApiService _apiService = ApiService();
 
 
