@@ -31,26 +31,14 @@ class _StockRequestReplyScreenState extends State<StockRequestReplyScreen> {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
-            drawer: Drawer(
-              child: AppDrawerWidget(),
-            ),
+
             appBar: AppBar(
               backgroundColor: AppColors.green,
-              leading: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: InkWell(
-                    onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
-                    },
-                    child: Image.asset(
-                      ImageFile.menuIcon,
-                      color: AppColors.whiteColor,
-                    )),
-              ),
               title: Text(
                 "${AppStrings.REPLY_TO_REQUEST}",
                 style: TextStyle(color: AppColors.whiteColor),
               ),
+              automaticallyImplyLeading: true,
               centerTitle: true,
               actions: [
                 Padding(
@@ -106,13 +94,13 @@ class _StockRequestReplyScreenState extends State<StockRequestReplyScreen> {
                       border: OutlineInputBorder(),
                     ),
                     validator: (value){
-                      if(value.isEmpty){
-                        return 'required';
-                      }
-                      else
+                      // if(value.isEmpty){
+                      //   return 'required';
+                      // }
+                      // else
                         return null;
                     },
-                    onSaved: (value) => model.comment = value,
+                    onSaved: (value) => model.comment = value??'',
                   ),
                 ),
                 SizeConfig.CVerticalSpaceBig(),

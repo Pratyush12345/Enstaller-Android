@@ -2,6 +2,7 @@ import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
+import 'package:enstaller/ui/util/dialog_util.dart';
 import 'package:flutter/material.dart';
 import 'package:select_form_field/select_form_field.dart';
 
@@ -35,8 +36,8 @@ class _OrderItemState extends State<OrderItem> {
   @override
   void initState() {
     super.initState();
-    if(widget.saveOrderLine.intContractId != null)
-    cValue = widget.saveOrderLine.intContractId.toString();
+    if (widget.saveOrderLine.intContractId != null)
+      cValue = widget.saveOrderLine.intContractId.toString();
   }
 
   @override
@@ -56,16 +57,17 @@ class _OrderItemState extends State<OrderItem> {
                   type: SelectFormFieldType.dropdown,
                   initialValue: widget.saveOrderLine.intItemId.toString() ?? '',
                   enabled: widget.itemList.isNotEmpty,
-                  labelText:
-                       'Items',
+                  labelText: 'Items',
                   items: widget.itemList,
                   onSaved: (val) =>
                       widget.saveOrderLine.intItemId = int.parse(val),
                   onChanged: (val) {
                     setState(() {
                       id = int.parse(val);
-                      cValue = widget.itemList.firstWhere((element) => element['value'] == val)['intContractId'].toString();
-
+                      cValue = widget.itemList
+                          .firstWhere((element) => element['value'] == val)[
+                              'intContractId']
+                          .toString();
 
                       widget.saveOrderLine.intItemId = int.parse(val);
                     });
@@ -78,24 +80,28 @@ class _OrderItemState extends State<OrderItem> {
                 ),
               ),
               SizeConfig.verticalSpaceMedium(),
-
               Padding(
                   padding: SizeConfig.sidepadding,
                   child: DropdownButtonFormField<String>(
                     onChanged: (value) {
-
                       widget.saveOrderLine.intContractId = int.parse(value);
                     },
 
                     decoration: InputDecoration(
-                      hintText: cValue??'Select',
+                      hintText: cValue ?? 'Select',
                       labelText: 'Contract',
                     ),
                     value: cValue,
-                    items: cValue == null? []:[DropdownMenuItem<String>(
-                        child: Text(widget.contractList.firstWhere((element) => element['value']== cValue)['label']),
-                        value: cValue.toString(),
-                      )],
+                    items: cValue == null
+                        ? []
+                        : [
+                            DropdownMenuItem<String>(
+                              child: Text(widget.contractList.firstWhere(
+                                  (element) =>
+                                      element['value'] == cValue)['label']),
+                              value: cValue.toString(),
+                            )
+                          ],
                     // items: widget.contractList.map((e) =>
                     //
                     //      DropdownMenuItem<String>(
@@ -104,13 +110,12 @@ class _OrderItemState extends State<OrderItem> {
                     //     )
                     //
                     // ).toList().where((element) => element.value == id.toString()).toList(),
-                    onSaved: (val){
+                    onSaved: (val) {
                       widget.saveOrderLine.intContractId = int.parse(val);
                     },
                     validator: (val) {
                       print('value is $val');
-                      if (val == null)
-                        return 'Please choose an option.';
+                      if (val == null) return 'Please choose an option.';
                       return null;
                     },
                   )),
@@ -121,7 +126,8 @@ class _OrderItemState extends State<OrderItem> {
                   children: [
                     Expanded(
                         child: TextFormField(
-                          initialValue: widget.saveOrderLine.decQty?.toString() ?? '',
+                      initialValue:
+                          widget.saveOrderLine.decQty?.toString() ?? '',
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: AppStrings.QUANTITY,
@@ -144,7 +150,21 @@ class _OrderItemState extends State<OrderItem> {
                           Icons.delete,
                           color: AppColors.red,
                         ),
-                        onPressed: widget.onDelete),
+                        onPressed: () {
+                          DialogSnackBarUtils().showAlertDialog(
+                              context: context,
+                              title: 'Are you sure you want to delete?',
+                              onPositiveButtonTab:(){
+                                widget.onDelete();
+                                Navigator.of(context).pop();
+                              },
+                                onNegativeButtonTab: ()
+                              {
+                                Navigator.of(context).pop();
+                              },
+                              negativeButton: 'No',
+                              positiveButton: 'Yes');
+                        }),
                   ],
                 ),
               ),

@@ -79,7 +79,7 @@ class DialogSnackBarUtils {
                TextStyle(color: Colors.black,fontSize: 14.0),
           ),
           content: Visibility(
-              visible: subTitle?.isNotEmpty ,
+              visible: subTitle?.isNotEmpty??false ,
               child: new Text(
                 subTitle ?? "",
                 style: subTitleTextStyle ??

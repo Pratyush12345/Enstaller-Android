@@ -33,21 +33,10 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
-            drawer: Drawer(
-              child:AppDrawerWidget(),
-            ),
+
             appBar: AppBar(
               backgroundColor: AppColors.green,
-              leading: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: InkWell(
-                    onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
-                    },
-                    child: Image.asset(
-                      ImageFile.menuIcon,color: AppColors.whiteColor,
-                    )),
-              ),
+              automaticallyImplyLeading: true,
               title: Text((widget.intOrderId != null)?"${AppStrings.EDIT_ORDER}":'${AppStrings.ADD_ORDER}',style: TextStyle(
                   color: AppColors.whiteColor
               ),),
