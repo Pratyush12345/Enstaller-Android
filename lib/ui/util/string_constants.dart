@@ -1,0 +1,1 @@
+const String COMMON_ERROR_MESSAGE= "Something Went Wrong";
