@@ -50,8 +50,8 @@ class UpdateStatusScreen extends StatelessWidget {
               child: InkWell(
                   onTap: () {
                     _scaffoldKey.currentState.openDrawer();
-                  },
-                  child: Image.asset(
+                  }, 
+                  child: Image.asset( 
                     ImageFile.menuIcon,color: AppColors.whiteColor,
                   )),
             ),

@@ -26,7 +26,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseView<OrderScreenViewModel>(
-      onModelReady: (model) => model.initializeData(),
+      onModelReady: (model) => model.initializeData(), 
       builder: (context, model, child) {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,

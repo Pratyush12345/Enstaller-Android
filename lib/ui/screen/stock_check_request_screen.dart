@@ -50,7 +50,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
               title: Text(
                 "${AppStrings.STOCK_REQUEST_CHECK}",
                 style: TextStyle(color: AppColors.whiteColor),
-              ),
+              ), 
               centerTitle: true,
               actions: [
                 Padding(

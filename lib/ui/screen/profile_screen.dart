@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatefulWidget { 
   @override
   MapScreenState createState() => MapScreenState();
 }
