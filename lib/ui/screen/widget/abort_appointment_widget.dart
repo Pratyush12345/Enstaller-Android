@@ -119,7 +119,7 @@ class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
                                     intId: widget.appointmentID.trim(),
                                     bisAbortRequestApproved: "0",
                                     intAbortRequestedId: reasonId,
-                                    isabort: "1",
+                                    isabort: 1,
                                     requestFrom: "Enstaller",
                                     strCancellationComment: "Comment",
                                     strCancellationReason: abort_reason.trim() );

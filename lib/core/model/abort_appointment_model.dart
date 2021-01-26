@@ -30,7 +30,7 @@ class AbortAppointmentModel {
 
 class ConfirmAbortAppointment {
   String intId;
-  String isabort;
+  int isabort;
   String intAbortRequestedId;
   String strCancellationReason;
   String strCancellationComment;

@@ -192,13 +192,10 @@ class ApiService extends BaseApi{
     
     print(credentials.toJson());
 
-    return postRequest(ApiUrls.updateAbortAppointment, (r) {
+    return postRequestMap(ApiUrls.updateAbortAppointment, (r) {
       final response = json.decode(r.body);
       if (response) {
-        print("ccccccccccccccc");
-    print(response);
-    print("ccccccccccccccc");
-    
+        
         return ResponseModel(
             statusCode: 1,
             response: 'Successfully Updated'
