@@ -2,6 +2,7 @@ import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/navigation_service.dart';
 import 'package:enstaller/core/viewmodel/abort_appointment_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/appointment_viewmodel.dart';
+import 'package:enstaller/core/viewmodel/check_request_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/email_notification_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/comment_dialog_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
@@ -56,6 +57,7 @@ void setupLocator() {
   getIt.registerFactory(() => StockRequestReplyViewModel());
   getIt.registerFactory(() => OrderScreenViewModel());
   getIt.registerFactory(() => OrderDetailViewModel());
+  getIt.registerFactory(() => CheckRequestViewModel());
   
 
 

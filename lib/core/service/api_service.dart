@@ -15,6 +15,7 @@ import 'package:enstaller/core/model/order_line_detail_model.dart';
 import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/model/save_order.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
+import 'package:enstaller/core/model/serial_item_model.dart';
 import 'package:enstaller/core/model/serial_model.dart';
 import 'package:enstaller/core/model/sms_notification_model.dart';
 import 'package:enstaller/core/model/email_notification_model.dart';
@@ -474,6 +475,14 @@ class ApiService extends BaseApi{
   }
 
 
+  Future <dynamic> getSerialListByEmployeeId(String intEngineerId){
+    return getRequestWithParam(ApiUrls.getSerialListByEmployeeId,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => SerialItemModel.fromJson(e)).toList();
+
+        }, 'intEngineerId=$intEngineerId') ;
+  }
 
 
 

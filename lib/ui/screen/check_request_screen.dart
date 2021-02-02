@@ -1,0 +1,118 @@
+import 'package:enstaller/core/constant/app_colors.dart';
+import 'package:enstaller/core/constant/app_string.dart';
+import 'package:enstaller/core/constant/appconstant.dart';
+import 'package:enstaller/core/constant/image_file.dart';
+import 'package:enstaller/core/constant/size_config.dart';
+import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/serial_item_model.dart';
+import 'package:enstaller/core/provider/base_view.dart';
+import 'package:enstaller/core/viewmodel/check_request_viewmodel.dart';
+import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
+import 'package:enstaller/ui/shared/app_drawer_widget.dart';
+import 'package:flutter/material.dart';
+
+class CheckRequestScreen extends StatefulWidget {
+  @override
+  _CheckRequestScreenState createState() => _CheckRequestScreenState();
+}
+
+class _CheckRequestScreenState extends State<CheckRequestScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
+    return BaseView<CheckRequestViewModel>(
+      onModelReady: (model) => model.initializeData(),
+      builder: (context, model, child) {
+        return Scaffold(
+            backgroundColor: AppColors.scafoldColor,
+            key: _scaffoldKey,
+            drawer: Drawer(
+              child: AppDrawerWidget(),
+            ),
+            appBar: AppBar(
+              backgroundColor: AppColors.green,
+              leading: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: InkWell(
+                    onTap: () {
+                      _scaffoldKey.currentState.openDrawer();
+                    },
+                    child: Image.asset(
+                      ImageFile.menuIcon,
+                      color: AppColors.whiteColor,
+                    )),
+              ),
+              title: Text(
+                "${AppStrings.CHECK_REQUEST}",
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
+              centerTitle: true,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Image.asset(
+                    ImageFile.notification,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ],
+            ),
+            body: model.state == ViewState.Busy
+                ? AppConstants.circulerProgressIndicator()
+                : SingleChildScrollView(
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height),
+                  child: (model.serialList.isNotEmpty == true)
+                      ? Padding(
+                    padding:
+                    SizeConfig.padding.copyWith(bottom: 100),
+                    child: ListView.builder(
+                      itemCount: model.serialList.length,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: SizeConfig.verticalC13Padding,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors
+                                    .appointmentBackGroundColor,
+                                borderRadius:
+                                BorderRadius.circular(10)),
+                            child: Column(
+                              children: [
+                                _serialModel(
+                                    model.serialList[i])
+//                                Divider(
+//                                  color: AppColors.darkGrayColor,
+//                                  thickness: 1.0,
+//                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                      : Center(child: Text(AppStrings.noDataFound))),
+            ));
+      },
+    );
+  }
+
+  Widget _serialModel(
+      SerialItemModel serialItemModel) {
+    return Column(
+      children: [
+        AppointmentDataRow(
+          firstText: AppStrings.SERIAL_NUMBER,
+          secondText: serialItemModel?.strSerialNo ?? "",
+        ),
+        AppointmentDataRow(
+          firstText: AppStrings.ITEM_NAME,
+          secondText: serialItemModel?.strItemName ?? "",
+        ),
+
+      ],
+    );
+  }
+}

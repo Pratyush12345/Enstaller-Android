@@ -38,5 +38,6 @@ class ApiUrls{
   static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
   static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
   static String getStockOrderLineItemsByOrderId= 'Order/GetStockOrderLineItemsByOrderId';
+  static String getSerialListByEmployeeId = 'stkEngineerWiseStock/GetSerialListByEmployeeId';
 
 }

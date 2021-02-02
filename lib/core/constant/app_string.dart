@@ -166,6 +166,7 @@ class AppStrings {
   static const MODIFIED = 'Modified';
   static const COLLECTION_DATE = 'Collection Date';
   static const DOWNLOAD = 'DOWNLOAD';
+  static const CHECK_REQUEST = 'Check Request';
   //email Notification
   static const Date ='Date';
   static const appointmentNo='Appointment No';
@@ -183,6 +184,8 @@ class AppStrings {
   static const ORDER_QUANTITY = 'Order Quantity';
   static const PENDING_QUANTITY = 'Pending Quantity';
   static const EDIT_ORDER = 'EDIT ORDER';
+  static const SERIAL_NUMBER = 'Serial Number';
+  static const ITEM_NAME = 'Item Name';
 
   //SMS Notification
   static const bookingRefNo = "Booking Ref. No";

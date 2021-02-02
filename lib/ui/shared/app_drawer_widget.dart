@@ -8,6 +8,7 @@ import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
+import 'package:enstaller/ui/screen/check_request_screen.dart';
 import 'package:enstaller/ui/screen/email_notification.dart';
 import 'package:enstaller/ui/screen/add_order_screen.dart';
 import 'package:enstaller/ui/screen/order_screen.dart';
@@ -143,6 +144,14 @@ class AppDrawerWidget extends StatelessWidget {
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => StockCheckRequestScreen()));
+                },
+              ),
+              DrawerRowWidget(
+                title: 'Check Request',
+                assetPath: ImageFile.stock_check_request,
+                onTap: (){
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => CheckRequestScreen()));
                 },
               ),
               // DrawerRowWidget(
