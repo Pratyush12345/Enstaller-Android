@@ -100,9 +100,11 @@ class DetailsScreenViewModel extends BaseModel {
     if(id!=2 && id!=6){
       isformfilled[_smest2displaybutton[id]] = await _formfilledornot(customerID, _processid[ _smest2displaybutton[id]] );
     }else{
-      _smest2displaybutton[id].split("+").forEach((element) async{ 
-        isformfilled[element] = await _formfilledornot(customerID, _processid[ element] ); 
-      });
+       
+      List<String> _elementlist = _smest2displaybutton[id].split("+");
+      for(int i = 0; i<2; i++){
+          isformfilled[_elementlist[i]] = await _formfilledornot(customerID, _processid[_elementlist[i]] );    
+        }
     }
     }
 

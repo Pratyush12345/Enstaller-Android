@@ -430,7 +430,7 @@ class _DetailScreenState extends State<DetailScreen> {
             
         id = value[model.appointmentDetails.appointment.strJobType.trim()];
         
-      }
+              }
     });
     
     return id;
