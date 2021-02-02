@@ -430,7 +430,7 @@ class _DetailScreenState extends State<DetailScreen> {
             
         id = value[model.appointmentDetails.appointment.strJobType.trim()];
         
-      }
+              }
     });
     
     return id;
@@ -444,7 +444,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ? Column(
                   children: [
                     Text(
-                      "SMETS2 XICOM ACTION",
+                      "SMETS2 XMREM ACTION",
                       textAlign: TextAlign.start,
                       style: TextStyle(fontWeight: FontWeight.normal),
                     ),
@@ -455,18 +455,18 @@ class _DetailScreenState extends State<DetailScreen> {
                       padding: SizeConfig.sidepadding,
                       child: AppButton(
                         height: 40,
-                        color: !model.isformfilled
+                        color: !model.isformfilled[_smest2displaybutton[id]]
                             ? AppColors.darkBlue
                             : AppColors.disablebuttonColor,
-                        buttonText: !model.isformfilled
-                            ? _smest2displaybutton[id]
+                        buttonText: !model.isformfilled[_smest2displaybutton[id]]
+                            ? "Raise "+_smest2displaybutton[id]
                             : _disablesmest2displaybutton[id],
-                        radius: 15,
+                        radius: !model.isformfilled[_smest2displaybutton[id]]? 15 : 6,
                         textStyle: TextStyle(
-                            color: !model.isformfilled
+                            color: !model.isformfilled[_smest2displaybutton[id]]
                                 ? AppColors.whiteColor
                                 : AppColors.black),
-                        onTap: !model.isformfilled
+                        onTap: !model.isformfilled[_smest2displaybutton[id]]
                             ? () {
                                 model.onRaiseButtonPressed(
                                     widget.arguments.customerID,
@@ -480,7 +480,7 @@ class _DetailScreenState extends State<DetailScreen> {
               : Column(
                   children: [
                     Text(
-                      "SMETS2 XICOM ACTION",
+                      "SMETS2 XMREM ACTION",
                       textAlign: TextAlign.start,
                       style: TextStyle(fontWeight: FontWeight.normal),
                     ),
@@ -491,18 +491,18 @@ class _DetailScreenState extends State<DetailScreen> {
                       padding: SizeConfig.sidepadding,
                       child: AppButton(
                         height: 40,
-                        color: !model.isformfilled
+                        color: !model.isformfilled[_smest2displaybutton[id].split("+")[0]]
                             ? AppColors.darkBlue
                             : AppColors.disablebuttonColor,
-                        buttonText: !model.isformfilled
-                            ? _smest2displaybutton[id].split("+")[0]
+                        buttonText: !model.isformfilled[_smest2displaybutton[id].split("+")[0]]
+                            ? "Raise "+_smest2displaybutton[id].split("+")[0]
                             : _disablesmest2displaybutton[id].split("+")[0],
-                        radius: 15,
+                        radius: !model.isformfilled[_smest2displaybutton[id].split("+")[0]]? 15 : 6,
                         textStyle: TextStyle(
-                            color: !model.isformfilled
+                            color: !model.isformfilled[_smest2displaybutton[id].split("+")[0]]
                                 ? AppColors.whiteColor
                                 : AppColors.black),
-                        onTap: !model.isformfilled
+                        onTap: !model.isformfilled[_smest2displaybutton[id].split("+")[0]]
                             ? () {
                                 model.onRaiseButtonPressed(
                                     widget.arguments.customerID,
@@ -519,18 +519,18 @@ class _DetailScreenState extends State<DetailScreen> {
                       padding: SizeConfig.sidepadding,
                       child: AppButton(
                         height: 40,
-                        color: !model.isformfilled
+                        color: !model.isformfilled[_smest2displaybutton[id].split("+")[1]]
                             ? AppColors.darkBlue
                             : AppColors.disablebuttonColor,
-                        buttonText: !model.isformfilled
-                            ? _smest2displaybutton[id].split("+")[1]
+                        buttonText: !model.isformfilled[_smest2displaybutton[id].split("+")[1]]
+                            ? "Raise "+_smest2displaybutton[id].split("+")[1]
                             : _disablesmest2displaybutton[id].split("+")[1],
-                        radius: 15,
+                        radius: !model.isformfilled[_smest2displaybutton[id].split("+")[1]]? 15 : 6,
                         textStyle: TextStyle(
-                            color: !model.isformfilled
+                            color: !model.isformfilled[_smest2displaybutton[id].split("+")[1]]
                                 ? AppColors.whiteColor
                                 : AppColors.black),
-                        onTap: !model.isformfilled
+                        onTap: !model.isformfilled[_smest2displaybutton[id].split("+")[1]]
                             ? () {
                                 model.onRaiseButtonPressed(
                                     widget.arguments.customerID,

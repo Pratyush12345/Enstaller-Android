@@ -17,6 +17,7 @@ class AbortAppoinmentWidget extends StatefulWidget {
 
 class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
   String abort_reason;
+  String reasonId;
   @override
   Widget build(BuildContext context) {
     return  BaseView<AbortAppointmentViewModel>( 
@@ -89,8 +90,14 @@ class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
                     }).toList(),
                     onChanged: (newValueSelected) {
                       abort_reason = newValueSelected;
-                      setState(() {
-                      });  
+                      model.abortlist.forEach((element) { 
+                        if(element.strName == abort_reason.trim()){
+                          reasonId = element.intReasonId.toString();
+                        }
+                      }); 
+                      print(reasonId);
+                      print(abort_reason);
+                      setState(() {});  
                     },
                     isExpanded: true,
                     hint: Text("Choose Reason for Abort Appointment"),
@@ -111,8 +118,8 @@ class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
                                   final ConfirmAbortAppointment confirmAbortAppointment = ConfirmAbortAppointment(
                                     intId: widget.appointmentID.trim(),
                                     bisAbortRequestApproved: "0",
-                                    intAbortRequestedId: "1",
-                                    isabort: "1",
+                                    intAbortRequestedId: reasonId,
+                                    isabort: 1,
                                     requestFrom: "Enstaller",
                                     strCancellationComment: "Comment",
                                     strCancellationReason: abort_reason.trim() );

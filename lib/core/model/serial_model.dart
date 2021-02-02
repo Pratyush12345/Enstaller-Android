@@ -6,7 +6,6 @@ class SerialNoModel{
   SerialNoModel.fromJson(Map<String, dynamic> json){
     strSerialNo = json['strSerialNo'];
   }
-
   SerialNoModel.fromJson1(Map<String, dynamic> json){
     strSerialNo = json['serialNo'];
   }

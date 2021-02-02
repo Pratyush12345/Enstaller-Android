@@ -14,11 +14,39 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:encrypt/encrypt.dart' as AESencrypt;
-import 'dart:convert' as convert;
-import 'package:geocoder/geocoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailsScreenViewModel extends BaseModel {
+  Map<String, String> _processid = {
+    "EMREM": "6",
+    "GMREM": "81",
+    "GICOM": "79",
+    "EICOM": "1"
+  };
+  Map<int, String> _smest2displaybutton = {
+    0: "EMREM",
+    1: "GMREM",
+    2: "EMREM+GMREM",
+    3: "EMREM",
+    4: "EICOM",
+    5: "GICON",
+    6: "EICOM+GICOM",
+    7: "EICOM"
+  };
+  Map<String, Map<String, int>> _appointmentandjobtype = {
+    "Meter removal, Scheduled Exchange, Emergency Exchange": {
+      "SMETS2 1ph Elec": 0,
+      "SMETS2 Gas": 1,
+      "SMETS2 Dual": 2,
+      "SMETS2 3ph Elec": 3,
+    },
+    "New Connection": {
+      "SMETS2 1ph Elec": 4,
+      "SMETS2 Gas": 5,
+      "SMETS2 Dual": 6,
+      "SMETS2 3ph Elec": 7
+    }
+  };
   String pincode;
   ApiService _apiService = ApiService();
   List<Appointment> appointMentList = [];
@@ -26,7 +54,7 @@ class DetailsScreenViewModel extends BaseModel {
   AppointmentDetails appointmentDetails;
   List<ElectricAndGasMeterModel> electricGasMeterList = [];
   CustomerDetails customerDetails;
-  bool isformfilled = false;
+  Map<String, bool> isformfilled = {};
   String selectedStatus;
   UserModel user;
   List<String> statusList = [
@@ -66,6 +94,20 @@ class DetailsScreenViewModel extends BaseModel {
     electricGasMeterList =
         await _apiService.getCustomerMeterListByCustomer(customerID);
     customerDetails = await _apiService.getCustomerById(customerID);
+     
+    int id = _checkbuttonindex(appointmentDetails);
+    if(id!=null){
+    if(id!=2 && id!=6){
+      isformfilled[_smest2displaybutton[id]] = await _formfilledornot(customerID, _processid[ _smest2displaybutton[id]] );
+    }else{
+       
+      List<String> _elementlist = _smest2displaybutton[id].split("+");
+      for(int i = 0; i<2; i++){
+          isformfilled[_elementlist[i]] = await _formfilledornot(customerID, _processid[_elementlist[i]] );    
+        }
+    }
+    }
+
     user = await Prefs.getUser();
     if (statusList
         .contains(appointmentDetails.appointment.appointmentEventType)) {
@@ -78,6 +120,30 @@ class DetailsScreenViewModel extends BaseModel {
     }
 
     setState(ViewState.Idle);
+  }
+
+  int _checkbuttonindex(appointmentDetails) {
+    int id;
+    _appointmentandjobtype.forEach((key, value) {
+       
+      if (key
+          .contains(appointmentDetails.appointment.strAppointmentType.trim())) {
+            
+        id = value[appointmentDetails.appointment.strJobType.trim()];
+        
+      }
+    });
+    return id;
+  }
+
+  Future<bool> _formfilledornot(String customerID, String processId) async{
+     ResponseModel responseModel =
+        await _apiService.getMAICheckProcess(customerID, processId);
+    if (responseModel.statusCode == 1) {
+     return true;
+    } else {
+      return false;
+    }
   }
 
   void onUpdateStatus(BuildContext context, String appointmentID) async {
@@ -110,18 +176,12 @@ class DetailsScreenViewModel extends BaseModel {
     UserModel userModel = await Prefs.getUser();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String ups = preferences.getString('ups');
-    ResponseModel responseModel =
-        await _apiService.getMAICheckProcess(customerid, processId);
-    if (responseModel.statusCode == 1) {
-     isformfilled = true;
-    } else {
-      isformfilled = false;
+    
       if (processId == "79" || processId == "81") {
         startGasProcess(processId, userModel, ups, customerid);
       } else {
         startElecProcess(processId, userModel, ups, customerid);
       }
-    }
     setState(ViewState.Idle);
   }
   

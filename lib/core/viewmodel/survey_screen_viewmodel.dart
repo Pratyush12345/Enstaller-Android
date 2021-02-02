@@ -197,7 +197,6 @@ class SurveyScreenViewModel extends BaseModel {
       });
     }
 
-
     setState(ViewState.Idle);
   }
   void onChangeYesNo(SurveyResponseModel surveyResponseModel){

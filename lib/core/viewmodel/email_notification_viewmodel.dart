@@ -4,7 +4,6 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
-
 class EmailNotificationViewModel extends BaseModel{
   ApiService _apiService=ApiService();
   List<EmailNotificationModel>emailNotificationList=[];

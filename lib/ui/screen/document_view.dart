@@ -6,7 +6,10 @@ class DocumentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Document"),),
+      appBar: AppBar(title: Text("Document",
+      style: TextStyle(
+        color: Colors.white
+      ),),),
       body: Center(
         child:  PDFView(
           filePath: doc,
