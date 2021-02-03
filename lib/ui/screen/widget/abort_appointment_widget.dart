@@ -145,7 +145,7 @@ class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
                               width: 2,
                             ),
                             Expanded(
-                              flex: 3,
+                              flex: 2,
                               child: InkWell(
                                 onTap: (){
                                   Navigator.of(context).pop();

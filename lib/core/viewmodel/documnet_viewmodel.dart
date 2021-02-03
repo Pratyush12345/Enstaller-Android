@@ -66,13 +66,12 @@ class DocumnetViewModel extends BaseModel{
   void onSearch(String val){
     setState(ViewState.Busy);
     documentList=[];
-    // _documentList.forEach((element) {
-    //   DateTime dt = DateTime.parse(element.dteBookedDate);
-    //   if(element.strCompanyName.toLowerCase().contains(val.toLowerCase())||element.appointmentEventType.toLowerCase().contains(val.toLowerCase())||
-    //   element.engineerNam.toLowerCase().contains(val.toLowerCase())||element.strBookingReference.toLowerCase().contains(val.toLowerCase())){
-    //     documentList.add(element);
-    //   }
-    // });
+    _documentList.forEach((element) {
+      if(element.strDocType.toLowerCase().contains(val.toLowerCase())||
+      element.strFileName.toLowerCase().contains(val.toLowerCase())){
+        documentList.add(element);
+      }
+    });
     setState(ViewState.Idle);
   }
   Future<String> pdfview(String url) async{

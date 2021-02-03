@@ -12,7 +12,7 @@ class AppointmentViewModel extends BaseModel{
 
   bool searchBool=false;
 
-  void getAppointmentList()async{
+  void getAppointmentList()async{ 
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
     _appointmentList =await _apiService.getAppointmentList(user.intEngineerId.toString());

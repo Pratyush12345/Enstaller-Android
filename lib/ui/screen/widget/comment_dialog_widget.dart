@@ -129,7 +129,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                               color: AppColors.darkBlue,
                               child: Center(
                                   child: Text(
-                                    "Date & Time",
+                                    "Date",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,

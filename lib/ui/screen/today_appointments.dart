@@ -52,18 +52,32 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                       ImageFile.menuIcon,color: AppColors.whiteColor,
                     )),
               ),
-              title: Text(
+              title: model.searchBool
+                  ? TextField(
+                      decoration:
+                          InputDecoration(hintText: AppStrings.searchHere),
+                      onChanged: (val) {
+                        model.onSearch(val);
+                      },
+                    )
+                  : Text(
                 AppStrings.TODAY_APPOINTMENTS,
                 style: getTextStyle(color: AppColors.whiteColor, isBold: true),
               ),
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.white,
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Icon(
+                      model.searchBool ? Icons.clear : Icons.search,
+                      color: AppColors.whiteColor,
+                    ),
                   ),
-                )
+                  onTap: () {
+                    model.onClickSerach();
+                  },
+                ),
+                
               ],
             ),
             body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():SingleChildScrollView(

@@ -139,7 +139,7 @@ class AppDrawerWidget extends StatelessWidget {
                 },
               ),
               DrawerRowWidget(
-                title: 'Stock',
+                title: 'Stock Check Request',
                 assetPath: ImageFile.stock_check_request,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
@@ -147,7 +147,7 @@ class AppDrawerWidget extends StatelessWidget {
                 },
               ),
               DrawerRowWidget(
-                title: 'Check Request',
+                title: 'Available Stock',
                 assetPath: ImageFile.stock_check_request,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(

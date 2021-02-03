@@ -63,6 +63,7 @@ class AppStrings {
   static const meterSerialNo='Meter Serial No';
   static const profileClass='Profile Class';
   static const mPAN='MPAN';
+  static const mPRN='MPRN';
   static const meterMode='Meter Mode';
   static const sSC='SSC';
   static const pressure='Pressure';
@@ -138,7 +139,7 @@ class AppStrings {
   static const UNABLE_TO_SAVE = 'Unable to save';
   static const UNABLE_TO_VALIDATE = 'Unable to validate';
   static const SAVED_SUCCESSFULLY = 'Saved successfully';
-  static const STOCK_REQUEST_CHECK = 'Stock Request Check';
+  static const STOCK_REQUEST_CHECK = 'Stock Check Request';
   static const MOP_USER = 'MOP User';
   static const MOP_COMMENTS = 'MOP Comments';
   static const ENGINEER_REPLY_COMMENTS = 'Engineer Reply Comments';
@@ -166,7 +167,7 @@ class AppStrings {
   static const MODIFIED = 'Modified';
   static const COLLECTION_DATE = 'Collection Date';
   static const DOWNLOAD = 'DOWNLOAD';
-  static const CHECK_REQUEST = 'Check Request';
+  static const CHECK_REQUEST = 'Available Stock';
   //email Notification
   static const Date ='Date';
   static const appointmentNo='Appointment No';

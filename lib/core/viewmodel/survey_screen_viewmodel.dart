@@ -75,8 +75,9 @@ class SurveyScreenViewModel extends BaseModel {
 
       _surveyQuestion =
       await _apiService.getSurveyQuestionAppointmentWise(appointmentID);
-
-
+       print("???????????????");
+       
+       print("???????????????");
       _surveyQuestion.forEach((element) {
 
         if (element.intSectionId == 1) {

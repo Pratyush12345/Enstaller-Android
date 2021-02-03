@@ -1001,7 +1001,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   secondText: model.electricGasMeterList[i].strFuel ?? "",
                 ),
                 AppointmentDataRow(
-                  firstText: AppStrings.mPAN,
+                  firstText: AppStrings.mPRN,
                   secondText: model.electricGasMeterList[i].strMpan ?? "",
                 ),
                 AppointmentDataRow(
@@ -1023,7 +1023,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 secondText: '',
               ),
               AppointmentDataRow(
-                firstText: AppStrings.mPAN,
+                firstText: AppStrings.mPRN,
                 secondText: '',
               ),
               AppointmentDataRow(
