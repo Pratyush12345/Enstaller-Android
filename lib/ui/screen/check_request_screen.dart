@@ -67,31 +67,19 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
                       ? Padding(
                     padding:
                     SizeConfig.padding.copyWith(bottom: 100),
-                    child: ListView.builder(
-                      itemCount: model.serialList.length,
-                      itemBuilder: (context, i) {
-                        return Padding(
-                          padding: SizeConfig.verticalC13Padding,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors
-                                    .appointmentBackGroundColor,
-                                borderRadius:
-                                BorderRadius.circular(10)),
-                            child: Column(
-                              children: [
-                                _serialModel(
-                                    model.serialList[i])
-//                                Divider(
-//                                  color: AppColors.darkGrayColor,
-//                                  thickness: 1.0,
-//                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    child: Padding(
+                      padding: SizeConfig.verticalC13Padding,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: AppColors
+                                .appointmentBackGroundColor,
+                            borderRadius:
+                            BorderRadius.circular(10)),
+                        child: Column(
+                          children: model.list,
+                        ),
+                      ),
+                    )
                   )
                       : Center(child: Text(AppStrings.noDataFound))),
             ));
