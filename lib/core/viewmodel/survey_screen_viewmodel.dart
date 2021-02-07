@@ -542,7 +542,6 @@ class SurveyScreenViewModel extends BaseModel {
     final iv = AESencrypt.IV.fromUtf8('8080808080808080');
     final encrypter = AESencrypt.Encrypter(
         AESencrypt.AES(key, mode: AESencrypt.AESMode.cbc, padding: 'PKCS7'));
-
     final encrypted = encrypter.encrypt(value, iv: iv);
 
     return encrypted.base64

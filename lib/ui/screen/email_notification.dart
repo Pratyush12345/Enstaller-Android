@@ -1,4 +1,3 @@
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -18,111 +17,117 @@ import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
 
-
 class EmailNotificationScreen extends StatefulWidget {
   @override
-  _EmailNotificationScreenState createState() => _EmailNotificationScreenState();
+  _EmailNotificationScreenState createState() =>
+      _EmailNotificationScreenState();
 }
 
 class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
-
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
     return BaseView<EmailNotificationViewModel>(
-      onModelReady: (model)=>model.getEmailNotificationList(),
-      builder: (context,model,child){
+      onModelReady: (model) => model.getEmailNotificationList(),
+      builder: (context, model, child) {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
             drawer: Drawer(
-              child:AppDrawerWidget(),
+              child: AppDrawerWidget(),
             ),
             appBar: AppBar(
               backgroundColor: AppColors.green,
-              leading:Padding(
+              leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
                     onTap: () {
                       _scaffoldKey.currentState.openDrawer();
                     },
                     child: Image.asset(
-                      ImageFile.menuIcon,color: AppColors.whiteColor,
+                      ImageFile.menuIcon,
+                      color: AppColors.whiteColor,
                     )),
               ),
               centerTitle: true,
-              title: model.searchBool?TextField(
-                decoration: InputDecoration(
-                  hintText: AppStrings.searchHere
-                ),
-                onChanged: (val){
-                  model.onSearch(val);
-                },
-              ):Text(
-                AppStrings.emailnotification,
-                style: getTextStyle(color:AppColors.whiteColor, isBold: false),
-              ),
+              title: model.searchBool
+                  ? TextField(
+                      decoration:
+                          InputDecoration(hintText: AppStrings.searchHere),
+                      onChanged: (val) {
+                        model.onSearch(val);
+                      },
+                    )
+                  : Text(
+                      AppStrings.emailnotification,
+                      style: getTextStyle(
+                          color: AppColors.whiteColor, isBold: false),
+                    ),
               actions: [
                 InkWell(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Icon(
-                      model.searchBool?Icons.clear:Icons.search,
+                      model.searchBool ? Icons.clear : Icons.search,
                       color: AppColors.whiteColor,
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     model.onClickSerach();
                   },
                 ),
-                Icon(Icons.notifications_none,
-                  size: MediaQuery.of(context).size.height * 0.035,),
-
+                Icon(
+                  Icons.notifications_none,
+                  size: MediaQuery.of(context).size.height * 0.035,
+                ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
               ],
             ),
-            body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():
-            SingleChildScrollView(
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height),
-                  child: (model.emailNotificationList.isNotEmpty == true) ? Padding(
-                    padding: SizeConfig.padding.copyWith(
-                      bottom: 100
-                    ),
-                    child: ListView.builder(
-                      itemCount: model.emailNotificationList.length,
-                      itemBuilder: (context, i) {
-                        return
-                          Padding(
-                            padding: SizeConfig.verticalC13Padding,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.appointmentBackGroundColor,
-                                borderRadius: BorderRadius.circular(10)
-                              ),
-                              child: Column(
-                                children: [
-                                  _engineerInfo(model.emailNotificationList[i]),
+            body: model.state == ViewState.Busy
+                ? AppConstants.circulerProgressIndicator()
+                : RefreshIndicator(
+                    onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getEmailNotificationList()),
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height),
+                        child: (model.emailNotificationList.isNotEmpty == true)
+                            ? Padding(
+                                padding:
+                                    SizeConfig.padding.copyWith(bottom: 100),
+                                child: ListView.builder(
+                                  itemCount: model.emailNotificationList.length,
+                                  itemBuilder: (context, i) {
+                                    return Padding(
+                                      padding: SizeConfig.verticalC13Padding,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors
+                                                .appointmentBackGroundColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          children: [
+                                            _engineerInfo(
+                                                model.emailNotificationList[i]),
 //                                Divider(
 //                                  color: AppColors.darkGrayColor,
 //                                  thickness: 1.0,
 //                                ),
-                                ],
-                              ),
-                            ),
-                          );
-                      },
-                    ),
-                  ) : Center(child:Text(AppStrings.noDataFound))
-              ),
-            ));
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            : Center(child: Text(AppStrings.noDataFound))),
+                  ));
       },
     );
   }
@@ -133,16 +138,18 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
       children: [
         AppointmentDataRow(
           firstText: AppStrings.Date,
-          secondText: AppConstants.formattedSingeDate(DateTime.parse(appointment?.dteCreatedDate)) ?? "",
+          secondText: AppConstants.formattedSingeDate(
+                  DateTime.parse(appointment?.dteCreatedDate)) ??
+              "",
         ),
         AppointmentDataRow(
           firstText: AppStrings.appointmentNo,
           secondText: appointment?.intAppointmentId.toString() ?? "",
         ),
-    AppointmentDataRow(
-    firstText: AppStrings.Email,
-    secondText: appointment?.strEmail ?? "",
-    ),
+        AppointmentDataRow(
+          firstText: AppStrings.Email,
+          secondText: appointment?.strEmail ?? "",
+        ),
         AppointmentDataRow(
           firstText: AppStrings.customer,
           secondText: appointment?.customerName ?? "",
@@ -163,18 +170,19 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
           firstText: AppStrings.ActionBy,
           secondText: appointment?.strActionby ?? "",
         ),
-
         ClipRRect(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(7),
-            bottomRight:  Radius.circular(7)
-          ),
+              bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
           child: AppButton(
             buttonText: AppStrings.viewemail,
             color: AppColors.green,
-            textStyle: TextStyle(color: AppColors.whiteColor,fontWeight: FontWeight.bold),
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EmailView(html:appointment?.strMailContent ?? "" ,)));
+            textStyle: TextStyle(
+                color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EmailView(
+                        html: appointment?.strMailContent ?? "",
+                      )));
             },
           ),
         ),
@@ -184,14 +192,10 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
 
   //survey info
 
-
   TextStyle getTextStyle({Color color, bool isBold = false, num fontSize}) {
     return TextStyle(
         color: color,
         fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
         fontSize: fontSize);
   }
-
-
-
 }
