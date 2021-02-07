@@ -26,11 +26,11 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
-class SurveyArguments{
+class SurveyArguments {
   String appointmentID;
   bool edit;
   DetailsScreenViewModel dsmodel;
-  SurveyArguments({this.appointmentID,this.edit, this.dsmodel});
+  SurveyArguments({this.appointmentID, this.edit, this.dsmodel});
 }
 
 class SurveyScreen extends StatefulWidget {
@@ -42,18 +42,13 @@ class SurveyScreen extends StatefulWidget {
 }
 
 class _SurveyScreenState extends State<SurveyScreen> {
-
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
-
-      onWillPop: ()async{
-
+      onWillPop: () async {
         Navigator.pop(context);
         return true;
       },
@@ -74,63 +69,44 @@ class _SurveyScreenState extends State<SurveyScreen> {
 //                    ImageFile.menuIcon,color: AppColors.whiteColor,
 //                  )),
 //            ),
-            title: Text(AppStrings.survey,style: TextStyle(color: AppColors.whiteColor),),
+            title: Text(
+              AppStrings.survey,
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
           ),
           body: BaseView<SurveyScreenViewModel>(
-            onModelReady: (model)=>model.initializeData(widget.arguments.appointmentID,widget.arguments.edit),
-            builder: (context,model,child){
-              if(model.state==ViewState.Busy){
+            onModelReady: (model) => model.initializeData(
+                widget.arguments.appointmentID, widget.arguments.edit),
+            builder: (context, model, child) {
+              if (model.state == ViewState.Busy) {
                 return AppConstants.circulerProgressIndicator();
-              }else {
+              } else {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 20,),
-                      model.firstQuestions.length==0&&model.firstAnswers.length==0?
-                      Center(child: Text(AppStrings.surveyDataNotFound)):ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          key:  Key('builder ${model.selected.toString()}'),
-                          itemCount: 3,
-                          itemBuilder: (BuildContext ctxt, int index) {
-                            return CustomExpandedTile(
-                              expanded: model.selected==index,
-                              firstChild:InkWell(
-                                child: Container(
-                                  color:AppColors.green,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 20, top: 20, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          _getHeaderText(index),
-                                          style: getTextStyle(
-                                              color: Colors.white,
-                                              isBold: true,
-                                              fontSize: 16.0),
-                                        ),
-                                        Icon(Icons.arrow_drop_down)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onTap: (){
-                                  model.onChangeSelected(index);
-                                },
-                              ),
-                              secondChild: Column(
-                                children: [
-                                  InkWell(
+                      SizedBox(
+                        height: 20,
+                      ),
+                      model.firstQuestions.length == 0 &&
+                              model.firstAnswers.length == 0
+                          ? Center(child: Text(AppStrings.surveyDataNotFound))
+                          : ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              key: Key('builder ${model.selected.toString()}'),
+                              itemCount: 3,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                return CustomExpandedTile(
+                                  expanded: model.selected == index,
+                                  firstChild: InkWell(
                                     child: Container(
-                                      color:AppColors.green,
+                                      color: AppColors.green,
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             left: 20, top: 20, bottom: 10),
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Text(
                                               _getHeaderText(index),
@@ -139,22 +115,55 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                   isBold: true,
                                                   fontSize: 16.0),
                                             ),
-                                            RotatedBox(
-                                                quarterTurns: 2,
-                                                child: Icon(Icons.arrow_drop_down))
+                                            Icon(Icons.arrow_drop_down)
                                           ],
                                         ),
                                       ),
                                     ),
-                                    onTap: (){
-                                      model.closeExpand();
+                                    onTap: () {
+                                      model.onChangeSelected(index);
                                     },
                                   ),
-                                  model.selected>=0&&model.selected<3?_getChildrenWidget(model.selected,model):Container()
-                                ],
-                              ),
-                            );
-                          }),
+                                  secondChild: Column(
+                                    children: [
+                                      InkWell(
+                                        child: Container(
+                                          color: AppColors.green,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 20, top: 20, bottom: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  _getHeaderText(index),
+                                                  style: getTextStyle(
+                                                      color: Colors.white,
+                                                      isBold: true,
+                                                      fontSize: 16.0),
+                                                ),
+                                                RotatedBox(
+                                                    quarterTurns: 2,
+                                                    child: Icon(
+                                                        Icons.arrow_drop_down))
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          model.closeExpand();
+                                        },
+                                      ),
+                                      model.selected >= 0 && model.selected < 3
+                                          ? _getChildrenWidget(
+                                              model.selected, model)
+                                          : Container()
+                                    ],
+                                  ),
+                                );
+                              }),
                     ],
                   ),
                 );
@@ -163,8 +172,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
           )),
     );
   }
-
-
 
   TextStyle getTextStyle({Color color, bool isBold = false, num fontSize}) {
     return TextStyle(
@@ -191,30 +198,33 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   //get widgets data  as per text
-  Widget _getChildrenWidget(int index,SurveyScreenViewModel model) {
+  Widget _getChildrenWidget(int index, SurveyScreenViewModel model) {
     switch (index) {
       case 0:
-        return _getData(model.firstQuestions,model,model.firstAnswers);
+        return _getData(model.firstQuestions, model, model.firstAnswers);
         break;
 
       case 1:
-        return _getData(model.secondQuestions,model,model.secondAnswers);
+        return _getData(model.secondQuestions, model, model.secondAnswers);
         break;
       case 2:
-        return _getData(model.thirdQuestions,model,model.thirdAnswers);
+        return _getData(model.thirdQuestions, model, model.thirdAnswers);
         break;
     }
   }
 
   //column data
-  Widget _getColumnData(SurveyResponseModel surveyResponseModel,SurveyScreenViewModel model) {
+  Widget _getColumnData(
+      SurveyResponseModel surveyResponseModel, SurveyScreenViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Q: ${surveyResponseModel.intQuestionNo} " + surveyResponseModel?.strQuestionText ?? "",
+            "Q: ${surveyResponseModel.intQuestionNo} " +
+                    surveyResponseModel?.strQuestionText ??
+                "",
             textAlign: TextAlign.left,
             style: getTextStyle(color: Colors.black, isBold: true),
           ),
@@ -222,183 +232,211 @@ class _SurveyScreenState extends State<SurveyScreen> {
         SizedBox(
           height: 10,
         ),
-        _getTypeWidget(surveyResponseModel,model,model.validationValue),
+        _getTypeWidget(surveyResponseModel, model, model.validationValue),
       ],
     );
   }
 
-  Widget _getData(List<SurveyResponseModel>questions,SurveyScreenViewModel model,List<QuestionAnswer>answers) {
-
-    if(!widget.arguments.edit){
-      return questions.length==0?Center(child: Text(AppStrings.surveyDataNotFound),):ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: questions.length>0?questions.length+1:questions.length,
-        itemBuilder: (context, i) {
-          if(i==questions.length&&questions.length>0){
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  AppButton(
-                    width: 100,
-                    height: 40,
-                    radius: 10,
-                    color: AppColors.green,
-                    buttonText: model.selected<2?AppStrings.next:AppStrings.submit,
-                    onTap: ()async{
-
-                      if(!widget.arguments.edit){
-                        int validateconter=0;
-                        model.clearAnswer();
-                        model.onValidation();
-                        for (int i=0;i<questions.length;i++){
-                          if(questions[i].validate!=null){
-                            setState(() {
-                              validateconter++;
-
-
-                            });
-                            model.onAddAnswer(AnswerCredential(
-                                intsurveyquetionid: questions[i].intQuestionNo.toString(),
-                                intappointmentid:widget.arguments.appointmentID,
-                                intsurveyid:(model.selected+1).toString(),
-                                stranswer:questions[i].validate,
-                                intcreatedby:model.user.intEngineerId,
-                                bisalive:questions[i].bisAlive?'1':'0',
-                                strfilename:""
-                            ));
-                          }else{
-                            setState(() {
-                              print(validateconter);
-                              print(questions.length);
-                              if(questions[i].strQuestiontype=='P'&&validateconter==questions.length-2){
-
-                              }else{
-
+  Widget _getData(List<SurveyResponseModel> questions,
+      SurveyScreenViewModel model, List<QuestionAnswer> answers) {
+    if (!widget.arguments.edit) {
+      return questions.length == 0
+          ? Center(
+              child: Text(AppStrings.surveyDataNotFound),
+            )
+          : ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: questions.length > 0
+                  ? questions.length + 1
+                  : questions.length,
+              itemBuilder: (context, i) {
+                if (i == questions.length && questions.length > 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        AppButton(
+                          width: 100,
+                          height: 40,
+                          radius: 10,
+                          color: AppColors.green,
+                          buttonText: model.selected < 2
+                              ? AppStrings.next
+                              : AppStrings.submit,
+                          onTap: () async {
+                            if (!widget.arguments.edit) {
+                              int validateconter = 0;
+                              model.clearAnswer();
+                              model.onValidation();
+                              for (int i = 0; i < questions.length; i++) {
+                                if (questions[i].validate != null) {
+                                  setState(() {
+                                    validateconter++;
+                                  });
+                                  model.onAddAnswer(AnswerCredential(
+                                      intsurveyquetionid:
+                                          questions[i].intQuestionNo.toString(),
+                                      intappointmentid:
+                                          widget.arguments.appointmentID,
+                                      intsurveyid:
+                                          (model.selected + 1).toString(),
+                                      stranswer: questions[i].validate,
+                                      intcreatedby: model.user.intEngineerId,
+                                      bisalive:
+                                          questions[i].bisAlive ? '1' : '0',
+                                      strfilename: ""));
+                                } else {
+                                  setState(() {
+                                    print(validateconter);
+                                    print(questions.length);
+                                    if (questions[i].strQuestiontype == 'P' &&
+                                        validateconter ==
+                                            questions.length - 2) {
+                                    } else {}
+                                  });
+                                }
                               }
-                            });
-                          }
-                        }
-                        if(validateconter==questions.length){
-
-                          model.onSubmit(model.selected,widget.arguments.appointmentID, context, widget.arguments.dsmodel);
-                        }
-                      }else{
-                        model.incrementCounter();
-                      }
-
-
-
-
-                    },
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return Padding(
-            padding: const EdgeInsets.only(
-                left: 20.0, top: 10.0, bottom: 5.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _getColumnData(questions[i],model),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }else{
-      return answers.length==0?Center(child: Text(AppStrings.surveyDataNotFound),):
-      ListView.builder(itemCount: answers.length>0?answers.length+1:answers.length,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context,int index){
-            if(index==answers.length&&answers.length>0){
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
+                              model.incrementCounter();
+                              if (validateconter == questions.length) {
+                                model.onSubmit(
+                                    model.selected,
+                                    widget.arguments.appointmentID,
+                                    context,
+                                    widget.arguments.dsmodel);
+                              }
+                            } else {
+                              model.incrementCounter();
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                    model.selected<2?AppButton(
-                      width: 100,
-                      height: 40,
-                      radius: 10,
-                      color: AppColors.green,
-                      buttonText: AppStrings.next,
-                      onTap: (){
-                        model.incrementCounter();
+                  );
+                }
 
-                      },
-                    ):Container(),
-                  ],
-                ),
-              );
-            }
-        return Padding(
-          padding: SizeConfig.sidepadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 5,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Q: ${answers[index]?.intSurveyQuetionId} " + answers[index]?.strQuestionText ?? "",
-                  textAlign: TextAlign.left,
-                  style: getTextStyle(color: Colors.black, isBold: true),
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              answers[index].strQuestiontype=='P'&&answers[index].strFileName!=''?ViewPAnswerImageWidget(
-                url: answers[index].fileUrlPath,
-              ):answers[index].strQuestiontype=='P'&&answers[index].strFileName==''?ShowBase64Image(
-                base64String: answers[index].strAnswer.
-                replaceAll('data:image/png;base64,', ''),
-              ):answers[index].strQuestiontype=='S'?ShowBase64Image(
-                base64String: answers[index].strAnswer.
-                replaceAll('data:image/png;base64,', ''),
-              ):Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Ans: " + answers[index]?.strAnswer ?? "",
-                  textAlign: TextAlign.left,
-                  style: getTextStyle(color: Colors.black, isBold: true),
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-            ],
-          ),
-        );
-      });
-
+                return Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 5.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _getColumnData(questions[i], model),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+    } else {
+      return answers.length == 0
+          ? Center(
+              child: Text(AppStrings.surveyDataNotFound),
+            )
+          : ListView.builder(
+              itemCount:
+                  answers.length > 0 ? answers.length + 1 : answers.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, int index) {
+                if (index == answers.length && answers.length > 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        model.selected < 2
+                            ? AppButton(
+                                width: 100,
+                                height: 40,
+                                radius: 10,
+                                color: AppColors.green,
+                                buttonText: AppStrings.next,
+                                onTap: () {
+                                  model.incrementCounter();
+                                },
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  );
+                }
+                return Padding(
+                  padding: SizeConfig.sidepadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Q: ${answers[index]?.intSurveyQuetionId} " +
+                                  answers[index]?.strQuestionText ??
+                              "",
+                          textAlign: TextAlign.left,
+                          style:
+                              getTextStyle(color: Colors.black, isBold: true),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      answers[index].strQuestiontype == 'P' &&
+                              answers[index].strFileName != ''
+                          ? ViewPAnswerImageWidget(
+                              url: answers[index].fileUrlPath,
+                            )
+                          : answers[index].strQuestiontype == 'P' &&
+                                  answers[index].strFileName == ''
+                              ? ShowBase64Image(
+                                  base64String: answers[index]
+                                      .strAnswer
+                                      .replaceAll('data:image/png;base64,', ''),
+                                )
+                              : answers[index].strQuestiontype == 'S'
+                                  ? ShowBase64Image(
+                                      base64String: answers[index]
+                                          .strAnswer
+                                          .replaceAll(
+                                              'data:image/png;base64,', ''),
+                                    )
+                                  : Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Ans: " + answers[index]?.strAnswer ??
+                                            "",
+                                        textAlign: TextAlign.left,
+                                        style: getTextStyle(
+                                            color: Colors.black, isBold: true),
+                                      ),
+                                    ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                    ],
+                  ),
+                );
+              });
     }
-
-
   }
-  TextEditingController editController=TextEditingController();
 
-  Widget _getTypeWidget(SurveyResponseModel surveyResponseModel,SurveyScreenViewModel model,bool showMessage) {
+  TextEditingController editController = TextEditingController();
+
+  Widget _getTypeWidget(SurveyResponseModel surveyResponseModel,
+      SurveyScreenViewModel model, bool showMessage) {
     switch (surveyResponseModel.strQuestiontype) {
       case "YN":
         return Padding(
@@ -414,7 +452,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       onTap: () {
                         setState(() {
                           surveyResponseModel?.yesNoPressedVal = 1;
-                          surveyResponseModel?.validate='true';
+                          surveyResponseModel?.validate = 'true';
                           model.onChangeYesNo(surveyResponseModel);
                         });
                       },
@@ -425,7 +463,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             style: BorderStyle.solid,
                             width: 1.0,
                           ),
-                          color: (surveyResponseModel?.yesNoPressedVal==1)
+                          color: (surveyResponseModel?.yesNoPressedVal == 1)
                               ? Colors.red
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(10.0),
@@ -436,8 +474,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             child: Text(
                               AppStrings.yes,
                               style: TextStyle(
-                                color: (surveyResponseModel?.yesNoPressedVal==1)?Colors.white:
-                                Colors.red,
+                                color:
+                                    (surveyResponseModel?.yesNoPressedVal == 1)
+                                        ? Colors.white
+                                        : Colors.red,
                                 fontFamily: 'Montserrat',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -457,7 +497,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       onTap: () {
                         setState(() {
                           surveyResponseModel?.yesNoPressedVal = 0;
-                          surveyResponseModel?.validate='false';
+                          surveyResponseModel?.validate = 'false';
                           model.onChangeYesNo(surveyResponseModel);
                         });
                       },
@@ -468,7 +508,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             style: BorderStyle.solid,
                             width: 1.0,
                           ),
-                          color: (surveyResponseModel?.yesNoPressedVal==0)
+                          color: (surveyResponseModel?.yesNoPressedVal == 0)
                               ? Colors.red
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(10.0),
@@ -479,9 +519,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             child: Text(
                               AppStrings.no,
                               style: TextStyle(
-                                color: (surveyResponseModel?.yesNoPressedVal==0)
-                                    ? Colors.white
-                                    : Colors.red,
+                                color:
+                                    (surveyResponseModel?.yesNoPressedVal == 0)
+                                        ? Colors.white
+                                        : Colors.red,
                                 fontFamily: 'Montserrat',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -495,7 +536,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   ),
                 ],
               ),
-              showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+              showMessage && surveyResponseModel?.validate == null
+                  ? ErrorTextWidget()
+                  : Container()
             ],
           ),
         );
@@ -508,11 +551,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
         List<String> itemList = List<String>();
 
         for (var item in arr) {
-          itemList.add(item.replaceAll(new RegExp(r"\s+"), ""));
+          itemList.add(item.replaceAll(new RegExp(r"\s+"), " "));
         }
         return Column(
           children: [
-             DropdownButton<String>(
+            DropdownButton<String>(
                 items: itemList.map((String val) {
                   return DropdownMenuItem<String>(
                     value: val,
@@ -526,18 +569,17 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 style: TextStyle(color: Colors.blue),
                 hint: Text(surveyResponseModel?.dropDownValue),
                 onChanged: (String val) {
-
                   print('object');
                   print('val==$val');
                   setState(() {
                     surveyResponseModel?.dropDownValue = val;
                     surveyResponseModel?.validate = val;
-
-
                   });
                   model.onChangeYesNo(surveyResponseModel);
                 }),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
 
@@ -552,8 +594,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
               },
               child: (surveyResponseModel?.image == null)
                   ? Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10.0, left: 10.0, right: 20),
+                      padding: const EdgeInsets.only(
+                          top: 10.0, left: 10.0, right: 20),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -587,7 +629,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       width: 100,
                     ),
             ),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
         break;
@@ -597,96 +641,117 @@ class _SurveyScreenState extends State<SurveyScreen> {
             InkWell(
               onTap: () async {
                 // signature screen
-               var result =await  Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (context) => SignatureScreen()));
+                var result = await Navigator.of(context).push(
+                    new MaterialPageRoute(
+                        builder: (context) => SignatureScreen()));
 
-               if(result!=null){
-                 setState(() {
-                   surveyResponseModel?.signatureImage= result;
-                   surveyResponseModel.validate= 'data:image/png;base64,'+base64.encode(result.buffer.asUint8List());
-                 });
-               }
-
+                if (result != null) {
+                  setState(() {
+                    surveyResponseModel?.signatureImage = result;
+                    surveyResponseModel.validate = 'data:image/png;base64,' +
+                        base64.encode(result.buffer.asUint8List());
+                  });
+                }
               },
               child: (surveyResponseModel?.signatureImage == null)
                   ? Padding(
-                padding:
-                const EdgeInsets.only(top: 10.0, left: 10.0, right: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color(0xFFF05A22),
-                      style: BorderStyle.solid,
-                      width: 1.0,
-                    ),
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        AppStrings.clickHereForSignature,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                      padding: const EdgeInsets.only(
+                          top: 10.0, left: 10.0, right: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(0xFFF05A22),
+                            style: BorderStyle.solid,
+                            width: 1.0,
+                          ),
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              AppStrings.clickHereForSignature,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              )
+                    )
                   : SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Image.memory(surveyResponseModel?.signatureImage.buffer.asUint8List(),)),
+                      height: 100,
+                      width: 100,
+                      child: Image.memory(
+                        surveyResponseModel?.signatureImage.buffer
+                            .asUint8List(),
+                      )),
             ),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
 
         break;
 
-
-      case "C" :
+      case "C":
         return Column(
           children: [
-            MyTile(isOnlyNumeric: false,surveyResponseModel: surveyResponseModel,),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+            MyTile(
+              isOnlyNumeric: false,
+              surveyResponseModel: surveyResponseModel,
+            ),
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
         break;
 
-
-      case "N" :
+      case "N":
         return Column(
           children: [
-            MyTile(isOnlyNumeric: true,surveyResponseModel: surveyResponseModel),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+            MyTile(
+                isOnlyNumeric: true, surveyResponseModel: surveyResponseModel),
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
         break;
 
-      case "R" :
-
+      case "R":
         return Column(
           children: [
-            MyTile(isOnlyNumeric: true,surveyResponseModel: surveyResponseModel,),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+            MyTile(
+              isOnlyNumeric: true,
+              surveyResponseModel: surveyResponseModel,
+            ),
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
         break;
 
-        case "D" :
-          return Column(
-            children: [
-              MyTile(isOnlyNumeric: true,surveyResponseModel: surveyResponseModel,),
-              showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
-            ],
-          );
+      case "D":
+        return Column(
+          children: [
+            MyTile(
+              isOnlyNumeric: true,
+              surveyResponseModel: surveyResponseModel,
+            ),
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
+          ],
+        );
 //        return TextField(
 //
 //          keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -709,83 +774,81 @@ class _SurveyScreenState extends State<SurveyScreen> {
 //        );
         break;
 
-
-
-
-
-
       case "B":
-        var result="";
+        var result = "";
         return Column(
           children: [
             InkWell(
-              onTap: () async {
-                String barcodeScanRes;
-                // Platform messages may fail, so we use a try/catch PlatformException.
-                try {
-                  var result = await BarcodeScanner.scan();
-                  print(result.rawContent);
-                  setState(() {
-                    surveyResponseModel?.barCodeScanVal =result.rawContent.toString();
-                    surveyResponseModel?.validate=result.rawContent.toString();
-                  });
-
-                } on PlatformException {
-                  barcodeScanRes = 'Failed to get platform version.';
-                }
-
-              },
-              child: (surveyResponseModel?.barCodeScanVal?.isEmpty)
-                  ? Padding(
-                padding:
-                const EdgeInsets.only(top: 10.0, left: 10.0, right: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color(0xFFF05A22),
-                      style: BorderStyle.solid,
-                      width: 1.0,
-                    ),
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        AppStrings.scanBarCode,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                onTap: () async {
+                  String barcodeScanRes;
+                  // Platform messages may fail, so we use a try/catch PlatformException.
+                  try {
+                    var result = await BarcodeScanner.scan();
+                    print(result.rawContent);
+                    setState(() {
+                      surveyResponseModel?.barCodeScanVal =
+                          result.rawContent.toString();
+                      surveyResponseModel?.validate =
+                          result.rawContent.toString();
+                    });
+                  } on PlatformException {
+                    barcodeScanRes = 'Failed to get platform version.';
+                  }
+                },
+                child: (surveyResponseModel?.barCodeScanVal?.isEmpty)
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10.0, left: 10.0, right: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Color(0xFFF05A22),
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                            ),
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                AppStrings.scanBarCode,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-                  : Text("${AppStrings.barCode} : "+surveyResponseModel?.barCodeScanVal)
-            ),
-            showMessage&&surveyResponseModel?.validate==null?ErrorTextWidget():Container()
+                      )
+                    : Text("${AppStrings.barCode} : " +
+                        surveyResponseModel?.barCodeScanVal)),
+            showMessage && surveyResponseModel?.validate == null
+                ? ErrorTextWidget()
+                : Container()
           ],
         );
 
-      default: return Container();
+      default:
+        return Container();
     }
   }
 
   // text field form
   Widget _textFieldForm(
       {TextEditingController controller,
-        TextInputType keyboardType,
-        String hint,
-        FormFieldValidator<String> validator,
-        int maxLines = 1,
-        FocusNode currentFocusNode,
-        FocusNode nextFocusNode,
-        BuildContext context}) {
+      TextInputType keyboardType,
+      String hint,
+      FormFieldValidator<String> validator,
+      int maxLines = 1,
+      FocusNode currentFocusNode,
+      FocusNode nextFocusNode,
+      BuildContext context}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
@@ -799,7 +862,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
             numOfChare=currentLength.toString();
 
           });*/
-
         },
         style: TextStyle(color: Colors.black),
         focusNode: currentFocusNode,
@@ -813,15 +875,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
           filled: true,
           fillColor: Colors.grey[50],
           hintStyle: TextStyle(
-              fontWeight:
-              FontWeight.w500,
-              fontSize: 14.0,
-              color: Colors.grey),
-          enabledBorder:  OutlineInputBorder(
+              fontWeight: FontWeight.w500, fontSize: 14.0, color: Colors.grey),
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
-               Radius.circular(8),
+              Radius.circular(8),
             ),
-            borderSide:  BorderSide(
+            borderSide: BorderSide(
               color: Colors.black,
               width: 0.5,
             ),
@@ -884,7 +943,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
               ],
             ),
             // used  for the camera
-             Column(
+            Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 GestureDetector(
@@ -936,28 +995,22 @@ class _SurveyScreenState extends State<SurveyScreen> {
         String base64Image = base64Encode(image.readAsBytesSync());
         print('image$base64Image');
 //        String base64Image = BASE64.encode(imageBytes);
-        surveyResponseModel.validate='data:image/png;base64,'+base64Image;
-
+        surveyResponseModel.validate = 'data:image/png;base64,' + base64Image;
 
         ///have to work
-
       });
     }
 
     Navigator.pop(context);
   }
-
-
 }
-
 
 class MyTile extends StatefulWidget {
   SurveyResponseModel surveyResponseModel;
 
+  bool isOnlyNumeric = false;
 
-  bool isOnlyNumeric =false;
-
-  MyTile({this.isOnlyNumeric,this.surveyResponseModel});
+  MyTile({this.isOnlyNumeric, this.surveyResponseModel});
 
   @override
   _MyTileState createState() => _MyTileState();
@@ -967,7 +1020,7 @@ class MyTile extends StatefulWidget {
 class _MyTileState extends State<MyTile> {
   // Initalliy make the TextField uneditable.
   bool editable = false;
-  TextEditingController controller =TextEditingController();
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -979,44 +1032,42 @@ class _MyTileState extends State<MyTile> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Expanded(
-              child: TextField(
-                controller: controller,
+            child: TextField(
+              controller: controller,
               enabled: editable,
-          keyboardType: widget.isOnlyNumeric ? TextInputType.number : TextInputType.text,
-                inputFormatters:  widget.isOnlyNumeric ?  <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ] :  <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-                ],
-                decoration: InputDecoration(
+              keyboardType: widget.isOnlyNumeric
+                  ? TextInputType.number
+                  : TextInputType.text,
+              inputFormatters: widget.isOnlyNumeric
+                  ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
+                  : <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                    ],
+              decoration: InputDecoration(
                   hintText: AppStrings.writeHere,
-
-                  hintStyle: TextStyle(color: Colors.black)
-              ),
-              onEditingComplete: (){
+                  hintStyle: TextStyle(color: Colors.black)),
+              onEditingComplete: () {
                 // After editing is complete, make the editable false
                 setState(() {
                   editable = !editable;
-                  if(controller.text!=''){
-                    widget.surveyResponseModel.validate=controller.text;
+                  if (controller.text != '') {
+                    widget.surveyResponseModel.validate = controller.text;
                   }
-
                 });
               },
             ),
           ),
           SizeConfig.horizontalSpaceSmall(),
-
           RaisedButton(
             elevation: 1.0,
-            child: Text(!editable?AppStrings.edit:AppStrings.done),
-            onPressed: (){
+            child: Text(!editable ? AppStrings.edit : AppStrings.done),
+            onPressed: () {
               // When edit is pressed, make the editable true
               FocusScope.of(context).unfocus();
               setState(() {
                 editable = !editable;
-                if(controller.text!=''){
-                  widget.surveyResponseModel.validate=controller.text;
+                if (controller.text != '') {
+                  widget.surveyResponseModel.validate = controller.text;
                 }
               });
             },

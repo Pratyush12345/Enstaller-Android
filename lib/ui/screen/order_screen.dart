@@ -71,14 +71,17 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
-                : SingleChildScrollView(
+                : RefreshIndicator(
+                  onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.initializeData()),
+                    
               child: ConstrainedBox(
                   constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height),
                   child: (model.list.isNotEmpty)
                       ? Padding(
                     padding:
-                    SizeConfig.padding.copyWith(bottom: 100),
+                    SizeConfig.padding,
                     child: ListView.builder(
                       itemCount: model.list.length,
                       itemBuilder: (context, i) {

@@ -1,4 +1,3 @@
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -17,115 +16,116 @@ import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
 
-
 class SMSNotificationScreen extends StatefulWidget {
   @override
   _SMSNotificationScreenState createState() => _SMSNotificationScreenState();
 }
 
 class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
-
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
     return BaseView<SMSNotificationViewModel>(
-      onModelReady: (model)=>model.getSMSNotificationList(),
-      builder: (context,model,child){
+      onModelReady: (model) => model.getSMSNotificationList(),
+      builder: (context, model, child) {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
             drawer: Drawer(
-              child:AppDrawerWidget(),
+              child: AppDrawerWidget(),
             ),
             appBar: AppBar(
               backgroundColor: AppColors.green,
-              leading:Padding(
+              leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
                     onTap: () {
                       _scaffoldKey.currentState.openDrawer();
                     },
                     child: Image.asset(
-                      ImageFile.menuIcon,color: AppColors.whiteColor,
+                      ImageFile.menuIcon,
+                      color: AppColors.whiteColor,
                     )),
               ),
               centerTitle: true,
-              title: model.searchBool?TextField(
-                decoration: InputDecoration(
-                  hintText: AppStrings.searchHere
-                ),
-                onChanged: (val){
-                  model.onSearch(val);
-                },
-              ):Text(
-                AppStrings.SMSnotification,
-                style: getTextStyle(color:AppColors.whiteColor, isBold: false),
-              ),
+              title: model.searchBool
+                  ? TextField(
+                      decoration:
+                          InputDecoration(hintText: AppStrings.searchHere),
+                      onChanged: (val) {
+                        model.onSearch(val);
+                      },
+                    )
+                  : Text(
+                      AppStrings.SMSnotification,
+                      style: getTextStyle(
+                          color: AppColors.whiteColor, isBold: false),
+                    ),
               actions: [
                 InkWell(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Icon(
-                      model.searchBool?Icons.clear:Icons.search,
+                      model.searchBool ? Icons.clear : Icons.search,
                       color: AppColors.whiteColor,
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     model.onClickSerach();
                   },
                 ),
-                Icon(Icons.notifications_none,
-                  size: MediaQuery.of(context).size.height * 0.035,),
-
+                Icon(
+                  Icons.notifications_none,
+                  size: MediaQuery.of(context).size.height * 0.035,
+                ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
               ],
             ),
-            body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():
-            SingleChildScrollView(
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height),
-                  child: (model.smsNotificationList.isNotEmpty == true) ? Padding(
-                    padding: SizeConfig.padding.copyWith(
-                      bottom: 100
-                    ),
-                    child: ListView.builder(
-                      itemCount: model.smsNotificationList.length,
-                      itemBuilder: (context, i) {
-                        return
-                          Padding(
-                            padding: SizeConfig.verticalC13Padding,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.appointmentBackGroundColor,
-                                borderRadius: BorderRadius.circular(10)
-                              ),
-                              child: Column(
-                                children: [
-                                  _engineerInfo(model.smsNotificationList[i]),
+            body: model.state == ViewState.Busy
+                ? AppConstants.circulerProgressIndicator()
+                : RefreshIndicator(
+                    onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getSMSNotificationList()),
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height),
+                        child: (model.smsNotificationList.isNotEmpty == true)
+                            ? Padding(
+                                padding:
+                                    SizeConfig.padding,
+                                child: ListView.builder(
+                                  itemCount: model.smsNotificationList.length,
+                                  itemBuilder: (context, i) {
+                                    return Padding(
+                                      padding: SizeConfig.verticalC13Padding,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors
+                                                .appointmentBackGroundColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          children: [
+                                            _engineerInfo(
+                                                model.smsNotificationList[i]),
 //                                Divider(
 //                                  color: AppColors.darkGrayColor,
 //                                  thickness: 1.0,
 //                                ),
-                                ],
-                              ),
-                            ),
-                          );
-                      },
-                    ),
-                  ) : Center(child:Text(AppStrings.noDataFound))
-
-
-
-
-              ),
-            ));
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            : Center(child: Text(AppStrings.noDataFound))),
+                  ));
       },
     );
   }
@@ -136,16 +136,18 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
       children: [
         AppointmentDataRow(
           firstText: AppStrings.Date,
-          secondText: AppConstants.formattedSingeDate(DateTime.parse(smsNotificationModel?.dteCreatedDate)) ?? "",
+          secondText: AppConstants.formattedSingeDate(
+                  DateTime.parse(smsNotificationModel?.dteCreatedDate)) ??
+              "",
         ),
         AppointmentDataRow(
           firstText: AppStrings.bookingRefNo,
           secondText: smsNotificationModel?.strBookingReference ?? "",
         ),
-    AppointmentDataRow(
-    firstText: AppStrings.Customer,
-    secondText: smsNotificationModel?.customerName ?? "",
-    ),
+        AppointmentDataRow(
+          firstText: AppStrings.Customer,
+          secondText: smsNotificationModel?.customerName ?? "",
+        ),
         AppointmentDataRow(
           firstText: AppStrings.sendto,
           secondText: smsNotificationModel?.msgto ?? "",
@@ -162,12 +164,11 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
           firstText: AppStrings.smsstatus,
           secondText: smsNotificationModel?.msgStatus ?? "",
         ),
-              ],
+      ],
     );
   }
 
   //survey info
-
 
   TextStyle getTextStyle({Color color, bool isBold = false, num fontSize}) {
     return TextStyle(
@@ -175,7 +176,4 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
         fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
         fontSize: fontSize);
   }
-
-
-
 }

@@ -64,14 +64,16 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
             ),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
-                : SingleChildScrollView(
+                : RefreshIndicator(
+                    onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.initializeData()),
                     child: ConstrainedBox(
                         constraints: BoxConstraints(
                             maxHeight: MediaQuery.of(context).size.height),
                         child: (model.stockCheckList.isNotEmpty == true)
                             ? Padding(
                                 padding:
-                                    SizeConfig.padding.copyWith(bottom: 100),
+                                    SizeConfig.padding,
                                 child: ListView.builder(
                                   itemCount: model.stockCheckList.length,
                                   itemBuilder: (context, i) {
@@ -141,8 +143,12 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
                 color: AppColors.whiteColor, fontWeight: FontWeight.bold),
             onTap: () {
               if (stockCheckModel?.strCurrentStatus == 'Request Pending') {
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (context) => StockRequestReplyScreen(intRequestId: stockCheckModel.intId,))).whenComplete(() => {model.initializeData()});
+                Navigator.of(context)
+                    .push(new MaterialPageRoute(
+                        builder: (context) => StockRequestReplyScreen(
+                              intRequestId: stockCheckModel.intId,
+                            )))
+                    .whenComplete(() => {model.initializeData()});
               } else {
                 AppConstants.showAppDialog(
                     context: context,

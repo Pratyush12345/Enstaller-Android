@@ -59,36 +59,36 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
             ),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
-                : SingleChildScrollView(
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height),
-                  child: (model.serialList.isNotEmpty == true)
-                      ? Padding(
-                    padding:
-                    SizeConfig.padding.copyWith(bottom: 100),
-                    child: Padding(
-                      padding: SizeConfig.verticalC13Padding,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: AppColors
-                                .appointmentBackGroundColor,
-                            borderRadius:
-                            BorderRadius.circular(10)),
-                        child: Column(
-                          children: model.list,
-                        ),
-                      ),
-                    )
-                  )
-                      : Center(child: Text(AppStrings.noDataFound))),
-            ));
+                : RefreshIndicator(
+                    onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.initializeData()),
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height),
+                        child: (model.serialList.isNotEmpty == true)
+                            ? Padding(
+                                padding:
+                                    SizeConfig.padding.copyWith(bottom: 100),
+                                child: Padding(
+                                  padding: SizeConfig.verticalC13Padding,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors
+                                            .appointmentBackGroundColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Column(
+                                      children: model.list,
+                                    ),
+                                  ),
+                                ))
+                            : Center(child: Text(AppStrings.noDataFound))),
+                  ));
       },
     );
   }
 
-  Widget _serialModel(
-      SerialItemModel serialItemModel) {
+  Widget _serialModel(SerialItemModel serialItemModel) {
     return Column(
       children: [
         AppointmentDataRow(
@@ -99,7 +99,6 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
           firstText: AppStrings.ITEM_NAME,
           secondText: serialItemModel?.strItemName ?? "",
         ),
-
       ],
     );
   }

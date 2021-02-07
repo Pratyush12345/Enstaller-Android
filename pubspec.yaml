@@ -50,15 +50,15 @@ dependencies:
   url_launcher: 5.6.0
   geocoder: ^0.2.1
   encrypt: ^4.1.0
-  cached_network_image: ^2.3.2+1
+  cached_network_image: 2.3.2+1
   flutter_statusbarcolor: ^0.2.3
   select_form_field: ^1.1.0
   csv: ^4.1.0
   ext_storage: ^1.0.3
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.27
-  flutter_pdfview:
-  html:  
+  flutter_pdfview: ^1.0.4
+  html: ^0.14.0+4 
 
 
 
