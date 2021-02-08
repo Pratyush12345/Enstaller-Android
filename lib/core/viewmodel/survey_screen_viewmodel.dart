@@ -72,14 +72,14 @@ class SurveyScreenViewModel extends BaseModel {
       return submitFourthBool;
     } else if (selected == 4) {
       return submitFifthBool;
-    } else {
+    } else if (selected == 5) {
       return submitSixthBool;
     }
   }
 
   void closeExpand() {
     setState(ViewState.Busy);
-    selected = 6;
+    selected = 5;
     setState(ViewState.Idle);
   }
 
@@ -99,28 +99,32 @@ class SurveyScreenViewModel extends BaseModel {
           _firstQuestions.add(element);
 
           if (element.strQuestiontype == 'YN') {
-            // if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  element.strDisableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!disableQuestions.contains(listData[i])) {
-                  disableQuestions.add(listData[i]);
+            if (element.yesNoPressedVal == 1) {
+              if (element.strDisableQuestions != null &&
+                  element.strDisableQuestions.isNotEmpty) {
+                String numberString =
+                    element.strDisableQuestions.split('Yes:')[1];
+                List listData = numberString.split(",");
+                for (int i = 0; i < listData.length; i++) {
+                  if (!disableQuestions.contains(listData[i])) {
+                    disableQuestions.add(listData[i]);
+                  }
+                }
+              }
+            } else if (element.yesNoPressedVal == 0) {
+              if (element.strEnableQuestions != null &&
+                  element.strEnableQuestions.isNotEmpty) {
+                String numberString =
+                    element.strEnableQuestions.split('No:')[1];
+                List listData = numberString.split(",");
+                for (int i = 0; i < listData.length; i++) {
+                  if (!enableQuestions.contains(listData[i])) {
+                    enableQuestions.add(listData[i]);
+                  }
                 }
               }
             }
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              String numberString = element.strEnableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!enableQuestions.contains(listData[i])) {
-                  enableQuestions.add(listData[i]);
-                }
-              }
-            }
+
             // }
           }
           if (!disableQuestions.contains('${element.intQuestionNo}')) {
@@ -216,7 +220,7 @@ class SurveyScreenViewModel extends BaseModel {
             fourthQuestions.add(element);
             print('added${element.intId}');
           }
-        } else if (element.intSectionId == 5) {
+        } else if (element.intSectionId == 9) {
           _fifthQuestions.add(element);
           if (element.strQuestiontype == 'YN') {
             if (element.yesNoPressedVal == 1) {
@@ -249,7 +253,7 @@ class SurveyScreenViewModel extends BaseModel {
             fifthQuestions.add(element);
             print('added${element.intId}');
           }
-        } else if (element.intSectionId == 6) {
+        } else if (element.intSectionId == 10) {
           _sixthQuestions.add(element);
           if (element.strQuestiontype == 'YN') {
             if (element.yesNoPressedVal == 1) {
@@ -306,9 +310,11 @@ class SurveyScreenViewModel extends BaseModel {
           thirdAnswers.add(answer);
         } else if (answer.intSectionID == 4) {
           fourthAnswers.add(answer);
-        } else if (answer.intSectionID == 5) {
+        } else if (answer.intSectionID == 9) {
           fifthAnswers.add(answer);
-        } else if (answer.intSectionID == 6) {
+        } else if (answer.intSectionID == 10) {
+          print("line 312");
+          print(answer);
           sixthAnswers.add(answer);
         }
       });
@@ -320,330 +326,360 @@ class SurveyScreenViewModel extends BaseModel {
   void onChangeYesNo(SurveyResponseModel surveyResponseModel) {
     setState(ViewState.Busy);
     print('surr===${surveyResponseModel.validate}');
-    for (int i = 0; i < _firstQuestions.length; i++) {
-      if (_firstQuestions[i].intQuestionNo ==
-          surveyResponseModel.intQuestionNo) {
-        _firstQuestions[i] = surveyResponseModel;
-      }
+    if (surveyResponseModel.intSectionId == 1) {
+      var index = _firstQuestions.indexWhere((element) =>
+          element.intQuestionNo == surveyResponseModel.intQuestionNo);
+      _firstQuestions[index] = surveyResponseModel;
+      print(index.toString() + "line 329");
+      // for (int i = 0; i < _firstQuestions.length; i++) {
+      //   if (_firstQuestions[i].intQuestionNo ==
+      //       surveyResponseModel.intQuestionNo) {
+      //     _firstQuestions[i] = surveyResponseModel;
+      //     break;
+      //   }
+      // }
     }
-    for (int i = 0; i < _secondQuestions.length; i++) {
-      if (_secondQuestions[i].intQuestionNo ==
-          surveyResponseModel.intQuestionNo) {
-        _secondQuestions[i] = surveyResponseModel;
-      }
-    }
-    for (int i = 0; i < _thirdQuestions.length; i++) {
-      if (_thirdQuestions[i].intQuestionNo ==
-          surveyResponseModel.intQuestionNo) {
-        _thirdQuestions[i] = surveyResponseModel;
-        print('_firstQuestions[i].validate${_thirdQuestions[i].validate}');
-        if (_thirdQuestions[i].strQuestiontype == 'L') {
-          print('#########${_thirdQuestions[i].validate}');
 
-          if (_thirdQuestions[i].validate == 'Energised') {
-            if (_thirdQuestions[i].strDisableQuestions != null &&
-                _thirdQuestions[i].strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  _thirdQuestions[i].strDisableQuestions.split('Energised:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                if (!disableQuestions.contains(listElement)) {
-                  disableQuestions.add(listElement);
-                }
-              });
-            }
-          } else if (_thirdQuestions[i].validate == 'De-Energised') {
-            if (_thirdQuestions[i].strDisableQuestions != null &&
-                _thirdQuestions[i].strDisableQuestions.isNotEmpty) {
-              print('object${_thirdQuestions[i].strDisableQuestions}');
-              String numberString =
-                  _thirdQuestions[i].strDisableQuestions.split('Energised:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                if (disableQuestions.contains(listElement)) {
-                  disableQuestions.remove(listElement);
-                }
-              });
-            }
-          }
+    if (surveyResponseModel.intSectionId == 2) {
+      for (int i = 0; i < _secondQuestions.length; i++) {
+        if (_secondQuestions[i].intQuestionNo ==
+            surveyResponseModel.intQuestionNo) {
+          _secondQuestions[i] = surveyResponseModel;
+          break;
         }
-      }
-    }
-    for (int i = 0; i < _fourthQuestions.length; i++) {
-      if (_fourthQuestions[i].intQuestionNo ==
-          surveyResponseModel.intQuestionNo) {
-        _fourthQuestions[i] = surveyResponseModel;
-      }
-    }
-    for (int i = 0; i < _fifthQuestions.length; i++) {
-      if (_fifthQuestions[i].intQuestionNo ==
-          surveyResponseModel.intQuestionNo) {
-        _fifthQuestions[i] = surveyResponseModel;
-      }
-    }
-    for (int i = 0; i < _sixthQuestions.length; i++) {
-      if (_sixthQuestions[i].intQuestionNo ==
-          surveyResponseModel.intQuestionNo) {
-        _sixthQuestions[i] = surveyResponseModel;
       }
     }
 
-    firstQuestions = [];
-    secondQuestions = [];
-    thirdQuestions = [];
-    fourthQuestions = [];
-    fifthQuestions = [];
-    sixthQuestions = [];
-    _surveyQuestion.forEach((element) {
-      if (element.intSectionId == 1) {
-        _firstQuestions.add(element);
-        if (element.strQuestiontype == 'YN') {
-          if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  element.strDisableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                if (!disableQuestions.contains(listElement)) {
-                  disableQuestions.add(listElement);
-                }
-              });
-            }
-          } else if (element.yesNoPressedVal == 0) {
-            print('EnableQuestions${element.strEnableQuestions}');
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              print('EnableQuestions${element.strEnableQuestions}');
-              String numberString = element.strEnableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                print(listElement);
-                if (disableQuestions.contains(listElement)) {
-                  disableQuestions.remove(listElement);
-                }
-              });
-            }
-          }
-        }
+    if (surveyResponseModel.intSectionId == 3) {
+      for (int i = 0; i < _thirdQuestions.length; i++) {
+        if (_thirdQuestions[i].intQuestionNo ==
+            surveyResponseModel.intQuestionNo) {
+          _thirdQuestions[i] = surveyResponseModel;
+          print('_firstQuestions[i].validate${_thirdQuestions[i].validate}');
+          if (_thirdQuestions[i].strQuestiontype == 'L') {
+            print('#########${_thirdQuestions[i].validate}');
 
-        print(disableQuestions);
-        print(element.intQuestionNo.toString());
-        if (!disableQuestions.contains('${element.intQuestionNo}')) {
-          firstQuestions.add(element);
-          print('added${element.intQuestionNo}');
-        }
-        print('length${firstQuestions.length}');
-      } else if (element.intSectionId == 2) {
-        _secondQuestions.add(element);
-        if (element.strQuestiontype == 'YN') {
-          if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString = element.strDisableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                if (!disableQuestions.contains(listElement)) {
-                  disableQuestions.add(listElement);
-                }
-              });
-            }
-          } else if (element.yesNoPressedVal == 0) {
-            print('EnableQuestions${element.strEnableQuestions}');
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              print('EnableQuestions${element.strEnableQuestions}');
-              String numberString = element.strEnableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                print(listElement);
-                if (disableQuestions.contains(listElement)) {
-                  disableQuestions.remove(listElement);
-                }
-              });
-            }
-          }
-        } else if (element.strQuestiontype == 'M') {
-          if (element.dropDownValue == 'Energised') {
-            String numberString =
-                element.strDisableQuestions.split('Energised:')[1];
-            List listData = numberString.split(",");
-            listData.forEach((listElement) {
-              if (!disableQuestions.contains(listElement)) {
-                disableQuestions.add(listElement);
+            if (_thirdQuestions[i].validate == 'Energised') {
+              if (_thirdQuestions[i].strDisableQuestions != null &&
+                  _thirdQuestions[i].strDisableQuestions.isNotEmpty) {
+                String numberString = _thirdQuestions[i]
+                    .strDisableQuestions
+                    .split('Energised:')[1];
+                List listData = numberString.split(",");
+                listData.forEach((listElement) {
+                  if (!disableQuestions.contains(listElement)) {
+                    disableQuestions.add(listElement);
+                  }
+                });
               }
-            });
-          } else if (element.dropDownValue == 'De-Energised') {
-            String numberString =
-                element.strDisableQuestions.split('De-Energised:')[1];
-            List listData = numberString.split(",");
-            listData.forEach((listElement) {
-              if (!disableQuestions.contains(listElement)) {
-                disableQuestions.add(listElement);
-              }
-            });
-          }
-        }
-        print(disableQuestions);
-        print(element.intQuestionNo.toString());
-        if (!disableQuestions.contains('${element.intQuestionNo}')) {
-          secondQuestions.add(element);
-        }
-      } else if (element.intSectionId == 3) {
-        _thirdQuestions.add(element);
-        if (element.strQuestiontype == 'YN') {
-          if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  element.strDisableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                if (!disableQuestions.contains(listElement)) {
-                  disableQuestions.add(listElement);
-                }
-              });
-            }
-          } else if (element.yesNoPressedVal == 0) {
-            print('EnableQuestions${element.strEnableQuestions}');
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              print('EnableQuestions${element.strEnableQuestions}');
-              String numberString = element.strEnableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              listData.forEach((listElement) {
-                print(listElement);
-                if (disableQuestions.contains(listElement)) {
-                  disableQuestions.remove(listElement);
-                }
-              });
-            }
-          }
-        }
-        if (element.strQuestiontype == 'M') {
-          print('object${surveyResponseModel.validate}');
-          if (surveyResponseModel.validate == 'Energised') {
-            String numberString =
-                element.strDisableQuestions.split('Energised:')[1];
-            List listData = numberString.split(",");
-            listData.forEach((listElement) {
-              if (!disableQuestions.contains(listElement)) {
-                disableQuestions.add(listElement);
-              }
-            });
-          } else if (surveyResponseModel.validate == 'De-Energised') {
-            String numberString =
-                element.strDisableQuestions.split('De-Energised:')[1];
-            List listData = numberString.split(",");
-            listData.forEach((listElement) {
-              if (!disableQuestions.contains(listElement)) {
-                disableQuestions.add(listElement);
-              }
-            });
-          }
-        }
-        if (!disableQuestions.contains('${element.intQuestionNo}')) {
-          thirdQuestions.add(element);
-          print('added${element.intQuestionNo}');
-        }
-      } else if (element.intSectionId == 4) {
-        _fourthQuestions.add(element);
-        if (element.strQuestiontype == 'YN') {
-          if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  element.strDisableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!disableQuestions.contains(listData[i])) {
-                  disableQuestions.add(listData[i]);
-                }
-              }
-            }
-          } else if (element.yesNoPressedVal == 0) {
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              String numberString = element.strEnableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!enableQuestions.contains(listData[i])) {
-                  enableQuestions.add(listData[i]);
-                }
+            } else if (_thirdQuestions[i].validate == 'De-Energised') {
+              if (_thirdQuestions[i].strDisableQuestions != null &&
+                  _thirdQuestions[i].strDisableQuestions.isNotEmpty) {
+                print('object${_thirdQuestions[i].strDisableQuestions}');
+                String numberString = _thirdQuestions[i]
+                    .strDisableQuestions
+                    .split('Energised:')[1];
+                List listData = numberString.split(",");
+                listData.forEach((listElement) {
+                  if (disableQuestions.contains(listElement)) {
+                    disableQuestions.remove(listElement);
+                  }
+                });
               }
             }
           }
-        }
-        if (!disableQuestions.contains('${element.intQuestionNo}')) {
-          fourthQuestions.add(element);
-          print('added${element.intId}');
-        }
-      } else if (element.intSectionId == 5) {
-        _fifthQuestions.add(element);
-        if (element.strQuestiontype == 'YN') {
-          if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  element.strDisableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!disableQuestions.contains(listData[i])) {
-                  disableQuestions.add(listData[i]);
-                }
-              }
-            }
-          } else if (element.yesNoPressedVal == 0) {
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              String numberString = element.strEnableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!enableQuestions.contains(listData[i])) {
-                  enableQuestions.add(listData[i]);
-                }
-              }
-            }
-          }
-        }
-        if (!disableQuestions.contains('${element.intQuestionNo}')) {
-          fifthQuestions.add(element);
-          print('added${element.intId}');
-        }
-      } else if (element.intSectionId == 6) {
-        _sixthQuestions.add(element);
-        if (element.strQuestiontype == 'YN') {
-          if (element.yesNoPressedVal == 1) {
-            if (element.strDisableQuestions != null &&
-                element.strDisableQuestions.isNotEmpty) {
-              String numberString =
-                  element.strDisableQuestions.split('Yes:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!disableQuestions.contains(listData[i])) {
-                  disableQuestions.add(listData[i]);
-                }
-              }
-            }
-          } else if (element.yesNoPressedVal == 0) {
-            if (element.strEnableQuestions != null &&
-                element.strEnableQuestions.isNotEmpty) {
-              String numberString = element.strEnableQuestions.split('No:')[1];
-              List listData = numberString.split(",");
-              for (int i = 0; i < listData.length; i++) {
-                if (!enableQuestions.contains(listData[i])) {
-                  enableQuestions.add(listData[i]);
-                }
-              }
-            }
-          }
-        }
-        if (!disableQuestions.contains('${element.intQuestionNo}')) {
-          sixthQuestions.add(element);
-          print('added${element.intId}');
+          break;
         }
       }
-    });
+    }
+
+    if (surveyResponseModel.intSectionId == 4) {
+      for (int i = 0; i < _fourthQuestions.length; i++) {
+        if (_fourthQuestions[i].intQuestionNo ==
+            surveyResponseModel.intQuestionNo) {
+          _fourthQuestions[i] = surveyResponseModel;
+          break;
+        }
+      }
+    }
+
+    if (surveyResponseModel.intSectionId == 9) {
+      for (int i = 0; i < _fifthQuestions.length; i++) {
+        if (_fifthQuestions[i].intQuestionNo ==
+            surveyResponseModel.intQuestionNo) {
+          _fifthQuestions[i] = surveyResponseModel;
+          break;
+        }
+      }
+    }
+
+    if (surveyResponseModel.intSectionId == 10) {
+      for (int i = 0; i < _sixthQuestions.length; i++) {
+        if (_sixthQuestions[i].intQuestionNo ==
+            surveyResponseModel.intQuestionNo) {
+          _sixthQuestions[i] = surveyResponseModel;
+          break;
+        }
+      }
+    }
+
+    // firstQuestions = [];
+    // secondQuestions = [];
+    // thirdQuestions = [];
+    // fourthQuestions = [];
+    // fifthQuestions = [];
+    // sixthQuestions = [];
+    // _surveyQuestion.forEach((element) {
+    //   if (element.intSectionId == 1) {
+    //     _firstQuestions.add(element);
+    //     if (element.strQuestiontype == 'YN') {
+    //       if (element.yesNoPressedVal == 1) {
+    //         if (element.strDisableQuestions != null &&
+    //             element.strDisableQuestions.isNotEmpty) {
+    //           String numberString =
+    //               element.strDisableQuestions.split('Yes:')[1];
+    //           List listData = numberString.split(",");
+    //           listData.forEach((listElement) {
+    //             if (!disableQuestions.contains(listElement)) {
+    //               disableQuestions.add(listElement);
+    //             }
+    //           });
+    //         }
+    //       } else if (element.yesNoPressedVal == 0) {
+    //         print('EnableQuestions${element.strEnableQuestions}');
+    //         if (element.strEnableQuestions != null &&
+    //             element.strEnableQuestions.isNotEmpty) {
+    //           print('EnableQuestions${element.strEnableQuestions}');
+    //           String numberString = element.strEnableQuestions.split('No:')[1];
+    //           List listData = numberString.split(",");
+    //           listData.forEach((listElement) {
+    //             print(listElement);
+    //             if (disableQuestions.contains(listElement)) {
+    //               disableQuestions.remove(listElement);
+    //             }
+    //           });
+    //         }
+    //       }
+    //     }
+
+    //     print(disableQuestions);
+    //     print(element.intQuestionNo.toString());
+    //     if (!disableQuestions.contains('${element.intQuestionNo}')) {
+    //       firstQuestions.add(element);
+    //       print('added${element.intQuestionNo}');
+    //     }
+    //     print('length${firstQuestions.length}');
+    //   } else if (element.intSectionId == 2) {
+    //     _secondQuestions.add(element);
+    //     if (element.strQuestiontype == 'YN') {
+    //       if (element.yesNoPressedVal == 1) {
+    //         if (element.strDisableQuestions != null &&
+    //             element.strDisableQuestions.isNotEmpty) {
+    //           String numberString = element.strDisableQuestions.split('No:')[1];
+    //           List listData = numberString.split(",");
+    //           listData.forEach((listElement) {
+    //             if (!disableQuestions.contains(listElement)) {
+    //               disableQuestions.add(listElement);
+    //             }
+    //           });
+    //         }
+    //       } else if (element.yesNoPressedVal == 0) {
+    //         print('EnableQuestions${element.strEnableQuestions}');
+    //         if (element.strEnableQuestions != null &&
+    //             element.strEnableQuestions.isNotEmpty) {
+    //           print('EnableQuestions${element.strEnableQuestions}');
+    //           String numberString = element.strEnableQuestions.split('Yes:')[1];
+    //           List listData = numberString.split(",");
+    //           listData.forEach((listElement) {
+    //             print(listElement);
+    //             if (disableQuestions.contains(listElement)) {
+    //               disableQuestions.remove(listElement);
+    //             }
+    //           });
+    //         }
+    //       }
+    //     } else if (element.strQuestiontype == 'M') {
+    //       if (element.dropDownValue == 'Energised') {
+    //         String numberString =
+    //             element.strDisableQuestions.split('Energised:')[1];
+    //         List listData = numberString.split(",");
+    //         listData.forEach((listElement) {
+    //           if (!disableQuestions.contains(listElement)) {
+    //             disableQuestions.add(listElement);
+    //           }
+    //         });
+    //       } else if (element.dropDownValue == 'De-Energised') {
+    //         String numberString =
+    //             element.strDisableQuestions.split('De-Energised:')[1];
+    //         List listData = numberString.split(",");
+    //         listData.forEach((listElement) {
+    //           if (!disableQuestions.contains(listElement)) {
+    //             disableQuestions.add(listElement);
+    //           }
+    //         });
+    //       }
+    //     }
+    //     print(disableQuestions);
+    //     print(element.intQuestionNo.toString());
+    //     if (!disableQuestions.contains('${element.intQuestionNo}')) {
+    //       secondQuestions.add(element);
+    //     }
+    //   } else if (element.intSectionId == 3) {
+    //     _thirdQuestions.add(element);
+    //     if (element.strQuestiontype == 'YN') {
+    //       if (element.yesNoPressedVal == 1) {
+    //         if (element.strDisableQuestions != null &&
+    //             element.strDisableQuestions.isNotEmpty) {
+    //           String numberString =
+    //               element.strDisableQuestions.split('Yes:')[1];
+    //           List listData = numberString.split(",");
+    //           listData.forEach((listElement) {
+    //             if (!disableQuestions.contains(listElement)) {
+    //               disableQuestions.add(listElement);
+    //             }
+    //           });
+    //         }
+    //       } else if (element.yesNoPressedVal == 0) {
+    //         print('EnableQuestions${element.strEnableQuestions}');
+    //         if (element.strEnableQuestions != null &&
+    //             element.strEnableQuestions.isNotEmpty) {
+    //           print('EnableQuestions${element.strEnableQuestions}');
+    //           String numberString = element.strEnableQuestions.split('No:')[1];
+    //           List listData = numberString.split(",");
+    //           listData.forEach((listElement) {
+    //             print(listElement);
+    //             if (disableQuestions.contains(listElement)) {
+    //               disableQuestions.remove(listElement);
+    //             }
+    //           });
+    //         }
+    //       }
+    //     }
+    //     if (element.strQuestiontype == 'M') {
+    //       print('object${surveyResponseModel.validate}');
+    //       if (surveyResponseModel.validate == 'Energised') {
+    //         String numberString =
+    //             element.strDisableQuestions.split('Energised:')[1];
+    //         List listData = numberString.split(",");
+    //         listData.forEach((listElement) {
+    //           if (!disableQuestions.contains(listElement)) {
+    //             disableQuestions.add(listElement);
+    //           }
+    //         });
+    //       } else if (surveyResponseModel.validate == 'De-Energised') {
+    //         String numberString =
+    //             element.strDisableQuestions.split('De-Energised:')[1];
+    //         List listData = numberString.split(",");
+    //         listData.forEach((listElement) {
+    //           if (!disableQuestions.contains(listElement)) {
+    //             disableQuestions.add(listElement);
+    //           }
+    //         });
+    //       }
+    //     }
+    //     if (!disableQuestions.contains('${element.intQuestionNo}')) {
+    //       thirdQuestions.add(element);
+    //       print('added${element.intQuestionNo}');
+    //     }
+    //   } else if (element.intSectionId == 4) {
+    //     _fourthQuestions.add(element);
+    //     if (element.strQuestiontype == 'YN') {
+    //       if (element.yesNoPressedVal == 1) {
+    //         if (element.strDisableQuestions != null &&
+    //             element.strDisableQuestions.isNotEmpty) {
+    //           String numberString =
+    //               element.strDisableQuestions.split('Yes:')[1];
+    //           List listData = numberString.split(",");
+    //           for (int i = 0; i < listData.length; i++) {
+    //             if (!disableQuestions.contains(listData[i])) {
+    //               disableQuestions.add(listData[i]);
+    //             }
+    //           }
+    //         }
+    //       } else if (element.yesNoPressedVal == 0) {
+    //         if (element.strEnableQuestions != null &&
+    //             element.strEnableQuestions.isNotEmpty) {
+    //           String numberString = element.strEnableQuestions.split('No:')[1];
+    //           List listData = numberString.split(",");
+    //           for (int i = 0; i < listData.length; i++) {
+    //             if (!enableQuestions.contains(listData[i])) {
+    //               enableQuestions.add(listData[i]);
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //     if (!disableQuestions.contains('${element.intQuestionNo}')) {
+    //       fourthQuestions.add(element);
+    //       print('added${element.intId}');
+    //     }
+    //   } else if (element.intSectionId == 5) {
+    //     _fifthQuestions.add(element);
+    //     if (element.strQuestiontype == 'YN') {
+    //       if (element.yesNoPressedVal == 1) {
+    //         if (element.strDisableQuestions != null &&
+    //             element.strDisableQuestions.isNotEmpty) {
+    //           String numberString =
+    //               element.strDisableQuestions.split('Yes:')[1];
+    //           List listData = numberString.split(",");
+    //           for (int i = 0; i < listData.length; i++) {
+    //             if (!disableQuestions.contains(listData[i])) {
+    //               disableQuestions.add(listData[i]);
+    //             }
+    //           }
+    //         }
+    //       } else if (element.yesNoPressedVal == 0) {
+    //         if (element.strEnableQuestions != null &&
+    //             element.strEnableQuestions.isNotEmpty) {
+    //           String numberString = element.strEnableQuestions.split('No:')[1];
+    //           List listData = numberString.split(",");
+    //           for (int i = 0; i < listData.length; i++) {
+    //             if (!enableQuestions.contains(listData[i])) {
+    //               enableQuestions.add(listData[i]);
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //     if (!disableQuestions.contains('${element.intQuestionNo}')) {
+    //       fifthQuestions.add(element);
+    //       print('added${element.intId}');
+    //     }
+    //   } else if (element.intSectionId == 6) {
+    //     _sixthQuestions.add(element);
+    //     if (element.strQuestiontype == 'YN') {
+    //       if (element.yesNoPressedVal == 1) {
+    //         if (element.strDisableQuestions != null &&
+    //             element.strDisableQuestions.isNotEmpty) {
+    //           String numberString =
+    //               element.strDisableQuestions.split('Yes:')[1];
+    //           List listData = numberString.split(",");
+    //           for (int i = 0; i < listData.length; i++) {
+    //             if (!disableQuestions.contains(listData[i])) {
+    //               disableQuestions.add(listData[i]);
+    //             }
+    //           }
+    //         }
+    //       } else if (element.yesNoPressedVal == 0) {
+    //         if (element.strEnableQuestions != null &&
+    //             element.strEnableQuestions.isNotEmpty) {
+    //           String numberString = element.strEnableQuestions.split('No:')[1];
+    //           List listData = numberString.split(",");
+    //           for (int i = 0; i < listData.length; i++) {
+    //             if (!enableQuestions.contains(listData[i])) {
+    //               enableQuestions.add(listData[i]);
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //     if (!disableQuestions.contains('${element.intQuestionNo}')) {
+    //       sixthQuestions.add(element);
+    //       print('added${element.intId}');
+    //     }
+    //   }
+    // }
+    // );
 
     setState(ViewState.Idle);
   }
@@ -819,11 +855,11 @@ class SurveyScreenViewModel extends BaseModel {
     } else if (selected == 2) {
       submitThirdBool = true;
     } else if (selected == 3) {
-      submitThirdBool = true;
+      submitFourthBool = true;
     } else if (selected == 4) {
-      submitThirdBool = true;
+      submitFifthBool = true;
     } else {
-      submitThirdBool = true;
+      submitSixthBool = true;
     }
 
     setState(ViewState.Idle);

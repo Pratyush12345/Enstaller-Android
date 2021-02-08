@@ -470,11 +470,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     width: 100,
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          surveyResponseModel?.yesNoPressedVal = 1;
-                          surveyResponseModel?.validate = 'true';
-                          model.onChangeYesNo(surveyResponseModel);
-                        });
+                        // setState(() {
+                        surveyResponseModel?.yesNoPressedVal = 1;
+                        surveyResponseModel?.validate = 'true';
+                        model.onChangeYesNo(surveyResponseModel);
+                        // });
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -515,11 +515,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     width: 100,
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          surveyResponseModel?.yesNoPressedVal = 0;
-                          surveyResponseModel?.validate = 'false';
-                          model.onChangeYesNo(surveyResponseModel);
-                        });
+                        // setState(() {
+                        surveyResponseModel?.yesNoPressedVal = 0;
+                        surveyResponseModel?.validate = 'false';
+                        model.onChangeYesNo(surveyResponseModel);
+                        // });
                       },
                       child: Container(
                         decoration: BoxDecoration(
