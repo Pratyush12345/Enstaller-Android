@@ -99,7 +99,7 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
                         child: (model.emailNotificationList.isNotEmpty == true)
                             ? Padding(
                                 padding:
-                                    SizeConfig.padding.copyWith(bottom: 100),
+                                    SizeConfig.padding,
                                 child: ListView.builder(
                                   itemCount: model.emailNotificationList.length,
                                   itemBuilder: (context, i) {

@@ -80,14 +80,16 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                 
               ],
             ),
-            body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():SingleChildScrollView(
+            body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():
+            RefreshIndicator(
+              onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getAppoinmentList()),
+                    
               child: ConstrainedBox(
                   constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height),
                   child: (model.appointmentList.isNotEmpty == true) ? Padding(
-                    padding:SizeConfig.padding.copyWith(
-                        bottom: 100
-                    ),
+                    padding:SizeConfig.padding,
                     child: ListView.builder(
                       itemCount:model.appointmentList.length,
                       itemBuilder: (context, i) {

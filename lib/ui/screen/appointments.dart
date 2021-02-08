@@ -97,7 +97,7 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
                         child: (model.appointmentList.isNotEmpty == true)
                             ? Padding(
                                 padding:
-                                    SizeConfig.padding.copyWith(bottom: 100),
+                                    SizeConfig.padding,
                                 child: ListView.builder(
                                   itemCount: model.appointmentList.length,
                                   itemBuilder: (context, i) {

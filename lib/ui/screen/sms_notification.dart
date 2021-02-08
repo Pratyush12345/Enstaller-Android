@@ -97,7 +97,7 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
                         child: (model.smsNotificationList.isNotEmpty == true)
                             ? Padding(
                                 padding:
-                                    SizeConfig.padding.copyWith(bottom: 100),
+                                    SizeConfig.padding,
                                 child: ListView.builder(
                                   itemCount: model.smsNotificationList.length,
                                   itemBuilder: (context, i) {

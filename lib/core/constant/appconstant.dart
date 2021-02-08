@@ -213,7 +213,7 @@ class AppConstants{
   }
   static Future<dynamic> showAppDialog({BuildContext context,String title,Widget child}){
     FocusScope.of(context).requestFocus(FocusNode());
-    return showDialog(context: context,child:Dialog(
+    return showDialog(context: context,builder:(context)=>Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(7.0))),
       child: child,

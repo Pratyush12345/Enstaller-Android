@@ -73,7 +73,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
                         child: (model.stockCheckList.isNotEmpty == true)
                             ? Padding(
                                 padding:
-                                    SizeConfig.padding.copyWith(bottom: 100),
+                                    SizeConfig.padding,
                                 child: ListView.builder(
                                   itemCount: model.stockCheckList.length,
                                   itemBuilder: (context, i) {
