@@ -73,9 +73,7 @@ class SurveyScreenViewModel extends BaseModel {
 
       _surveyQuestion =
           await _apiService.getSurveyQuestionAppointmentWise(appointmentID);
-      print("???????????????");
 
-      print("???????????????");
       _surveyQuestion.forEach((element) {
         if (element.intSectionId == 1) {
           _firstQuestions.add(element);
@@ -166,6 +164,7 @@ class SurveyScreenViewModel extends BaseModel {
             thirdQuestions.add(element);
           }
         }
+        
       });
     } else {
       List<QuestionAnswer> _answers =
@@ -193,11 +192,13 @@ class SurveyScreenViewModel extends BaseModel {
 
   void onChangeYesNo(SurveyResponseModel surveyResponseModel) {
     setState(ViewState.Busy);
+  
     print('surr===${surveyResponseModel.validate}');
     for (int i = 0; i < _firstQuestions.length; i++) {
       if (_firstQuestions[i].intQuestionNo ==
           surveyResponseModel.intQuestionNo) {
         _firstQuestions[i] = surveyResponseModel;
+        
       }
     }
     for (int i = 0; i < _secondQuestions.length; i++) {

@@ -14,6 +14,8 @@ class TodayAppointmentViewModel extends BaseModel{
   bool searchBool=false;
 
   void getAppoinmentList()async{
+    appointmentList = [];
+    _appointmentList = [];
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser(); 
     _appointmentList =await _apiService.getAppointmentList(user.intEngineerId.toString());

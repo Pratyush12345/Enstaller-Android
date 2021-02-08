@@ -24,6 +24,8 @@ class DocumnetViewModel extends BaseModel{
   bool searchBool=false;
 
   void getDocumnetList()async{
+    documentList = [];
+    _documentList = [];
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
      DocumentModel documentModel = DocumentModel(intCreatedBy: user.intEngineerId.toString() , intSupplierId: "0", strDocUser: "Engineer", strKey: "GetDocumentWeb");

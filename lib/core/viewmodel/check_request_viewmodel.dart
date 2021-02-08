@@ -15,6 +15,8 @@ class CheckRequestViewModel extends BaseModel{
 
 
   void initializeData() async {
+    list = [];
+    serialList = [];
     setState(ViewState.Busy);
     //Fetch from apis
     UserModel user = await Prefs.getUser();
