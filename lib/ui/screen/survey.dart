@@ -94,7 +94,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               key: Key('builder ${model.selected.toString()}'),
-                              itemCount: 3,
+                              itemCount: 6,
                               itemBuilder: (BuildContext ctxt, int index) {
                                 return CustomExpandedTile(
                                   expanded: model.selected == index,
@@ -156,7 +156,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           model.closeExpand();
                                         },
                                       ),
-                                      model.selected >= 0 && model.selected < 3
+                                      model.selected >= 0 && model.selected < 6
                                           ? _getChildrenWidget(
                                               model.selected, model)
                                           : Container()
@@ -194,6 +194,18 @@ class _SurveyScreenState extends State<SurveyScreen> {
       case 2:
         return AppStrings.electricityOldMeterDetails;
         break;
+
+      case 3:
+        return AppStrings.electricityNewMeterDetails;
+        break;
+
+      case 4:
+        return AppStrings.signOff;
+        break;
+
+      case 5:
+        return AppStrings.abort;
+        break;
     }
   }
 
@@ -203,12 +215,20 @@ class _SurveyScreenState extends State<SurveyScreen> {
       case 0:
         return _getData(model.firstQuestions, model, model.firstAnswers);
         break;
-
       case 1:
         return _getData(model.secondQuestions, model, model.secondAnswers);
         break;
       case 2:
         return _getData(model.thirdQuestions, model, model.thirdAnswers);
+        break;
+      case 3:
+        return _getData(model.fourthQuestions, model, model.fourthAnswers);
+        break;
+      case 4:
+        return _getData(model.fifthQuestions, model, model.fifthAnswers);
+        break;
+      case 5:
+        return _getData(model.sixthQuestions, model, model.sixthAnswers);
         break;
     }
   }
@@ -264,7 +284,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           height: 40,
                           radius: 10,
                           color: AppColors.green,
-                          buttonText: model.selected < 2
+                          buttonText: model.selected < 5
                               ? AppStrings.next
                               : AppStrings.submit,
                           onTap: () async {
@@ -356,7 +376,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         SizedBox(
                           width: 20,
                         ),
-                        model.selected < 2
+                        model.selected < 5
                             ? AppButton(
                                 width: 100,
                                 height: 40,
