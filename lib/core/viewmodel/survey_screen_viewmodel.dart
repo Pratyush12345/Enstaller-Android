@@ -324,7 +324,7 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   void onChangeYesNo(SurveyResponseModel surveyResponseModel) {
-    setState(ViewState.Busy);
+    // setState(ViewState.Busy);
     print('surr===${surveyResponseModel.validate}');
     if (surveyResponseModel.intSectionId == 1) {
       var index = _firstQuestions.indexWhere((element) =>
@@ -338,9 +338,7 @@ class SurveyScreenViewModel extends BaseModel {
       //     break;
       //   }
       // }
-    }
-
-    if (surveyResponseModel.intSectionId == 2) {
+    } else if (surveyResponseModel.intSectionId == 2) {
       for (int i = 0; i < _secondQuestions.length; i++) {
         if (_secondQuestions[i].intQuestionNo ==
             surveyResponseModel.intQuestionNo) {
@@ -348,9 +346,7 @@ class SurveyScreenViewModel extends BaseModel {
           break;
         }
       }
-    }
-
-    if (surveyResponseModel.intSectionId == 3) {
+    } else if (surveyResponseModel.intSectionId == 3) {
       for (int i = 0; i < _thirdQuestions.length; i++) {
         if (_thirdQuestions[i].intQuestionNo ==
             surveyResponseModel.intQuestionNo) {
@@ -391,9 +387,7 @@ class SurveyScreenViewModel extends BaseModel {
           break;
         }
       }
-    }
-
-    if (surveyResponseModel.intSectionId == 4) {
+    } else if (surveyResponseModel.intSectionId == 4) {
       for (int i = 0; i < _fourthQuestions.length; i++) {
         if (_fourthQuestions[i].intQuestionNo ==
             surveyResponseModel.intQuestionNo) {
@@ -401,9 +395,7 @@ class SurveyScreenViewModel extends BaseModel {
           break;
         }
       }
-    }
-
-    if (surveyResponseModel.intSectionId == 9) {
+    } else if (surveyResponseModel.intSectionId == 9) {
       for (int i = 0; i < _fifthQuestions.length; i++) {
         if (_fifthQuestions[i].intQuestionNo ==
             surveyResponseModel.intQuestionNo) {
@@ -411,9 +403,7 @@ class SurveyScreenViewModel extends BaseModel {
           break;
         }
       }
-    }
-
-    if (surveyResponseModel.intSectionId == 10) {
+    } else if (surveyResponseModel.intSectionId == 10) {
       for (int i = 0; i < _sixthQuestions.length; i++) {
         if (_sixthQuestions[i].intQuestionNo ==
             surveyResponseModel.intQuestionNo) {
@@ -422,7 +412,7 @@ class SurveyScreenViewModel extends BaseModel {
         }
       }
     }
-
+    print('line 342');
     // firstQuestions = [];
     // secondQuestions = [];
     // thirdQuestions = [];
@@ -681,7 +671,7 @@ class SurveyScreenViewModel extends BaseModel {
     // }
     // );
 
-    setState(ViewState.Idle);
+    // setState(ViewState.Idle);
   }
 
   void clearAnswer() {
