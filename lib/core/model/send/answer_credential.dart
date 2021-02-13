@@ -4,7 +4,7 @@ class AnswerCredential {
   String intsurveyquetionid;
   String stranswer;
   String intcreatedby;
-  String bisalive;
+  int bisalive;
   String strfilename;
 
   AnswerCredential(

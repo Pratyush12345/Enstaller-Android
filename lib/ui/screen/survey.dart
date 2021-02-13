@@ -20,11 +20,13 @@ import 'package:enstaller/ui/screen/widget/survey/show_p_image_widget.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/shared/custom_expanded_tile_widget.dart';
+import 'package:enstaller/ui/util/onchangeyesnoprovider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
 class SurveyArguments {
   String appointmentID;
@@ -156,7 +158,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           model.closeExpand();
                                         },
                                       ),
-                                      model.selected >= 0 && model.selected < 6
+                                      model.selected >= 0 &&
+                                              model.selected < 6 &&
+                                              model.selected == index
                                           ? _getChildrenWidget(
                                               model.selected, model)
                                           : Container()
@@ -211,9 +215,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   //get widgets data  as per text
   Widget _getChildrenWidget(int index, SurveyScreenViewModel model) {
-    print("bbbbbbbbb");
-    print(index);
-    print("bbbbbbbbb");
+    print('object');
     switch (index) {
       case 0:
         return _getData(model.firstQuestions, model, model.firstAnswers);
@@ -239,30 +241,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
   //column data
   Widget _getColumnData(
       SurveyResponseModel surveyResponseModel, SurveyScreenViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Q: ${surveyResponseModel.intQuestionNo} " +
-                    surveyResponseModel?.strQuestionText ??
-                "",
-            textAlign: TextAlign.left,
-            style: getTextStyle(color: Colors.black, isBold: true),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        _getTypeWidget(surveyResponseModel, model, model.validationValue),
-      ],
-    );
+    return _getTypeWidget(surveyResponseModel, model, model.validationValue);
+    
   }
 
   Widget _getData(List<SurveyResponseModel> questions,
       SurveyScreenViewModel model, List<QuestionAnswer> answers) {
-    print("aaaaaaaa");    
     if (!widget.arguments.edit) {
       return questions.length == 0
           ? Center(
@@ -280,7 +264,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Row(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         AppButton(
@@ -311,7 +295,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       stranswer: questions[i].validate,
                                       intcreatedby: model.user.intEngineerId,
                                       bisalive:
-                                          questions[i].bisAlive ? '1' : '0',
+                                          questions[i].bisAlive ? 1 : 0,
                                       strfilename: ""));
                                 } else {
                                   setState(() {
@@ -348,11 +332,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         _getColumnData(questions[i], model),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                       ],
@@ -364,7 +348,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     } else {
       return answers.length == 0
           ? Center(
-              child: Text(AppStrings.surveyDataNotFound),
+              child: const Text(AppStrings.surveyDataNotFound),
             )
           : ListView.builder(
               itemCount:
@@ -459,112 +443,142 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   TextEditingController editController = TextEditingController();
 
+ Widget _getQuestion(SurveyResponseModel surveyResponseModel){
+   return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Q: ${surveyResponseModel.intQuestionNo} " +
+                    surveyResponseModel?.strQuestionText ??
+                "",
+            textAlign: TextAlign.left,
+            style: getTextStyle(color: Colors.black, isBold: true),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        
+      ],
+    );
+ }
+ 
   Widget _getTypeWidget(SurveyResponseModel surveyResponseModel,
       SurveyScreenViewModel model, bool showMessage) {
     switch (surveyResponseModel.strQuestiontype) {
       case "YN":
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    height: 40.0,
-                    width: 100,
-                    child: GestureDetector(
-                      onTap: () {
-                        // setState(() {
-                        surveyResponseModel?.yesNoPressedVal = 1;
-                        surveyResponseModel?.validate = 'true';
-                        model.onChangeYesNo(surveyResponseModel);
-                        // });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(0xFFF05A22),
-                            style: BorderStyle.solid,
-                            width: 1.0,
+        return Consumer<OnChangeYesNo>(
+          builder: (context, value, child) => Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                _getQuestion(surveyResponseModel),
+                Row(
+                  children: [
+                    Container(
+                      height: 40.0,
+                      width: 100,
+                      child: GestureDetector(
+                        onTap: () {
+                          // setState(() {
+                          surveyResponseModel?.yesNoPressedVal = 1;
+                          surveyResponseModel?.validate = 'true';
+                          model.onChangeYesNo(surveyResponseModel);
+                          value.setState();
+                          // });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Color(0xFFF05A22),
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                            ),
+                            color: (surveyResponseModel?.yesNoPressedVal == 1)
+                                ? Colors.red
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          color: (surveyResponseModel?.yesNoPressedVal == 1)
-                              ? Colors.red
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              AppStrings.yes,
-                              style: TextStyle(
-                                color:
-                                    (surveyResponseModel?.yesNoPressedVal == 1)
-                                        ? Colors.white
-                                        : Colors.red,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                AppStrings.yes,
+                                style: TextStyle(
+                                  color:
+                                      (surveyResponseModel?.yesNoPressedVal ==
+                                              1)
+                                          ? Colors.white
+                                          : Colors.red,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 10),
-                  Container(
-                    height: 40.0,
-                    width: 100,
-                    child: GestureDetector(
-                      onTap: () {
-                        // setState(() {
-                        surveyResponseModel?.yesNoPressedVal = 0;
-                        surveyResponseModel?.validate = 'false';
-                        model.onChangeYesNo(surveyResponseModel);
-                        // });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.red,
-                            style: BorderStyle.solid,
-                            width: 1.0,
+                    SizedBox(width: 10),
+                    Container(
+                      height: 40.0,
+                      width: 100,
+                      child: GestureDetector(
+                        onTap: () {
+                          // setState(() {
+                          surveyResponseModel?.yesNoPressedVal = 0;
+                          surveyResponseModel?.validate = 'false';
+                          model.onChangeYesNo(surveyResponseModel);
+                          value.setState();
+                          // });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.red,
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                            ),
+                            color: (surveyResponseModel?.yesNoPressedVal == 0)
+                                ? Colors.red
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          color: (surveyResponseModel?.yesNoPressedVal == 0)
-                              ? Colors.red
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              AppStrings.no,
-                              style: TextStyle(
-                                color:
-                                    (surveyResponseModel?.yesNoPressedVal == 0)
-                                        ? Colors.white
-                                        : Colors.red,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                AppStrings.no,
+                                style: TextStyle(
+                                  color:
+                                      (surveyResponseModel?.yesNoPressedVal ==
+                                              0)
+                                          ? Colors.white
+                                          : Colors.red,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              showMessage && surveyResponseModel?.validate == null
-                  ? ErrorTextWidget()
-                  : Container()
-            ],
+                  ],
+                ),
+                showMessage && surveyResponseModel?.validate == null
+                    ? ErrorTextWidget()
+                    : Container()
+              ],
+            ),
           ),
+          // child:
         );
         break;
 
@@ -577,8 +591,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
         for (var item in arr) {
           itemList.add(item.replaceAll(new RegExp(r"\s+"), " "));
         }
+        final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
         return Column(
+
           children: [
+            
+                _getQuestion(surveyResponseModel),
             DropdownButton<String>(
                 items: itemList.map((String val) {
                   return DropdownMenuItem<String>(
@@ -591,14 +609,17 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 }).toList(),
                 isExpanded: true,
                 style: TextStyle(color: Colors.blue),
-                hint: Text(surveyResponseModel?.dropDownValue),
+                hint: Consumer<OnChangeYesNo>(
+                    builder: (ctx, value, child) =>
+                        Text(surveyResponseModel?.dropDownValue)),
                 onChanged: (String val) {
                   print('object');
                   print('val==$val');
-                  setState(() {
-                    surveyResponseModel?.dropDownValue = val;
-                    surveyResponseModel?.validate = val;
-                  });
+                  // setState(() {
+                  onchange.setState();
+                  surveyResponseModel?.dropDownValue = val;
+                  surveyResponseModel?.validate = val;
+                  // });
                   model.onChangeYesNo(surveyResponseModel);
                 }),
             showMessage && surveyResponseModel?.validate == null
@@ -610,58 +631,78 @@ class _SurveyScreenState extends State<SurveyScreen> {
         break;
 
       case "P":
-        return Column(
-          children: [
-            InkWell(
-              onTap: () {
-                _showMyDialog(surveyResponseModel: surveyResponseModel);
-              },
-              child: (surveyResponseModel?.image == null)
-                  ? Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10.0, left: 10.0, right: 20),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(0xFFF05A22),
-                            style: BorderStyle.solid,
-                            width: 1.0,
+        return Consumer<OnChangeYesNo>(
+          
+            builder: (context, value, child)
+                  { 
+                    print("iiiiiiiiiiiiiiii");
+                    print(model.disableQuestions);
+                    print(surveyResponseModel.intQuestionNo.toString());
+                    print("iiiiiiiiiiiiiiiiii");
+                    if(model.disableQuestions.contains(surveyResponseModel.intQuestionNo.toString()))
+                    {
+                      return Container();
+                    }
+                    else{
+                    return Column(
+            children: [
+              
+                _getQuestion(surveyResponseModel),
+              InkWell(
+                onTap: () {
+                  _showMyDialog(surveyResponseModel: surveyResponseModel);
+                },
+                child: (surveyResponseModel?.image == null)
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10.0, left: 10.0, right: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Color(0xFFF05A22),
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                            ),
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              AppStrings.choosePhoto,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                AppStrings.choosePhoto,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
                               ),
                             ),
                           ),
                         ),
+                      )
+                    : Image.file(
+                        surveyResponseModel?.image,
+                        height: 100,
+                        width: 100,
                       ),
-                    )
-                  : Image.file(
-                      surveyResponseModel?.image,
-                      height: 100,
-                      width: 100,
-                    ),
-            ),
-            showMessage && surveyResponseModel?.validate == null
-                ? ErrorTextWidget()
-                : Container()
-          ],
+              ),
+              showMessage && surveyResponseModel?.validate == null
+                  ? ErrorTextWidget()
+                  : Container()
+            ],
+          );
+                  }
+                  }
         );
         break;
       case "S":
         return Column(
           children: [
+            
+                _getQuestion(surveyResponseModel),
             InkWell(
               onTap: () async {
                 // signature screen
@@ -725,22 +766,37 @@ class _SurveyScreenState extends State<SurveyScreen> {
         break;
 
       case "C":
-        return Column(
-          children: [
-            MyTile(
-              isOnlyNumeric: false,
-              surveyResponseModel: surveyResponseModel,
-            ),
-            showMessage && surveyResponseModel?.validate == null
-                ? ErrorTextWidget()
-                : Container()
-          ],
+        return Consumer<OnChangeYesNo>(
+           builder: (context, value, child){
+             if(model.disableQuestions.contains(surveyResponseModel.intQuestionNo.toString()))
+                    {
+                      return Container();
+                    }
+                    else{
+                     
+            return Column(
+            children: [
+              
+                _getQuestion(surveyResponseModel),
+              MyTile(
+                isOnlyNumeric: false,
+                surveyResponseModel: surveyResponseModel,
+              ),
+              showMessage && surveyResponseModel?.validate == null
+                  ? ErrorTextWidget()
+                  : Container()
+            ],
+          );
+           }
+    }
         );
         break;
 
       case "N":
         return Column(
           children: [
+            
+                _getQuestion(surveyResponseModel),
             MyTile(
                 isOnlyNumeric: true, surveyResponseModel: surveyResponseModel),
             showMessage && surveyResponseModel?.validate == null
@@ -753,6 +809,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
       case "R":
         return Column(
           children: [
+            
+                _getQuestion(surveyResponseModel),
             MyTile(
               isOnlyNumeric: true,
               surveyResponseModel: surveyResponseModel,
@@ -767,6 +825,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
       case "D":
         return Column(
           children: [
+            
+                _getQuestion(surveyResponseModel),
             MyTile(
               isOnlyNumeric: true,
               surveyResponseModel: surveyResponseModel,
@@ -802,6 +862,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
         var result = "";
         return Column(
           children: [
+            
+                _getQuestion(surveyResponseModel),
             InkWell(
                 onTap: () async {
                   String barcodeScanRes;
@@ -884,7 +946,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
             {int currentLength, int maxLength, bool isFocused}) {
           /* setState(() {
             numOfChare=currentLength.toString();
-
           });*/
         },
         style: TextStyle(color: Colors.black),

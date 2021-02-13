@@ -1,8 +1,8 @@
-class ApiError {
-  String status;
-  ApiError({this.status});
+  class ApiError {
+    String status;
+    ApiError({this.status});
 
-  ApiError.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    ApiError.fromJson(Map<String, dynamic> json) {
+      status = json['status'];
+    }
   }
-}

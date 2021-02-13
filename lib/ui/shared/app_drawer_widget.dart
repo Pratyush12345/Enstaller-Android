@@ -123,7 +123,7 @@ class AppDrawerWidget extends StatelessWidget {
                 },
               ),
               DrawerRowWidget(
-                title: 'Document',
+                title: 'Documents',
                 assetPath: ImageFile.document,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(

@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'dart:convert';
+import 'package:encrypt/encrypt.dart' as AESencrypt;
+import 'package:http/http.dart' as http;
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -6,6 +12,7 @@ import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/provider/base_view.dart';
+import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/survey.dart';
 import 'package:enstaller/ui/screen/widget/abort_appointment_widget.dart';
@@ -88,6 +95,34 @@ class _DetailScreenState extends State<DetailScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selected;
+  encryption(String value) {
+    final key = AESencrypt.Key.fromUtf8('8080808080808080');
+    final iv = AESencrypt.IV.fromUtf8('8080808080808080');
+    final encrypter = AESencrypt.Encrypter(
+        AESencrypt.AES(key, mode: AESencrypt.AESMode.cbc, padding: 'PKCS7'));
+    final encrypted = encrypter.encrypt(value, iv: iv);
+
+    return encrypted.base64
+        .toString()
+        .replaceAll('/', 'SLH')
+        .replaceAll('+', 'PLS')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS');
+  }
+
+  launchurl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,6 +331,28 @@ class _DetailScreenState extends State<DetailScreen> {
                           "AVAILABLE ACTION",
                           textAlign: TextAlign.start,
                           style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: AppButton(
+                            height: 40,
+                            color: AppColors.darkBlue,
+                            buttonText: "check",
+                            radius: 15,
+                            textStyle: TextStyle(color: AppColors.whiteColor),
+                            onTap: () async {
+                              var appointId = encryption(widget.arguments.appointmentID);
+        var url =
+            'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
+                appointId;
+                print(url);
+        launchurl(url);
+    
+                            },
+                          ),
                         ),
                         SizedBox(
                           height: 10.0,
