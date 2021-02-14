@@ -1,9 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'dart:convert';
 import 'package:encrypt/encrypt.dart' as AESencrypt;
-import 'package:http/http.dart' as http;
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -118,9 +113,10 @@ class _DetailScreenState extends State<DetailScreen> {
 
   launchurl(String url) async {
     if (await canLaunch(url)) {
-      await launch(url);
+       await launch(url,
+      enableJavaScript: true);
     } else {
-      throw 'Could not open the map.';
+      throw 'Could not open the $url.';
     }
   }
 
@@ -154,15 +150,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 style: TextStyle(color: AppColors.whiteColor),
               ),
               centerTitle: true,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(
-                    ImageFile.notification,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ],
+              // actions: [
+              //   Padding(
+              //     padding: const EdgeInsets.all(18.0),
+              //     child: Image.asset(
+              //       ImageFile.notification,
+              //       color: AppColors.whiteColor,
+              //     ),
+              //   ),
+              // ],
             ),
 //            floatingActionButton: (isToShowBottomBar == true)
 //                ? FloatingActionButton(
@@ -343,7 +339,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             buttonText: "check",
                             radius: 15,
                             textStyle: TextStyle(color: AppColors.whiteColor),
-                            onTap: () async {
+                            onTap: ()  {
                               var appointId = encryption(widget.arguments.appointmentID);
         var url =
             'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +

@@ -669,8 +669,7 @@ class SurveyScreenViewModel extends BaseModel {
           print('added${element.intId}');
         }
       }
-    }
-    );
+    });
 
     // setState(ViewState.Idle);
   }
@@ -714,52 +713,58 @@ class SurveyScreenViewModel extends BaseModel {
 //      }
 //
 //    }
-    try {
-      ConnectivityResult result = await _connectivity.checkConnectivity();
-      String status = _updateConnectionStatus(result);
-      if (status != "NONE") {
-        ResponseModel responseModel =
-            await _apiService.submitListSurveyAnswer(answerList);
-        print(responseModel.response);
-        if (responseModel.statusCode == 1) {
-          setState(ViewState.Idle);
-          if (selected < 5) {
-            selected++;
-            enableIndex++;
-          } else {
+    if (selected < 5) {
+      selected++;
+      enableIndex++;
+    } else {
+      try {
+        ConnectivityResult result = await _connectivity.checkConnectivity();
+        String status = _updateConnectionStatus(result);
+        if (status != "NONE") {
+          ResponseModel responseModel =
+              await _apiService.submitListSurveyAnswer(answerList);
+          print(responseModel.response);
+          if (responseModel.statusCode == 1) {
+            setState(ViewState.Idle);
+            // if (selected < 5) {
+            //   selected++;
+            //   enableIndex++;
+            // } else {
+
+            // }
             selected = -1;
             _openJumboTab(dsmodel, appointmentid);
           }
-        }
-      } else {
-        print("********online*****");
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        List<String> _list = [];
-        answerList.forEach((element) {
-          _list.add(jsonEncode(element.toJson()));
-        });
-        if (preferences.getStringList("listOfUnSubmittedForm") != null) {
-          _setofUnSubmittedForm =
-              preferences.getStringList("listOfUnSubmittedForm").toSet();
-        }
-        _setofUnSubmittedForm.add(appointmentid);
-
-        preferences.setStringList(
-            "listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
-        preferences.setStringList(
-            "key${selected.toString()}+$appointmentid", _list);
-        setState(ViewState.Idle);
-        if (selected < 5) {
-          selected++;
-          enableIndex++;
         } else {
+          print("********online*****");
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          List<String> _list = [];
+          answerList.forEach((element) {
+            _list.add(jsonEncode(element.toJson()));
+          });
+          if (preferences.getStringList("listOfUnSubmittedForm") != null) {
+            _setofUnSubmittedForm =
+                preferences.getStringList("listOfUnSubmittedForm").toSet();
+          }
+          _setofUnSubmittedForm.add(appointmentid);
+
+          preferences.setStringList(
+              "listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
+          preferences.setStringList(
+              "key${selected.toString()}+$appointmentid", _list);
+          setState(ViewState.Idle);
+          // if (selected < 5) {
+          //   selected++;
+          //   enableIndex++;
+          // } else {
           selected = -1;
           _openJumboTab(dsmodel, appointmentid);
+          // }
+          AppConstants.showFailToast(context, "Submitted Offline");
         }
-        AppConstants.showFailToast(context, "Submitted Offline");
+      } on PlatformException catch (e) {
+        print(e.toString());
       }
-    } on PlatformException catch (e) {
-      print(e.toString());
     }
 
     setState(ViewState.Idle);

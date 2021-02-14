@@ -35,27 +35,24 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
                     onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
+                      Navigator.of(context).pop();
                     },
-                    child: Image.asset(
-                      ImageFile.menuIcon,
-                      color: AppColors.whiteColor,
-                    )),
+                    child: Icon(Icons.arrow_back)),
               ),
               title: Text(
                 "${AppStrings.CHECK_REQUEST}",
                 style: TextStyle(color: AppColors.whiteColor),
               ),
               centerTitle: true,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(
-                    ImageFile.notification,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ],
+              // actions: [
+              //   Padding(
+              //     padding: const EdgeInsets.all(18.0),
+              //     child: Image.asset(
+              //       ImageFile.notification,
+              //       color: AppColors.whiteColor,
+              //     ),
+              //   ),
+              // ],
             ),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()

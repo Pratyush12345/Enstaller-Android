@@ -48,12 +48,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
                     onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
+                      Navigator.of(context).pop();
                     },
-                    child: Image.asset(
-                      ImageFile.menuIcon,
-                      color: AppColors.whiteColor,
-                    )),
+                    child: Icon(Icons.arrow_back)),
               ),
               centerTitle: true,
               title: model.searchBool
@@ -82,10 +79,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
                     model.onClickSerach();
                   },
                 ),
-                Icon(
-                  Icons.notifications_none,
-                  size: MediaQuery.of(context).size.height * 0.035,
-                ),
+                // Icon(
+                //   Icons.notifications_none,
+                //   size: MediaQuery.of(context).size.height * 0.035,
+                // ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),

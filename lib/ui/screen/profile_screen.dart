@@ -41,15 +41,13 @@ class MapScreenState extends State<ProfilePage>
         appBar: AppBar(
           backgroundColor: AppColors.green,
           leading: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: InkWell(
-                onTap: () {
-                  _scaffoldKey.currentState.openDrawer();
-                },
-                child: Image.asset(
-                  ImageFile.menuIcon,color: AppColors.whiteColor,
-                )),
-          ),
+                padding: const EdgeInsets.all(18.0),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Icon(Icons.arrow_back)),
+              ),
           title: Text(AppStrings.profile,style: TextStyle(
             color: AppColors.whiteColor
           ),),
