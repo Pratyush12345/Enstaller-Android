@@ -90,35 +90,7 @@ class _DetailScreenState extends State<DetailScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selected;
-  encryption(String value) {
-    final key = AESencrypt.Key.fromUtf8('8080808080808080');
-    final iv = AESencrypt.IV.fromUtf8('8080808080808080');
-    final encrypter = AESencrypt.Encrypter(
-        AESencrypt.AES(key, mode: AESencrypt.AESMode.cbc, padding: 'PKCS7'));
-    final encrypted = encrypter.encrypt(value, iv: iv);
-
-    return encrypted.base64
-        .toString()
-        .replaceAll('/', 'SLH')
-        .replaceAll('+', 'PLS')
-        .replaceAll('/', 'SLH')
-        .replaceAll('/', 'SLH')
-        .replaceAll('/', 'SLH')
-        .replaceAll('/', 'SLH')
-        .replaceAll('+', 'PLS')
-        .replaceAll('+', 'PLS')
-        .replaceAll('+', 'PLS')
-        .replaceAll('+', 'PLS');
-  }
-
-  launchurl(String url) async {
-    if (await canLaunch(url)) {
-       await launch(url,
-      enableJavaScript: true);
-    } else {
-      throw 'Could not open the $url.';
-    }
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -327,28 +299,6 @@ class _DetailScreenState extends State<DetailScreen> {
                           "AVAILABLE ACTION",
                           textAlign: TextAlign.start,
                           style: TextStyle(fontWeight: FontWeight.normal),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Padding(
-                          padding: SizeConfig.sidepadding,
-                          child: AppButton(
-                            height: 40,
-                            color: AppColors.darkBlue,
-                            buttonText: "check",
-                            radius: 15,
-                            textStyle: TextStyle(color: AppColors.whiteColor),
-                            onTap: ()  {
-                              var appointId = encryption(widget.arguments.appointmentID);
-        var url =
-            'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
-                appointId;
-                print(url);
-        launchurl(url);
-    
-                            },
-                          ),
                         ),
                         SizedBox(
                           height: 10.0,

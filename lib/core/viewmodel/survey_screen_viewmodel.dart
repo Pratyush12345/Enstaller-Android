@@ -92,9 +92,6 @@ class SurveyScreenViewModel extends BaseModel {
 
       _surveyQuestion =
           await _apiService.getSurveyQuestionAppointmentWise(appointmentID);
-      print("???????????????");
-
-      print("???????????????");
       _surveyQuestion.forEach((element) {
         if (element.intSectionId == 1) {
           _firstQuestions.add(element);
@@ -773,43 +770,49 @@ class SurveyScreenViewModel extends BaseModel {
   _openJumboTab(DetailsScreenViewModel dsmodel, String appointmentid) async {
     var AppointmentType =
         dsmodel.appointmentDetails.appointment.strAppointmentType.trim();
-    var MPAN;
-    var MPRN;
+    //var MPAN;
+    //var MPRN;
 
-    if (dsmodel.electricGasMeterList.isEmpty) {
-      MPRN = "";
-      MPAN = "";
-    } else {
-      dsmodel.electricGasMeterList.forEach((element) {
-        if (element.strFuel == "ELECTRICITY") {
-          MPAN = element.strMpan;
-          MPRN = "";
-        } else if (element.strFuel == "GAS") {
-          MPRN = element.strMpan;
-          MPAN = "";
-        }
-      });
-    }
+    // if (dsmodel.electricGasMeterList.isEmpty) {
+    //   MPRN = "";
+    //   MPAN = "";
+    // } else {
+    //   dsmodel.electricGasMeterList.forEach((element) {
+    //     if (element.strFuel == "ELECTRICITY") {
+    //       MPAN = element.strMpan;
+    //       MPRN = "";
+    //     } else if (element.strFuel == "GAS") {
+    //       MPRN = element.strMpan;
+    //       MPAN = "";
+    //     }
+    //   });
+    // }
     if (AppointmentType == "Scheduled Exchange" ||
         AppointmentType == "Emergency Exchange" ||
         AppointmentType == "New Connection" ||
         AppointmentType == "Meter Removal") {
-      if (MPAN != "" && MPRN != "") {
-        //alert(MPAN + '-' + MPRN);
+        var appointId = encryption(appointmentid);
+        var url =
+            'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
+                appointId;
+                print(url);
+        launchurl(url);   
+      // if (MPAN != "" && MPRN != "") {
+      //   //alert(MPAN + '-' + MPRN);
 
-      } else if (MPAN != "" && MPRN == "") {
-        var appointId = encryption(appointmentid);
-        var url =
-            'https://enstaller.enpaas.com/jmbCloseJob/AddElectricityCloseJob?intAppointmentId=' +
-                appointId;
-        launchurl(url);
-      } else if (MPRN != "" && MPAN == "") {
-        var appointId = encryption(appointmentid);
-        var url =
-            'https://enstaller.enpaas.com/jmbCloseJob/AddGasCloseJob?intAppointmentId=' +
-                appointId;
-        launchurl(url);
-      }
+      // } else if (MPAN != "" && MPRN == "") {
+      //   var appointId = encryption(appointmentid);
+      //   var url =
+      //       'https://enstaller.enpaas.com/jmbCloseJob/AddElectricityCloseJob?intAppointmentId=' +
+      //           appointId;
+      //   launchurl(url);
+      // } else if (MPRN != "" && MPAN == "") {
+      //   var appointId = encryption(appointmentid);
+      //   var url =
+      //       'https://enstaller.enpaas.com/jmbCloseJob/AddGasCloseJob?intAppointmentId=' +
+      //           appointId;
+      //   launchurl(url);
+      // }
     }
   }
 
