@@ -89,14 +89,22 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      model.firstQuestions.length == 0 &&
-                              model.firstAnswers.length == 0
+                      // model.sectionQuestions[model.sectionQuestions.keys.first]
+                      //                 .length ==
+                      //             0 &&
+                      //         model
+                      //                 .sectionAnswers[
+                      //                     model.sectionAnswers.keys.first]
+                      //                 .length ==
+                      //             0
+                      model.sectionQuestions.keys.isEmpty &&
+                              model.sectionAnswers.keys.isEmpty
                           ? Center(child: Text(AppStrings.surveyDataNotFound))
                           : ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               key: Key('builder ${model.selected.toString()}'),
-                              itemCount: 6,
+                              itemCount: model.sectionQuestions.keys.length,
                               itemBuilder: (BuildContext ctxt, int index) {
                                 return CustomExpandedTile(
                                   expanded: model.selected == index,
@@ -111,7 +119,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Text(
-                                              _getHeaderText(index),
+                                              _getHeaderText(index, model),
                                               style: getTextStyle(
                                                   color: Colors.white,
                                                   isBold: true,
@@ -140,7 +148,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Text(
-                                                  _getHeaderText(index),
+                                                  _getHeaderText(index, model),
                                                   style: getTextStyle(
                                                       color: Colors.white,
                                                       isBold: true,
@@ -159,7 +167,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                         },
                                       ),
                                       model.selected >= 0 &&
-                                              model.selected < 6 &&
+                                              model.selected <
+                                                  model.sectionQuestions.keys
+                                                      .length &&
                                               model.selected == index
                                           ? _getChildrenWidget(
                                               model.selected, model)
@@ -185,57 +195,79 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   // get header text
-  String _getHeaderText(int index) {
-    switch (index) {
-      case 0:
-        return AppStrings.confirmations;
-        break;
+  String _getHeaderText(int index, SurveyScreenViewModel model) {
+    int i = 0;
+    for (int j = 0; j < model.sectionQuestions.keys.length; j++) {
+      if (index == i) {
+        print(model.sectionQuestions.keys.toList()[index]);
+        return model.sectionNames[model.sectionNames.keys.toList()[index]];
+      }
 
-      case 1:
-        return AppStrings.commissioning;
-        break;
-
-      case 2:
-        return AppStrings.electricityOldMeterDetails;
-        break;
-
-      case 3:
-        return AppStrings.electricityNewMeterDetails;
-        break;
-
-      case 4:
-        return AppStrings.signOff;
-        break;
-
-      case 5:
-        return AppStrings.abort;
-        break;
+      i++;
     }
+    // switch (index) {
+    //   case 0:
+    //     return AppStrings.confirmations;
+    //     break;
+
+    //   case 1:
+    //     return AppStrings.commissioning;
+    //     break;
+
+    //   case 2:
+    //     return AppStrings.electricityOldMeterDetails;
+    //     break;
+
+    //   case 3:
+    //     return AppStrings.electricityNewMeterDetails;
+    //     break;
+
+    //   case 4:
+    //     return AppStrings.signOff;
+    //     break;
+
+    //   case 5:
+    //     return AppStrings.abort;
+    //     break;
+    // }
   }
 
   //get widgets data  as per text
   Widget _getChildrenWidget(int index, SurveyScreenViewModel model) {
     print('object');
-    switch (index) {
-      case 0:
-        return _getData(model.firstQuestions, model, model.firstAnswers);
-        break;
-      case 1:
-        return _getData(model.secondQuestions, model, model.secondAnswers);
-        break;
-      case 2:
-        return _getData(model.thirdQuestions, model, model.thirdAnswers);
-        break;
-      case 3:
-        return _getData(model.fourthQuestions, model, model.fourthAnswers);
-        break;
-      case 4:
-        return _getData(model.fifthQuestions, model, model.fifthAnswers);
-        break;
-      case 5:
-        return _getData(model.sixthQuestions, model, model.sixthAnswers);
-        break;
+    int i = 0;
+    for (int j = 0; j < model.sectionQuestions.keys.length; j++) {
+      if (index == i) {
+        print(model.sectionQuestions.keys.toList()[index]);
+        return _getData(
+            model.sectionQuestions[model.sectionQuestions.keys.toList()[index]],
+            model,
+            model.sectionAnswers[model.sectionAnswers.keys.toList()[index]]);
+      }
+
+      i++;
     }
+
+    // switch (index) {
+    //   case 0:
+    //     return _getData(model.firstQuestions, model, model.firstAnswers);
+    //     break;
+    //   case 1:
+    //     return _getData(model.secondQuestions, model, model.secondAnswers);
+    //     break;
+    //   case 2:
+    //     return _getData(model.thirdQuestions, model, model.thirdAnswers);
+    //     break;
+    //   case 3:
+    //     return _getData(model.fourthQuestions, model, model.fourthAnswers);
+    //     break;
+    //   case 4:
+    //     return _getData(model.fifthQuestions, model, model.fifthAnswers);
+    //     break;
+    //   case 5:
+    //     return _getData(model.sixthQuestions, model, model.sixthAnswers);
+    //     break;
+    // }
   }
 
   //column data
@@ -247,6 +279,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
   Widget _getData(List<SurveyResponseModel> questions,
       SurveyScreenViewModel model, List<QuestionAnswer> answers) {
     if (!widget.arguments.edit) {
+      print('line 270' + questions.length.toString());
       return questions.length == 0
           ? Center(
               child: Text(AppStrings.surveyDataNotFound),
@@ -271,7 +304,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           height: 40,
                           radius: 10,
                           color: AppColors.green,
-                          buttonText: model.selected < 5
+                          buttonText: model.selected <
+                                  model.sectionQuestions.keys.length - 1
                               ? AppStrings.next
                               : AppStrings.submit,
                           onTap: () async {
@@ -299,7 +333,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       strfilename: ""));
                                 } else {
                                   setState(() {
-                                    print(validateconter);
+                                    print(
+                                        validateconter.toString() + 'line 327');
                                     print(questions.length);
                                     if (questions[i].strQuestiontype == 'P' &&
                                         validateconter ==
@@ -365,7 +400,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         SizedBox(
                           width: 20,
                         ),
-                        model.selected < 5
+                        model.selected < model.sectionQuestions.keys.length - 1
                             ? AppButton(
                                 width: 100,
                                 height: 40,
@@ -703,7 +738,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
-            Column(
+            return Column(
               children: [
                 _getQuestion(surveyResponseModel),
                 InkWell(
@@ -772,6 +807,28 @@ class _SurveyScreenState extends State<SurveyScreen> {
         break;
 
       case "C":
+        return Consumer<OnChangeYesNo>(builder: (context, value, child) {
+          if (model.disableQuestions
+              .contains(surveyResponseModel.intQuestionNo.toString())) {
+            return Container();
+          } else {
+            return Column(
+              children: [
+                _getQuestion(surveyResponseModel),
+                MyTile(
+                  isOnlyNumeric: false,
+                  surveyResponseModel: surveyResponseModel,
+                ),
+                showMessage && surveyResponseModel?.validate == null
+                    ? ErrorTextWidget()
+                    : Container()
+              ],
+            );
+          }
+        });
+        break;
+
+      case "St":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
           if (model.disableQuestions
               .contains(surveyResponseModel.intQuestionNo.toString())) {
