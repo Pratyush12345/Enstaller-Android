@@ -260,7 +260,7 @@ class ApiService extends BaseApi{
           statusCode: 1,
           response: 'Successfully Updated'
       );
-    },json.encoder.convert(credentials));
+    },json.encode(credentials));
   }
 
   Future <dynamic> getCustomerById(String customerID){

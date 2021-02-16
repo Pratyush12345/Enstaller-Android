@@ -1,3 +1,4 @@
+import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -6,6 +7,7 @@ import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/provider/base_view.dart';
+import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/survey.dart';
 import 'package:enstaller/ui/screen/widget/abort_appointment_widget.dart';
@@ -88,6 +90,7 @@ class _DetailScreenState extends State<DetailScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selected;
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -119,15 +122,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 style: TextStyle(color: AppColors.whiteColor),
               ),
               centerTitle: true,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(
-                    ImageFile.notification,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ],
+              // actions: [
+              //   Padding(
+              //     padding: const EdgeInsets.all(18.0),
+              //     child: Image.asset(
+              //       ImageFile.notification,
+              //       color: AppColors.whiteColor,
+              //     ),
+              //   ),
+              // ],
             ),
 //            floatingActionButton: (isToShowBottomBar == true)
 //                ? FloatingActionButton(

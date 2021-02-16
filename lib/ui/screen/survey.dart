@@ -635,6 +635,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
         final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
 
         return Column(
+
           children: [
             _getQuestion(surveyResponseModel),
             DropdownButton<String>(

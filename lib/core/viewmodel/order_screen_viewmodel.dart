@@ -13,6 +13,7 @@ class OrderScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
 
   void initializeData() async {
+    list = [];
     setState(ViewState.Busy);
     //Fetch from api
     UserModel user = await Prefs.getUser();

@@ -46,11 +46,9 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
                     onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
+                      Navigator.of(context).pop();
                     },
-                    child: Image.asset(
-                      ImageFile.menuIcon,color: AppColors.whiteColor,
-                    )),
+                    child: Icon(Icons.arrow_back)),
               ),
               title: model.searchBool
                   ? TextField(

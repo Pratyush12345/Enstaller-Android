@@ -12,6 +12,8 @@ class EmailNotificationViewModel extends BaseModel{
   bool searchBool=false;
 
   void getEmailNotificationList()async{
+    emailNotificationList = [];
+    _emailNotificationList = [];
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
     _emailNotificationList =await _apiService.getEmailNotificationList(user.id.toString());

@@ -12,6 +12,8 @@ class SMSNotificationViewModel extends BaseModel{
   bool searchBool=false;
 
   void getSMSNotificationList()async{
+    smsNotificationList = [];
+    _smsNotificationList = [];
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
     

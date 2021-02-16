@@ -71,10 +71,10 @@ abstract class BaseApi {
   Future<dynamic> postRequestList(String path, Function(Response) success, [var body]) async {
     debugPrint(body);
 
-    var response = await http.post('${BaseApi._ENDPOINT}/$path',
-        // ignore: deprecated_member_use
+    var response = await client.post('${BaseApi._ENDPOINT}/$path',
+        
         headers: {HttpHeaders.CONTENT_TYPE: "application/json"},
-        body: body);
+        body:  (body));
 
     if (200 >= response.statusCode && response.statusCode < 300) {
       return success(response);

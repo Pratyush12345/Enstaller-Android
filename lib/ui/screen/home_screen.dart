@@ -161,8 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // SizedBox(
                 //   width: MediaQuery.of(context).size.width * 0.03,
                 // ),
-                Icon(Icons.notifications_none,
-                size: MediaQuery.of(context).size.height * 0.035,),
+                // Icon(Icons.notifications_none,
+                // size: MediaQuery.of(context).size.height * 0.035,),
 
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
