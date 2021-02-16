@@ -315,9 +315,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               model.onValidation();
                               for (int i = 0; i < questions.length; i++) {
                                 if (questions[i].validate != null) {
-                                  setState(() {
+                                  //setState(() {
                                     validateconter++;
-                                  });
+                                  //});
                                   model.onAddAnswer(AnswerCredential(
                                       intsurveyquetionid:
                                           questions[i].intQuestionNo.toString(),
@@ -332,27 +332,46 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           : 0.toString(),
                                       strfilename: ""));
                                 } else {
-                                  setState(() {
-                                    print(
+                                  print(
                                         validateconter.toString() + 'line 327');
                                     print(questions.length);
-                                    if (questions[i].strQuestiontype == 'P' &&
-                                        validateconter ==
-                                            questions.length - 2) {
-                                    } else {}
-                                  });
+                                     print("oooooooooooooooooooo");
+                                  // setState(() {
+                                  //   if (questions[i].strQuestiontype == 'P' &&
+                                  //       validateconter ==
+                                  //           questions.length - 2) {
+                                  //   } else {}
+                                  // });
                                 }
                               }
 
-                              if (validateconter == questions.length) {
-                                model.incrementCounter();
+print("lllllllllllllllllll");
+                                 print(validateconter);
+                                 print(questions.length);
+                                 print(model.disableQuestions.length);
+                                 print(model.enableQuestions.length);
+                                 print(validateconter == (questions.length-model.disableQuestions.length+model.enableQuestions.length));
+                                 print("llllllllllllll");
+                              if (validateconter == (questions.length-model.disableQuestions.length+model.enableQuestions.length)) {
+                                print("vvvvvvvvvvvvvvvv");
+                                //model.incrementCounter();
                                 model.onSubmit(
                                     model.selected,
                                     widget.arguments.appointmentID,
                                     context,
                                     widget.arguments.dsmodel);
+                              }else{
+                                
+                                 print("eeeeeeeeeeeeeeeeeeee");
+                                 print(validateconter);
+                                 print(questions.length);
+                                 print(model.disableQuestions);
+                                 print(model.enableQuestions);
+                                 print("eeeeeeeeeeeeeeeeeeee");
                               }
+
                             } else {
+                               print("ffffffffff");
                               model.incrementCounter();
                             }
                           },
