@@ -32,13 +32,12 @@ class EmailNotificationViewModel extends BaseModel{
   void onSearch(String val){
     setState(ViewState.Busy);
     emailNotificationList=[];
-    // _emailNotificationList.forEach((element) {
-    //   DateTime dt = DateTime.parse(element.dteBookedDate);
-    //   if(element.strCompanyName.toLowerCase().contains(val.toLowerCase())||element.appointmentEventType.toLowerCase().contains(val.toLowerCase())||
-    //   element.engineerName.toLowerCase().contains(val.toLowerCase())||element.strBookingReference.toLowerCase().contains(val.toLowerCase())){
-    //     appointmentList.add(element);
-    //   }
-    // });
+    _emailNotificationList.forEach((element) {
+      if(element.intAppointmentId.toString().toLowerCase().contains(val.toLowerCase())||element.customerName.toLowerCase().contains(val.toLowerCase())||
+      element.dteCreatedDate.toLowerCase().contains(val.toLowerCase())||element.strEmail.toLowerCase().contains(val.toLowerCase())){
+        emailNotificationList.add(element);
+      }
+    });
     setState(ViewState.Idle);
   }
   int getCurrentDay(DateTime date){

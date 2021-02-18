@@ -11,6 +11,7 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
+import 'package:enstaller/ui/util/MessagingService/FirebaseMessaging.dart';
 import 'package:ext_storage/ext_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,6 +27,7 @@ class OrderDetailViewModel extends BaseModel {
   void initializeData(intId) async {
     setState(ViewState.Busy);
     //Fetch from api
+    list= [];
     UserModel user = await Prefs.getUser();
     this.intOrderId = intId;
     orderDetailModel = await _apiService.getStockOrderById(this.intOrderId.toString()) as OrderDetailModel;
@@ -57,6 +59,7 @@ class OrderDetailViewModel extends BaseModel {
         final File file = File(path);
         await file.writeAsString(csv);
         AppConstants.showSuccessToast(context, AppStrings.SAVED_SUCCESSFULLY);
+        FirebaseMessagingService.showNotification("File Downloaded", path);
       }else{
         AppConstants.showFailToast(context, AppStrings.UNABLE_TO_SAVE);
       }

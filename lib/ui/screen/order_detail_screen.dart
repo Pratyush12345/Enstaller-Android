@@ -56,11 +56,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child:GestureDetector(
-                    child: Text(
-                      AppStrings.DOWNLOAD,
-                      style: TextStyle(
-                          color: AppColors.whiteColor, fontWeight: FontWeight.bold),
-                    ),
+                    child: Icon(Icons.download_sharp),
                     onTap: (){
                      //Download CSV
                       model.downloadCSV(widget.intId, context);
@@ -157,7 +153,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ),
         AppointmentDataRow(
           firstText: AppStrings.COLLECTION_DATE,
-          secondText: model.orderDetailModel?.dteCollectionDate ?? "",
+          secondText: model.orderDetailModel?.dteCreatedDate ?? "",
         ),
         AppointmentDataRow(
           firstText: AppStrings.APPROVED,

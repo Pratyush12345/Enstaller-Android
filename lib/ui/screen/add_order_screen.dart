@@ -41,12 +41,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                   color: AppColors.whiteColor
               ),),
               centerTitle: true,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Image.asset(ImageFile.notification,color: AppColors.whiteColor,),
-                ),
-              ],
+              // actions: [
+              //   Padding(
+              //     padding: const EdgeInsets.all(18.0),
+              //     child: Image.asset(ImageFile.notification,color: AppColors.whiteColor,),
+              //   ),
+              // ],
             ),
             body: model.state==ViewState.Busy && !model.isSaving?AppConstants.circulerProgressIndicator():
             SingleChildScrollView(
@@ -71,7 +71,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         buttonText: AppStrings.ADD_LINE_ITEM,
                         onTap: (){
                          //
-
+                          
                           model.addOrderItem();
                         },
                       ),

@@ -212,6 +212,18 @@
       "languageVersion": "2.2"
     },
     {
+      "name": "flutter_local_notifications",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
+      "name": "flutter_local_notifications_platform_interface",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_platform_interface-2.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "flutter_pdfview",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_pdfview-1.0.4",
       "packageUri": "lib/",
@@ -608,6 +620,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "timezone",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/timezone-0.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "toast",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/toast-0.1.5",
       "packageUri": "lib/",
@@ -698,7 +716,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-02-08T16:35:26.531453Z",
+  "generated": "2021-02-18T08:38:57.334841Z",
   "generator": "pub",
   "generatorVersion": "2.12.0-133.7.beta"
 }

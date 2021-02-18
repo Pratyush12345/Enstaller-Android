@@ -82,13 +82,25 @@ class AddOrderScreenViewModel extends BaseModel {
   void addOrderItem() {
     setState(ViewState.Busy);
     SaveOrderLine saveOrderLine = SaveOrderLine();
-
+    if(orderItems.isNotEmpty){
+    OrderItem _previtem = orderItems[orderItems.length-1];
+    if( _previtem.saveOrderLine.intItemId!=null &&_previtem.saveOrderLine.decQty!=null)
     orderItems.add(OrderItem(
         key: GlobalKey(),
         itemList: itemList,
         contractList: contractList,
         saveOrderLine: saveOrderLine,
         onDelete: () => onDelete(saveOrderLine)));
+    }
+    else{
+    orderItems.add(OrderItem(
+        key: GlobalKey(),
+        itemList: itemList,
+        contractList: contractList,
+        saveOrderLine: saveOrderLine,
+        onDelete: () => onDelete(saveOrderLine)));
+      
+    }
     setState(ViewState.Idle);
   }
 

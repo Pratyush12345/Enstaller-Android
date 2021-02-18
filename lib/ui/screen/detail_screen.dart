@@ -18,6 +18,7 @@ import 'package:enstaller/ui/screen/widget/update_status_dialog_widget.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/app_image_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
+import 'package:enstaller/ui/util/MessagingService/FirebaseMessaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/flutter_google_maps.dart';
@@ -322,8 +323,9 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 10.0,
                         ),
+                        
                         Padding(
                           padding: SizeConfig.sidepadding,
                           child: AppButton(
@@ -643,11 +645,14 @@ class _DetailScreenState extends State<DetailScreen> {
                           arguments: SurveyArguments(
                              dsmodel: model,
                               appointmentID: widget.arguments.appointmentID,
-                              edit: model.appointmentDetails.appointment
+                              edit: 
+                              model.appointmentDetails.appointment
                                           .surveyReceived ==
                                       AppStrings.yes
                                   ? true
-                                  : false));
+                                  : false
+                                  
+                                  ));
                     },
                   ),
                 ],

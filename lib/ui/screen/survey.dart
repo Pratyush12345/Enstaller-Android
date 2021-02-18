@@ -81,6 +81,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 widget.arguments.appointmentID, widget.arguments.edit),
             builder: (context, model, child) {
               if (model.state == ViewState.Busy) {
+                print('busyyyyyyyyyy');
                 return AppConstants.circulerProgressIndicator();
               } else {
                 return SingleChildScrollView(
@@ -310,6 +311,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               : AppStrings.submit,
                           onTap: () async {
                             if (!widget.arguments.edit) {
+                              print(model.selected.toString() + 'line 314');
                               int validateconter = 0;
                               // model.clearAnswer();
                               model.onValidation();
@@ -343,18 +345,20 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   //   } else {}
                                   // });
                                 }
-                              }
-
-print("lllllllllllllllllll");
+                              }print("llllllllllllllllllll");
                                  print(validateconter);
                                  print(questions.length);
-                                 print(model.disableQuestions.length);
-                                 print(model.enableQuestions.length);
-                                 print(validateconter == (questions.length-model.disableQuestions.length+model.enableQuestions.length));
-                                 print("llllllllllllll");
-                              if (validateconter == (questions.length-model.disableQuestions.length+model.enableQuestions.length)) {
-                                print("vvvvvvvvvvvvvvvv");
-                                //model.incrementCounter();
+                                 //print(model.disableQuestions.length);
+                                 //print(model.enableQuestions.length);
+                                 print(model.sectionDisableQuestions);
+                                 print("8888888888888888888");
+                                 print(model.sectionEnableQuestions);
+                                 
+                                 print(model.sectionDisableQuestions[questions[0].intSectionId].length);
+                                 print("llllllllllllllllllllll");
+                              if (validateconter == (questions.length-model.sectionDisableQuestions[questions[0].intSectionId].length)) {
+                                print('inside next');
+                                model.incrementCounter();
                                 model.onSubmit(
                                     model.selected,
                                     widget.arguments.appointmentID,
@@ -365,8 +369,8 @@ print("lllllllllllllllllll");
                                  print("eeeeeeeeeeeeeeeeeeee");
                                  print(validateconter);
                                  print(questions.length);
-                                 print(model.disableQuestions);
-                                 print(model.enableQuestions);
+                                 //print(model.disableQuestions);
+                                 //print(model.enableQuestions);
                                  print("eeeeeeeeeeeeeeeeeeee");
                               }
 
@@ -524,7 +528,7 @@ print("lllllllllllllllllll");
     switch (surveyResponseModel.strQuestiontype) {
       case "YN":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -654,7 +658,6 @@ print("lllllllllllllllllll");
         final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
 
         return Column(
-
           children: [
             _getQuestion(surveyResponseModel),
             DropdownButton<String>(
@@ -693,10 +696,10 @@ print("lllllllllllllllllll");
       case "P":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
           print("iiiiiiiiiiiiiiii");
-          print(model.disableQuestions);
+          print(model.sectionDisableQuestions[surveyResponseModel.intSectionId]);
           print(surveyResponseModel.intQuestionNo.toString());
           print("iiiiiiiiiiiiiiiiii");
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -754,7 +757,7 @@ print("lllllllllllllllllll");
         break;
       case "S":
         return Consumer<OnChangeYesNo>(builder: (ctx, val, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -828,7 +831,7 @@ print("lllllllllllllllllll");
 
       case "C":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -850,7 +853,7 @@ print("lllllllllllllllllll");
 
       case "St":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -872,7 +875,7 @@ print("lllllllllllllllllll");
 
       case "N":
         return Consumer<OnChangeYesNo>(builder: (ctx, val, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -893,7 +896,7 @@ print("lllllllllllllllllll");
 
       case "R":
         return Consumer<OnChangeYesNo>(builder: (ctx, val, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -915,7 +918,7 @@ print("lllllllllllllllllll");
 
       case "D":
         return Consumer(builder: (ctx, val, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
@@ -958,7 +961,7 @@ print("lllllllllllllllllll");
       case "B":
         var result = "";
         return Consumer<OnChangeYesNo>(builder: (ctx, val, child) {
-          if (model.disableQuestions
+          if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {

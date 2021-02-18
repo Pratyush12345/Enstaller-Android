@@ -32,13 +32,12 @@ class SMSNotificationViewModel extends BaseModel{
   void onSearch(String val){
     setState(ViewState.Busy);
     smsNotificationList=[];
-    // _appointmentList.forEach((element) {
-    //   DateTime dt = DateTime.parse(element.dteBookedDate);
-    //   if(element.strCompanyName.toLowerCase().contains(val.toLowerCase())||element.appointmentEventType.toLowerCase().contains(val.toLowerCase())||
-    //   element.engineerName.toLowerCase().contains(val.toLowerCase())||element.strBookingReference.toLowerCase().contains(val.toLowerCase())){
-    //     appointmentList.add(element);
-    //   }
-    // });
+    _smsNotificationList.forEach((element) {
+      if(element.strBookingReference.toLowerCase().contains(val.toLowerCase())||element.customerName.toLowerCase().contains(val.toLowerCase())||
+      element.dteCreatedDate.toLowerCase().contains(val.toLowerCase())||element.msgStatus.toLowerCase().contains(val.toLowerCase())){
+        smsNotificationList.add(element);
+      }
+    });
     setState(ViewState.Idle);
   }
   int getCurrentDay(DateTime date){

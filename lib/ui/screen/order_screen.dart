@@ -53,11 +53,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: GestureDetector(
-                    child: Text(
-                      AppStrings.ADD,
-                      style: TextStyle(
-                          color: AppColors.whiteColor, fontWeight: FontWeight.bold),
-                    ),
+                    child: Icon(Icons.add_circle_rounded),
                     onTap: (){
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (context) => AddOrderScreen())).whenComplete(() => {model.initializeData()});

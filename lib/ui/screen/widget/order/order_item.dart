@@ -126,6 +126,7 @@ class _OrderItemState extends State<OrderItem> {
                   children: [
                     Expanded(
                         child: TextFormField(
+                      maxLength: 50,    
                       initialValue:
                           widget.saveOrderLine.decQty?.toString() ?? '',
                       keyboardType: TextInputType.number,
@@ -139,8 +140,8 @@ class _OrderItemState extends State<OrderItem> {
                         } else
                           return null;
                       },
-                      // onChanged: (val) =>
-                      //     widget.saveOrderLine.decQty = int.parse(val.trim()),
+                      onChanged: (val) =>
+                          widget.saveOrderLine.decQty = int.parse(val.trim()),
                       onSaved: (val) =>
                           widget.saveOrderLine.decQty = int.parse(val.trim()),
                     )),
