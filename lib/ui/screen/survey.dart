@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:dropdown_below/dropdown_below.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -27,6 +28,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
+import 'package:enstaller/ui/screen/widget/survey/custom_drop_down.dart';
 
 class SurveyArguments {
   String appointmentID;
@@ -318,7 +320,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               for (int i = 0; i < questions.length; i++) {
                                 if (questions[i].validate != null) {
                                   //setState(() {
-                                    validateconter++;
+                                  validateconter++;
                                   //});
                                   model.onAddAnswer(AnswerCredential(
                                       intsurveyquetionid:
@@ -334,10 +336,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           : 0.toString(),
                                       strfilename: ""));
                                 } else {
-                                  print(
-                                        validateconter.toString() + 'line 327');
-                                    print(questions.length);
-                                     print("oooooooooooooooooooo");
+                                  print(validateconter.toString() + 'line 327');
+                                  print(questions.length);
+                                  print("oooooooooooooooooooo");
                                   // setState(() {
                                   //   if (questions[i].strQuestiontype == 'P' &&
                                   //       validateconter ==
@@ -345,18 +346,27 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   //   } else {}
                                   // });
                                 }
-                              }print("llllllllllllllllllll");
-                                 print(validateconter);
-                                 print(questions.length);
-                                 //print(model.disableQuestions.length);
-                                 //print(model.enableQuestions.length);
-                                 print(model.sectionDisableQuestions);
-                                 print("8888888888888888888");
-                                 print(model.sectionEnableQuestions);
-                                 
-                                 print(model.sectionDisableQuestions[questions[0].intSectionId].length);
-                                 print("llllllllllllllllllllll");
-                              if (validateconter == (questions.length-model.sectionDisableQuestions[questions[0].intSectionId].length)) {
+                              }
+                              print("llllllllllllllllllll");
+                              print(validateconter);
+                              print(questions.length);
+                              //print(model.disableQuestions.length);
+                              //print(model.enableQuestions.length);
+                              print(model.sectionDisableQuestions);
+                              print("8888888888888888888");
+                              print(model.sectionEnableQuestions);
+
+                              print(model
+                                  .sectionDisableQuestions[
+                                      questions[0].intSectionId]
+                                  .length);
+                              print("llllllllllllllllllllll");
+                              if (validateconter ==
+                                  (questions.length -
+                                      model
+                                          .sectionDisableQuestions[
+                                              questions[0].intSectionId]
+                                          .length)) {
                                 print('inside next');
                                 model.incrementCounter();
                                 model.onSubmit(
@@ -364,18 +374,16 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     widget.arguments.appointmentID,
                                     context,
                                     widget.arguments.dsmodel);
-                              }else{
-                                
-                                 print("eeeeeeeeeeeeeeeeeeee");
-                                 print(validateconter);
-                                 print(questions.length);
-                                 //print(model.disableQuestions);
-                                 //print(model.enableQuestions);
-                                 print("eeeeeeeeeeeeeeeeeeee");
+                              } else {
+                                print("eeeeeeeeeeeeeeeeeeee");
+                                print(validateconter);
+                                print(questions.length);
+                                //print(model.disableQuestions);
+                                //print(model.enableQuestions);
+                                print("eeeeeeeeeeeeeeeeeeee");
                               }
-
                             } else {
-                               print("ffffffffff");
+                              print("ffffffffff");
                               model.incrementCounter();
                             }
                           },
@@ -391,13 +399,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
                         _getColumnData(questions[i], model),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
                       ],
                     ),
                   ),
@@ -536,6 +544,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
+                  // SizedBox(height: 10),
                   _getQuestion(surveyResponseModel),
                   Row(
                     children: [
@@ -636,7 +645,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   ),
                   showMessage && surveyResponseModel?.validate == null
                       ? ErrorTextWidget()
-                      : Container()
+                      : Container(),
+                  SizedBox(height: 10),
                 ],
               ),
             );
@@ -660,22 +670,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
         return Column(
           children: [
             _getQuestion(surveyResponseModel),
-            DropdownButton<String>(
+            Consumer<OnChangeYesNo>(
+              builder: (ctx, value, child) => CustomDropDown(
+                hintText: surveyResponseModel?.dropDownValue,
                 items: itemList.map((String val) {
-                  return DropdownMenuItem<String>(
-                    value: val,
-                    child: new Text(
-                      val,
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  );
+                  return CustomDropDownItems(val, val);
                 }).toList(),
-                isExpanded: true,
-                style: TextStyle(color: Colors.blue),
-                hint: Consumer<OnChangeYesNo>(
-                    builder: (ctx, value, child) =>
-                        Text(surveyResponseModel?.dropDownValue)),
-                onChanged: (String val) {
+                height: SizeConfig.screenHeight * 0.8,
+                width: SizeConfig.screenWidth,
+                callback: (String val) {
                   print('object');
                   print('val==$val');
                   // setState(() {
@@ -684,10 +687,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   surveyResponseModel?.validate = val;
                   // });
                   model.onChangeYesNo(surveyResponseModel);
-                }),
+                },
+              ),
+            ),
             showMessage && surveyResponseModel?.validate == null
                 ? ErrorTextWidget()
-                : Container()
+                : Container(),
+            SizedBox(height: 10),
           ],
         );
 
@@ -696,7 +702,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
       case "P":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
           print("iiiiiiiiiiiiiiii");
-          print(model.sectionDisableQuestions[surveyResponseModel.intSectionId]);
+          print(
+              model.sectionDisableQuestions[surveyResponseModel.intSectionId]);
           print(surveyResponseModel.intQuestionNo.toString());
           print("iiiiiiiiiiiiiiiiii");
           if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
@@ -705,6 +712,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 InkWell(
                   onTap: () {
@@ -749,7 +757,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -763,6 +772,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 InkWell(
                   onTap: () async {
@@ -821,7 +831,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -837,6 +848,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 MyTile(
                   isOnlyNumeric: false,
@@ -844,7 +856,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -859,6 +872,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 MyTile(
                   isOnlyNumeric: false,
@@ -866,7 +880,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -881,13 +896,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 MyTile(
                     isOnlyNumeric: true,
                     surveyResponseModel: surveyResponseModel),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -902,6 +919,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 MyTile(
                   isOnlyNumeric: true,
@@ -909,7 +927,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -924,6 +943,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 MyTile(
                   isOnlyNumeric: true,
@@ -931,7 +951,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 ),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
@@ -967,6 +988,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
+                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 InkWell(
                     onTap: () async {
@@ -1020,7 +1042,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             surveyResponseModel?.barCodeScanVal)),
                 showMessage && surveyResponseModel?.validate == null
                     ? ErrorTextWidget()
-                    : Container()
+                    : Container(),
+                SizedBox(height: 10),
               ],
             );
           }
