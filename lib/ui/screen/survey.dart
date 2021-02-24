@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:barcode_scan/barcode_scan.dart';
+//import 'package:barcode_scan/barcode_scan.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -994,14 +994,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       String barcodeScanRes;
                       // Platform messages may fail, so we use a try/catch PlatformException.
                       try {
-                        var result = await BarcodeScanner.scan();
-                        print(result.rawContent);
-                        setState(() {
-                          surveyResponseModel?.barCodeScanVal =
-                              result.rawContent.toString();
-                          surveyResponseModel?.validate =
-                              result.rawContent.toString();
-                        });
+                        // var result = await BarcodeScanner.scan();
+                        // print(result.rawContent);
+                        // setState(() {
+                        //   surveyResponseModel?.barCodeScanVal =
+                        //       result.rawContent.toString();
+                        //   surveyResponseModel?.validate =
+                        //       result.rawContent.toString();
+                        // });
                       } on PlatformException {
                         barcodeScanRes = 'Failed to get platform version.';
                       }
