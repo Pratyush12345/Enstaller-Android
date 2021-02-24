@@ -230,12 +230,6 @@
       "languageVersion": "2.1"
     },
     {
-      "name": "flutter_pdfview",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_pdfview-1.0.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.1"
-    },
-    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-1.0.11",
       "packageUri": "lib/",
@@ -716,7 +710,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-02-24T17:49:04.479093Z",
+  "generated": "2021-02-24T18:34:43.808542Z",
   "generator": "pub",
   "generatorVersion": "2.10.5"
 }
