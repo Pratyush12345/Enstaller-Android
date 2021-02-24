@@ -60,7 +60,7 @@ dependencies:
   path_provider: ^1.6.27
   flutter_pdfview: ^1.0.4
   html: ^0.14.0+4 
-  dropdown_below: ^0.0.6
+  dropdown_below: ^0.0.6 
 
 
 
