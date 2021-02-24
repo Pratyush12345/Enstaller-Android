@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 class DocumentView extends StatelessWidget {
   String doc;
   DocumentView({@required this.doc});
@@ -11,9 +11,9 @@ class DocumentView extends StatelessWidget {
         color: Colors.white
       ),),),
       body: Center(
-        // child:  PDFView(
-        //   filePath: doc,
-        // )
+        child:  PDFView(
+          filePath: doc,
+        )
       ),
     );
   }
