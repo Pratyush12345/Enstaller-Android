@@ -3,7 +3,7 @@ name: Basic Build
 on:
   push:
     branches:
-      - testBranch
+      - master
 
 jobs:
   build:
