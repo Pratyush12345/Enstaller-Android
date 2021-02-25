@@ -21,7 +21,7 @@ jobs:
     - run: flutter pub get
 #     - run: flutter build ipa
     - run: flutter build ios --release --no-codesign
-    - run: xcode-project build-ipa --workspace ios/Runner.xcworkspace --scheme Runner --config Release
+    - run: xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportOptionsPlist exportOptions.plist -exportPath $PWD/build/Runner.ipa
 
     - uses: actions/upload-artifact@v2
       with:
