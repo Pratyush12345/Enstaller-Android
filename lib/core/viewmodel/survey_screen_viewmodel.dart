@@ -3,6 +3,7 @@ import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/electric_and_gas_metter_model.dart';
 import 'package:enstaller/core/model/question_answer_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
@@ -866,7 +867,8 @@ class SurveyScreenViewModel extends BaseModel {
       if (_sectionQuestions[element.intSectionId].indexOf(element) == -1)
         _sectionQuestions[element.intSectionId].add(element);
       if (element.strQuestiontype == 'YN') {
-if (element.yesNoPressedVal == 1) {
+          if (element.yesNoPressedVal == 1) {
+            
           if (element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty && element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty) {
@@ -902,7 +904,10 @@ if (element.yesNoPressedVal == 1) {
             // });
             // print(sectionDisableQuestions[1].length);
           }
-        } else if (element.yesNoPressedVal == 0) {
+          
+        } 
+        else if (element.yesNoPressedVal == 0) {
+            
           if (element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty&& element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty) {
@@ -941,7 +946,16 @@ if (element.yesNoPressedVal == 1) {
             
             }
           }
+          else if(element.strAbandonJobOn == "No"){
+            setState(ViewState.Busy);
+            if (selected < sectionQuestions.keys.length - 1) {
+                selected = sectionQuestions.keys.length - 1;
+             }
+            setState(ViewState.Idle);  
+          }
+
         }
+        
         // }
       } else if (element.strQuestiontype == 'M') {
         if (element.dropDownValue == 'Energised') {
@@ -1476,4 +1490,144 @@ if (element.yesNoPressedVal == 1) {
       print(e.toString());
     }
   }
+
+  String checkXCANC(List<ElectricAndGasMeterModel> electricGasMeterList){
+    setState(ViewState.Busy);
+    String mpan = "none", mprn = "none", msg = "none";
+    try{
+      ElectricAndGasMeterModel model = electricGasMeterList
+        .firstWhere((element) => element.strFuel == "ELECTRICITY");
+      if(model.strMpan!=null && model.strMpan!=''){
+        mpan = "mpan";
+      }
+    }
+    catch(e){
+       
+    }
+
+    try{
+      ElectricAndGasMeterModel model = electricGasMeterList
+        .firstWhere((element) => element.strFuel == "GAS");
+      if(model.strMpan!=null && model.strMpan!=''){
+        mprn = "mprn";
+      }
+    }
+    catch(e){
+      mprn = "none";
+    }
+    if(mprn!="none" && mpan!="none" ){
+      msg = "both";
+    }
+    else if(mprn=="none" && mpan!="none"){
+      msg = "mpan";
+    }
+    else if(mprn!="none" && mpan=="none"){
+      msg = "mprn";
+    }
+    else{
+      msg = "none";
+    }
+    return msg;
+  }
+
+  void onRaiseButtonPressed(String customerid, String processId, List<ElectricAndGasMeterModel> electricGasMeterList) async {
+    setState(ViewState.Busy);
+    UserModel userModel = await Prefs.getUser();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String ups = preferences.getString('ups');
+    
+      if (processId == "79" || processId == "81" || processId == "94" ) {
+        startGasProcess(processId, userModel, ups, customerid, electricGasMeterList);
+      } else {
+        startElecProcess(processId, userModel, ups, customerid, electricGasMeterList);
+      }
+    setState(ViewState.Idle);
+  }
+
+  startElecProcess(
+      String processId, UserModel userModel, String ups, String customerID,List<ElectricAndGasMeterModel> electricGasMeterList) {
+    try{
+    var custId = customerID;
+    var DCCMAIWebUrl = 'https://mai.enpaas.com/';
+
+    ElectricAndGasMeterModel model = electricGasMeterList
+        .firstWhere((element) => element.strFuel == "ELECTRICITY");
+    var mpan = model.strMpan;
+    var em = userModel.email.toString();
+    var sessionId = userModel.id.toString();
+    if (mpan == null || mpan == '') {
+    } else {
+      var strUrl = '';
+      var strPara = '';
+      var strEncrypt;
+      strPara += 'Enstaller/' +
+          custId +
+          '/' +
+          processId +
+          '/' +
+          mpan +
+          '/' +
+          ups +
+          '/' +
+          sessionId +
+          '/' +
+          '108' +
+          '/' +
+          em;
+
+      strEncrypt = encryption(strPara);
+      strUrl += '' + DCCMAIWebUrl + '?returnUrl=' + strEncrypt + '';
+
+      launchurl(strUrl);
+    }
+    }
+      catch(err){
+      print(err);
+    }
+    
+  }
+
+  startGasProcess(
+      String processId, UserModel userModel, String ups, String customerID, List<ElectricAndGasMeterModel> electricGasMeterList) {
+    var custId = customerID;
+    try{
+      
+    ElectricAndGasMeterModel model =
+        electricGasMeterList.firstWhere((element) => element.strFuel == "GAS");
+    var mpan = model.strMpan;
+    var em = userModel.email.toString();
+    var sessionId = userModel.id.toString();
+    var DCCMAIWebUrl = 'https://mai.enpaas.com/';
+    if (mpan == null || mpan == '') {
+    } else {
+      var strUrl = '';
+      var strEncrypt;
+      var strPara = '';
+      strPara += 'Enstaller/' +
+          custId +
+          '/' +
+          processId +
+          '/' +
+          mpan +
+          '/' +
+          ups +
+          '/' +
+          sessionId +
+          '/' +
+          '109' +
+          '/' +
+          em;
+      strEncrypt = encryption(strPara);
+      strUrl += '' + DCCMAIWebUrl + '?returnUrl=' + strEncrypt + '';
+      launchurl(strUrl);
+    }
+      }
+    catch(err){
+      print(err);
+    }
+  }
+
+  
+
+  
 }

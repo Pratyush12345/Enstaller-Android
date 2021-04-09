@@ -169,7 +169,7 @@ class DetailsScreenViewModel extends BaseModel {
     }
 
     setState(ViewState.Idle);
-  }
+  } 
 
   void onRaiseButtonPressed(String customerid, String processId) async {
     setState(ViewState.Busy);

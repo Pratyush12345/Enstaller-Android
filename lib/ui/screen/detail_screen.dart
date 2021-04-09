@@ -456,7 +456,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    Padding(
+                    Padding( 
                       padding: SizeConfig.sidepadding,
                       child: AppButton(
                         height: 40,
@@ -643,6 +643,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     onTap: () {
                       Navigator.of(context).pushNamed(SurveyScreen.routeName,
                           arguments: SurveyArguments(
+                             customerID: widget.arguments.customerID,
                              dsmodel: model,
                               appointmentID: widget.arguments.appointmentID,
                               edit: 

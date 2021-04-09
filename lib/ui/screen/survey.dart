@@ -30,14 +30,16 @@ import 'package:provider/provider.dart';
 import 'package:enstaller/ui/screen/widget/survey/custom_drop_down.dart';
 
 class SurveyArguments {
+  String customerID;
   String appointmentID;
   bool edit;
   DetailsScreenViewModel dsmodel;
-  SurveyArguments({this.appointmentID, this.edit, this.dsmodel});
+  SurveyArguments({this.customerID,this.appointmentID, this.edit, this.dsmodel});
 }
 
 class SurveyScreen extends StatefulWidget {
   static const String routeName = '/surveyScreen';
+
   final SurveyArguments arguments;
   SurveyScreen({this.arguments});
   @override
@@ -47,7 +49,12 @@ class SurveyScreen extends StatefulWidget {
 class _SurveyScreenState extends State<SurveyScreen> {
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  Map<String, String> _processid = {
+    "EMREM": "6",
+    "GMREM": "81",
+    "GICOM": "79",
+    "EICOM": "1"
+  };
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -912,21 +919,180 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
       case "R":
         return Consumer<OnChangeYesNo>(builder: (ctx, val, child) {
+           String msg;
           if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
+            String btnstr;
+            bool isXCANC = false;
+            try{
+            btnstr =  surveyResponseModel.strQuestionText.split("-")[1].trim();
+            }
+            catch(e){
+            btnstr =  surveyResponseModel.strQuestionText.trim();
+            if(btnstr.contains("XCANC")){
+               isXCANC = true;
+               msg = model.checkXCANC(widget.arguments.dsmodel.electricGasMeterList);
+               
+            }
+            }
             return Column(
               children: [
                 // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
-                MyTile(
-                  isOnlyNumeric: true,
-                  surveyResponseModel: surveyResponseModel,
+                !isXCANC? InkWell(
+                  onTap: () {
+                    String _processID;
+                    _processid.forEach((key, value) { 
+                      if(surveyResponseModel.strQuestionText.contains(key)){
+                       _processID = value;  
+                      }
+                    });
+                    model.onRaiseButtonPressed(
+                                    widget.arguments.customerID,
+                                    _processID,
+                                    widget.arguments.dsmodel.electricGasMeterList
+                                    );
+                  },
+                  child: (surveyResponseModel?.image == null)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 10.0, right: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xFFF05A22),
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  "Raise $btnstr",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Image.file(
+                          surveyResponseModel?.image,
+                          height: 100,
+                          width: 100,
+                        ),
+                ):
+                Row(
+                  children: [
+                    if(msg == "both" || msg =="mpan")
+                    InkWell(
+                  onTap: () {
+                    
+                    model.onRaiseButtonPressed(
+                                    widget.arguments.customerID,
+                                    "9",
+                                    widget.arguments.dsmodel.electricGasMeterList
+                                    );
+                  },
+                  child: (surveyResponseModel?.image == null)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 10.0, right: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xFFF05A22),
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  "Raise EXCANC",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Image.file(
+                          surveyResponseModel?.image,
+                          height: 100,
+                          width: 100,
+                        ),
                 ),
-                showMessage && surveyResponseModel?.validate == null
-                    ? ErrorTextWidget()
-                    : Container(),
+                SizedBox(width: 8.0,),
+                if(msg == "both" || msg =="mprn")
+                InkWell(
+                  onTap: () {
+                    model.onRaiseButtonPressed(
+                                    widget.arguments.customerID,
+                                    "94",
+                                    widget.arguments.dsmodel.electricGasMeterList
+                                    );
+                  },
+                  child: (surveyResponseModel?.image == null)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 10.0, right: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xFFF05A22),
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  "Raise GXCANC",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Image.file(
+                          surveyResponseModel?.image,
+                          height: 100,
+                          width: 100,
+                        ),
+                )
+                  ],
+                ),
+                // showMessage && surveyResponseModel?.validate == null
+                //     ? ErrorTextWidget()
+                //     : Container(),
                 SizedBox(height: 10),
               ],
             );
