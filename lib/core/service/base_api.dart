@@ -62,7 +62,7 @@ abstract class BaseApi {
 
         await client.post(
           _ENDPOINT+path,
-          headers: {HttpHeaders.CONTENT_TYPE: "application/json"},
+          headers: {HttpHeaders.contentTypeHeader: "application/json"},
           body: body != null ? json.encode(body) : null,
 
         ), success

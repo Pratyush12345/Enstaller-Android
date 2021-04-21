@@ -6,6 +6,7 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/service/api_service.dart';
@@ -342,24 +343,34 @@ class _DetailScreenState extends State<DetailScreen> {
                             buttonText: AppStrings.abort_text,
                             radius: 15,
                             textStyle: TextStyle(color: AppColors.whiteColor),
-                            onTap: () {
-                              var AppointmentType =
-        model.appointmentDetails.appointment.strAppointmentType.trim();
-    if (AppointmentType == "Scheduled Exchange" ||
-        AppointmentType == "Emergency Exchange" ||
-        AppointmentType == "New Connection" ||
-        AppointmentType == "Meter Removal") {
-      var appointId = encryption(widget.arguments.appointmentID);
-      var url =
-          'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
-              appointId;
-              print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
-      print(url);
+                            onTap: ()  async{
+          //                     ApiService _apiService = ApiService();
+  
+          //                     ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
+          //   AbortAppointmentReasonModel(
+          //     intId: 50188,
+          //     isabort: false,
+          //     strCancellationReason: "Health and Safety"
+          //   )
+          // );
+          // print(abortreasonmodel.response);
+    //                           var AppointmentType =
+    //     model.appointmentDetails.appointment.strAppointmentType.trim();
+    // if (AppointmentType == "Scheduled Exchange" ||
+    //     AppointmentType == "Emergency Exchange" ||
+    //     AppointmentType == "New Connection" ||
+    //     AppointmentType == "Meter Removal") {
+    //   var appointId = encryption(widget.arguments.appointmentID);
+    //   var url =
+    //       'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
+    //           appointId;
+    //           print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
+    //   print(url);
       
-              print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
-      launchurl(url);
+    //           print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
+    //   launchurl(url);
       
-    }
+    //}
                               // AppConstants.showAppDialog(
                               //     context: context,
                               //     child: AbortAppoinmentWidget(

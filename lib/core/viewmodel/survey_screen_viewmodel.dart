@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/scheduler.dart';
 
 class SurveyScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
@@ -288,7 +289,8 @@ class SurveyScreenViewModel extends BaseModel {
     _surveyQuestion.forEach((element) {
       if (_sectionQuestions[element.intSectionId].indexOf(element) == -1)
         _sectionQuestions[element.intSectionId].add(element);
-      if (element.strQuestiontype == 'YN') {
+      if (element.strQuestiontype == 'YN' && surveyResponseModel.intQuestionNo == element.intQuestionNo) {
+          
           if (element.yesNoPressedVal == 1) {
           if ((element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty) || (element.strEnableQuestions != null &&
@@ -360,10 +362,12 @@ class SurveyScreenViewModel extends BaseModel {
           
           
         } 
-        else if (element.yesNoPressedVal == 0) {
+        else if (element.yesNoPressedVal == 0 && surveyResponseModel.intQuestionNo == element.intQuestionNo) {
+          
           if ((element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty) || (element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty)) {
+               
             String numberString;    
             if(element.strEnableQuestions.contains('No:') && !element.strEnableQuestions.contains('Yes:')){
             numberString = element.strEnableQuestions.split('No:')[1];
@@ -381,12 +385,23 @@ class SurveyScreenViewModel extends BaseModel {
             numberString = element.strDisableQuestions.split('No:')[1];
             if(numberString!=null){
             List<String> listData = numberString.trim().split(",");
+            
+            print("UUUUUUUUUUUUUUUUUUUUUU");
+            print(listData);
+            print(sectionDisableQuestions[element.intSectionId]);
+            print("UUUUUUUUUUUUUUUUUUUUUU");
             for (int i = 0; i < listData.length; i++) {
               if (!sectionDisableQuestions[element.intSectionId]
                   .contains(listData[i].trim())) {
+                    
+                    print("OOOOOOOOOOOOO"+listData[i].trim());
                 sectionDisableQuestions[element.intSectionId].add(listData[i].trim());
               }
             }
+            print("UUUUUUUUUUUUUUUUUUUUUU");
+            print(sectionDisableQuestions[element.intSectionId]);
+            print("UUUUUUUUUUUUUUUUUUUUUU");
+            
             }
             
             }
@@ -425,14 +440,14 @@ class SurveyScreenViewModel extends BaseModel {
             }
             }
           }
-          else if(element.strAbandonJobOn == "No"){
+          if(element.strAbandonJobOn == "No" && surveyResponseModel.intQuestionNo == element.intQuestionNo){
             setState(ViewState.Busy);
             if (selected < sectionQuestions.keys.length - 1) {
                 selected = sectionQuestions.keys.length - 1;
+                enableIndex = -1;
              }
             setState(ViewState.Idle);  
           }
-
         }
       } else if (element.strQuestiontype == 'L') {
         
@@ -460,7 +475,7 @@ class SurveyScreenViewModel extends BaseModel {
           });
         }
         else if(surveyResponseModel.intQuestionNo == 28 && element.intQuestionNo == 28){
-          
+          print("whatssssssssssssssssssssssssssssssssssssssss");
           String enablenumberString, disablenumberString;
           if(element.strEnableQuestions.contains('${element.dropDownValue.trim()}: '))
           enablenumberString = element.strEnableQuestions.split('${element.dropDownValue.trim()}: ')[1]?.split(" ")[0]?.trim();
@@ -469,7 +484,7 @@ class SurveyScreenViewModel extends BaseModel {
             
             if(enablenumberString!=null && disablenumberString!=null ){
             for (int i = 29; i <= 56; i++) {
-              
+              print("22222222222222222222222222222222222222222");
               if(enablenumberString.contains(i.toString())) {
                 if (sectionDisableQuestions[element.intSectionId]
                   .contains(i.toString())) {
@@ -479,6 +494,8 @@ class SurveyScreenViewModel extends BaseModel {
               else if(disablenumberString.contains(i.toString())){
                 if (!sectionDisableQuestions[element.intSectionId]
                   .contains(i.toString())) {
+                    
+                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!"+i.toString());
                 sectionDisableQuestions[element.intSectionId].add(i.toString());
                 }
               } 
@@ -535,16 +552,20 @@ class SurveyScreenViewModel extends BaseModel {
           }
           
         }
-        else if(surveyResponseModel.intQuestionNo == 205 && element.intQuestionNo == 205){
+        else if(surveyResponseModel.strQuestionText.trim() == "Give abort reason" && element.strQuestionText.trim() == "Give abort reason"){
           GlobalVar.abortReason = element.dropDownValue.trim();
           String disablenumberString;
-          if(element.strDisableQuestions.contains('${element.dropDownValue.trim()}: '))
+          int qno;
+          if(element.strDisableQuestions.contains('${element.dropDownValue.trim()}: ')){
           disablenumberString = element.strDisableQuestions.split('${element.dropDownValue.trim()}: ')[1].split(" ")[0].trim();
-            
+           qno = int.parse(disablenumberString.trim());
+          
+        
+          } 
             if(disablenumberString != null){
                 if (!sectionDisableQuestions[element.intSectionId]
-                  .contains("206")) {
-                sectionDisableQuestions[element.intSectionId].add("206");
+                  .contains(qno.toString())) {
+                sectionDisableQuestions[element.intSectionId].add(qno.toString());
                 }
                
           }
@@ -576,6 +597,10 @@ class SurveyScreenViewModel extends BaseModel {
     setState(ViewState.Busy);
 
     answerList.add(credential);
+    print("-----------------********************************------------------------------");
+    print(credential.toJson());
+    print("-----------------********************************------------------------------");
+    
     setState(ViewState.Idle);
   }
 
@@ -621,15 +646,21 @@ class SurveyScreenViewModel extends BaseModel {
           ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
             AbortAppointmentReasonModel(
               intId: int.parse( appointmentid),
-              isabort: 0,
+              isabort: false,
               strCancellationReason: GlobalVar.abortReason
             )
           );    
+          print(abortreasonmodel.response);
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
-            AppConstants.showFailToast(context, "Survey Aborted");
+            setState(ViewState.Idle);
+            //await Future.delayed(Duration(seconds: 1));
+            AppConstants.showSuccessToast(context, "Survey Aborted");
             GlobalVar.isloadAppointmentDetail = true;
-            Navigator.of(context).pop("Abort");
+            
+          }
+          else{
+            AppConstants.showFailToast(context, "Error Occured while saving");
             
           }
         } else {
@@ -668,9 +699,15 @@ class SurveyScreenViewModel extends BaseModel {
           dsmodel.onUpdateStatusOnCompleted(context, appointmentid);    
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
+            setState(ViewState.Idle);
+             
             AppConstants.showSuccessToast(context, "Survey Submitted");
             //Navigator.of(context).pop("Sign Off");
             openJumboTab(dsmodel, appointmentid);
+            
+          }
+          else{
+            AppConstants.showFailToast(context, "Error Occured while saving");
             
           }
         } else {
@@ -699,8 +736,7 @@ class SurveyScreenViewModel extends BaseModel {
       }
       selected = -1;
     }
-
-    setState(ViewState.Idle);
+setState(ViewState.Idle);          
   }
 
 

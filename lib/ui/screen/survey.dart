@@ -285,7 +285,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   //setState(() {
                                   validateconter++;
                                   //});
-                                  if(questions[i].validate != null && questions[i].validate != "NotNull" )
+                                  if(questions[i].validate != null && questions[i].validate != "NotNull" 
+                                  &&questions[i].intQuestionNo!=null && widget.arguments.appointmentID!=null 
+                                  && (model.selected + 1).toString()!=null && model.user.intEngineerId!=null
+                                  && !model.sectionDisableQuestions[questions[i].intSectionId].contains(questions[i].intQuestionNo.toString()) )
                                   model.onAddAnswer(AnswerCredential(
                                       intsurveyquetionid:
                                           questions[i].intQuestionNo.toString(),
@@ -299,7 +302,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           ? 1.toString()
                                           : 0.toString(),
                                       strfilename: "",
-                                      strRequireExplaination: questions[i].requireExplainationstr
+                                      strRequireExplaination: questions[i].requireExplainationstr??""
                                       ));
                                 } else {
                                   print(validateconter.toString() + 'line 327');
@@ -697,15 +700,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       
                     },
               ),
+              showMessage && surveyResponseModel?.validate == null && surveyResponseModel?.isMandatoryOptional =="M"
+                ? ErrorTextWidget()
+                : Container(),
+            SizedBox(height: 10),
                  ],
                );
               }
               }
             ),
-            showMessage && surveyResponseModel?.validate == null && surveyResponseModel?.isMandatoryOptional =="M"
-                ? ErrorTextWidget()
-                : Container(),
-            SizedBox(height: 10),
           ],
         );
 
@@ -713,11 +716,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
       case "P":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
-          print("iiiiiiiiiiiiiiii");
-          print(
-              model.sectionDisableQuestions[surveyResponseModel.intSectionId]);
-          print(surveyResponseModel.intQuestionNo.toString());
-          print("iiiiiiiiiiiiiiiiii");
           if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
@@ -854,6 +852,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
       case "C":
         return Consumer<OnChangeYesNo>(builder: (context, value, child) {
+          print("iiiiiiiiiiiiiiii");
+          print(
+              model.sectionDisableQuestions[surveyResponseModel.intSectionId]);
+          print(surveyResponseModel.intQuestionNo.toString());
+          print("iiiiiiiiiiiiiiiiii");
+          
           if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
@@ -1301,7 +1305,8 @@ class _MyTileState extends State<MyTile> {
         children: <Widget>[
           Expanded(
             child: TextField(
-              controller: controller,
+              maxLines: null,
+              controller: controller..text = widget.surveyResponseModel.validate,
               enabled: editable,
               keyboardType: widget.isOnlyNumeric
                   ? TextInputType.number
@@ -1309,7 +1314,7 @@ class _MyTileState extends State<MyTile> {
               inputFormatters: widget.isOnlyNumeric
                   ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
                   : <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_ ]')),
                     ],
               decoration: InputDecoration(
                   hintText: AppStrings.writeHere,
@@ -1374,7 +1379,8 @@ class _MyTile2State extends State<MyTile2> {
         children: <Widget>[
           Expanded(
             child: TextField(
-              controller: controller,
+              maxLines: null,
+              controller: controller..text = widget.surveyResponseModel.validate,
               enabled: editable,
               keyboardType: widget.isOnlyNumeric
                   ? TextInputType.number
@@ -1382,7 +1388,7 @@ class _MyTile2State extends State<MyTile2> {
               inputFormatters: widget.isOnlyNumeric
                   ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
                   : <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                      FilteringTextInputFormatter.allow(RegExp('[a-zA-Z_ ]')),
                     ],
               decoration: InputDecoration(
                   hintText: AppStrings.writeHere,

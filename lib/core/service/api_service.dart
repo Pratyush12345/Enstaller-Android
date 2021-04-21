@@ -195,8 +195,9 @@ class ApiService extends BaseApi{
   }
   Future<dynamic> abortappointmentbyreason(AbortAppointmentReasonModel credentials){
     print(credentials.toJson());
-    return postRequest(ApiUrls.updateAppointmentStatusUrl, (r) {
+    return postRequestMap(ApiUrls.abortappointmentreason, (r) {
       final response = json.decode(r.body);
+      print(response);
       if (response) {
         
         return ResponseModel(

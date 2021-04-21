@@ -58,7 +58,7 @@ class AnswerCredential {
 
 class AbortAppointmentReasonModel {
   int intId;
-  int isabort;
+  bool isabort;
   String strCancellationReason;
 
   AbortAppointmentReasonModel({this.intId, this.isabort, this.strCancellationReason});
