@@ -6,6 +6,7 @@ import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/customer_details.dart';
 import 'package:enstaller/core/model/electric_and_gas_metter_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/model/send/appointmentStatusUpdateCredential.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
@@ -149,6 +150,7 @@ class DetailsScreenViewModel extends BaseModel {
   void onUpdateStatus(BuildContext context, String appointmentID) async {
     setState(ViewState.Busy);
     if (selectedStatus != null) {
+      
       ResponseModel response = await _apiService.updateAppointmentStatus(
           AppointmentStatusUpdateCredentials(
               strStatus: selectedStatus != AppStrings.enRoute
@@ -156,6 +158,7 @@ class DetailsScreenViewModel extends BaseModel {
                   : AppStrings.onRoute,
               intBookedBy: user.intEngineerId.toString(),
               intEngineerId: user.intEngineerId.toString(),
+              strEmailActionby: "Send by Engineer",
               intId: appointmentDetails.appointment.intId.toString()));
       if (response.statusCode == 1) {
         appointmentDetails =
@@ -169,6 +172,39 @@ class DetailsScreenViewModel extends BaseModel {
     }
 
     setState(ViewState.Idle);
+  }
+
+  void onUpdateStatusOnSite(BuildContext context, String appointmentID) async {
+      
+      ResponseModel response = await _apiService.updateAppointmentStatus(
+          AppointmentStatusUpdateCredentials(
+              strStatus: "On Site",
+              intBookedBy: user.intEngineerId.toString(),
+              intEngineerId: user.intEngineerId.toString(),
+              strEmailActionby: "Send by Engineer",
+              intId: appointmentID));
+      if (response.statusCode == 1) {
+              GlobalVar.isloadAppointmentDetail = true;
+      } else {
+        AppConstants.showFailToast(context, response.response);
+      }
+    
+  }
+  void onUpdateStatusOnCompleted(BuildContext context, String appointmentID) async {
+      
+      ResponseModel response = await _apiService.updateAppointmentStatus(
+          AppointmentStatusUpdateCredentials(
+              strStatus: "Completed",
+              intBookedBy: user.intEngineerId.toString(),
+              intEngineerId: user.intEngineerId.toString(),
+              strEmailActionby: "Send by Engineer",
+              intId: appointmentID) );
+      if (response.statusCode == 1) {
+              GlobalVar.isloadAppointmentDetail = true;
+      } else {
+        AppConstants.showFailToast(context, response.response);
+      }
+     
   } 
 
   void onRaiseButtonPressed(String customerid, String processId) async {

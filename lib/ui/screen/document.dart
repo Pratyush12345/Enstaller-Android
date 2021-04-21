@@ -139,6 +139,10 @@ class _DocumentScreenState extends State<DocumentScreen> {
       children: [
         Container(
           decoration: BoxDecoration(
+
+              color: (document.bisEngineerRead ||
+                                    model.isfileopened[
+                                        document.intId.toString()])?Colors.white: AppColors.green,
               border: Border(
                   bottom: BorderSide(color: AppColors.lightGrayDotColor))),
           child: Padding(

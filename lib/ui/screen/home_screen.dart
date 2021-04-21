@@ -54,17 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> _listOfUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm");
   _listOfUnSubmittedForm.forEach((appointmentid) { 
     removeid = appointmentid;
-     for(int i=0;i<3;i++){
        List<AnswerCredential> _answerlist = [];
-       List<String> _listofEachKey = preferences.getStringList("key${i.toString()}+$appointmentid");
+       List<String> _listofEachKey = preferences.getStringList("key+$appointmentid");
        if(_listofEachKey!=null){
         _listofEachKey.forEach((element) { 
            _answerlist.add(AnswerCredential.fromJson(jsonDecode(element)));
         }); 
-        preferences.remove("key${i.toString()}+$appointmentid");
-        SurveyScreenViewModel().onSubmitOffline(i, appointmentid, _answerlist);
+        preferences.remove("key+$appointmentid");
+        SurveyScreenViewModel().onSubmitOffline( appointmentid, _answerlist);
        } 
-     }
+     
   });
   _listOfUnSubmittedForm.remove(removeid);
   }

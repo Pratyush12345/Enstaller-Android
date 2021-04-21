@@ -6,6 +6,7 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
@@ -92,6 +93,35 @@ class _DetailScreenState extends State<DetailScreen> {
 
   int selected;
  
+  encryption(String value) {
+    final key = AESencrypt.Key.fromUtf8('8080808080808080');
+    final iv = AESencrypt.IV.fromUtf8('8080808080808080');
+    final encrypter = AESencrypt.Encrypter(
+        AESencrypt.AES(key, mode: AESencrypt.AESMode.cbc, padding: 'PKCS7'));
+    final encrypted = encrypter.encrypt(value, iv: iv);
+
+    return encrypted.base64
+        .toString()
+        .replaceAll('/', 'SLH')
+        .replaceAll('+', 'PLS')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('/', 'SLH')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS')
+        .replaceAll('+', 'PLS');
+  }
+
+
+  launchurl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -313,12 +343,29 @@ class _DetailScreenState extends State<DetailScreen> {
                             radius: 15,
                             textStyle: TextStyle(color: AppColors.whiteColor),
                             onTap: () {
-                              AppConstants.showAppDialog(
-                                  context: context,
-                                  child: AbortAppoinmentWidget(
-                                    appointmentID:
-                                        widget.arguments.appointmentID,
-                                  ));
+                              var AppointmentType =
+        model.appointmentDetails.appointment.strAppointmentType.trim();
+    if (AppointmentType == "Scheduled Exchange" ||
+        AppointmentType == "Emergency Exchange" ||
+        AppointmentType == "New Connection" ||
+        AppointmentType == "Meter Removal") {
+      var appointId = encryption(widget.arguments.appointmentID);
+      var url =
+          'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
+              appointId;
+              print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
+      print(url);
+      
+              print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
+      launchurl(url);
+      
+    }
+                              // AppConstants.showAppDialog(
+                              //     context: context,
+                              //     child: AbortAppoinmentWidget(
+                              //       appointmentID:
+                              //           widget.arguments.appointmentID,
+                              //     ));
                             },
                           ),
                         ),
@@ -641,6 +688,14 @@ class _DetailScreenState extends State<DetailScreen> {
                     textStyle: TextStyle(color: AppColors.whiteColor),
                     radius: 15,
                     onTap: () {
+                      bool _isedit = model.appointmentDetails.appointment
+                                          .surveyReceived ==
+                                      AppStrings.yes
+                                  ? true
+                                  : false;
+                      if(!_isedit)
+                      model.onUpdateStatusOnSite(context, widget.arguments.appointmentID);
+                    
                       Navigator.of(context).pushNamed(SurveyScreen.routeName,
                           arguments: SurveyArguments(
                              customerID: widget.arguments.customerID,
@@ -653,7 +708,13 @@ class _DetailScreenState extends State<DetailScreen> {
                                   ? true
                                   : false
                                   
-                                  ));
+                                  )).then((value){
+                                    if(GlobalVar.isloadAppointmentDetail)
+                                    {model.initializeData(
+                                    widget.arguments.appointmentID, widget.arguments.customerID);
+                                    GlobalVar.isloadAppointmentDetail = false;
+                                    }
+                                  });                
                     },
                   ),
                 ],

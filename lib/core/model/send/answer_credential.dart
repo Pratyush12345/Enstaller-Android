@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class AnswerCredential {
   String intappointmentid;
   String intsurveyid;
@@ -6,6 +8,7 @@ class AnswerCredential {
   String intcreatedby;
   String bisalive;
   String strfilename;
+  String strRequireExplaination;
 
   AnswerCredential(
       {this.intappointmentid,
@@ -14,7 +17,8 @@ class AnswerCredential {
         this.stranswer,
         this.intcreatedby,
         this.bisalive,
-        this.strfilename});
+        this.strfilename,
+        @required this.strRequireExplaination});
 
   AnswerCredential.fromJson(Map<String, dynamic> json) {
     intappointmentid = json['intappointmentid'];
@@ -24,6 +28,7 @@ class AnswerCredential {
     intcreatedby = json['intcreatedby'];
     bisalive = json['bisalive'];
     strfilename = json['strfilename'];
+    strRequireExplaination = json['strRequireExplaination'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +40,7 @@ class AnswerCredential {
     data['intcreatedby'] = this.intcreatedby;
     data['"bisalive"'] = this.bisalive;
     data['strfilename'] = this.strfilename;
+    data['strRequireExplaination'] = this.strRequireExplaination;
     
     return data;
   }
@@ -48,4 +54,31 @@ class AnswerCredential {
 //    'strfilename': strfilename,
 //
 //  };
+}
+
+class AbortAppointmentReasonModel {
+  int intId;
+  int isabort;
+  String strCancellationReason;
+
+  AbortAppointmentReasonModel({this.intId, this.isabort, this.strCancellationReason});
+
+  AbortAppointmentReasonModel.fromJson(Map<String, dynamic> json) {
+    intId = json['intId'];
+    isabort = json['isabort'];
+    strCancellationReason = json['strCancellationReason'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['intId'] = this.intId;
+    data['isabort'] = this.isabort;
+    data['strCancellationReason'] = this.strCancellationReason;
+    return data;
+  }
+}
+
+class GlobalVar{
+  static String abortReason = "";
+  static bool isloadAppointmentDetail = false;
 }

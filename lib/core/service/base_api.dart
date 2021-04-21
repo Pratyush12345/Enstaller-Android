@@ -12,8 +12,11 @@ GetIt getIt = GetIt.instance;
 abstract class BaseApi {
   // TODO: Move the endpoint to some settings file?
   static const _ENDPOINT = 'https://enstallapi.enpaas.com/api/';
-  final client = http.Client();
+  static const _ENDPOINT1 = 'https://enstallapi.boshposh.com/api/';
 
+  final client = http.Client();
+  // HttpClient client1 = HttpClient()
+  //   ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
 
 
   @protected

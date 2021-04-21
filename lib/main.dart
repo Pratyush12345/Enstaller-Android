@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:enstaller/app_router.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/app_themes.dart';
 import 'package:enstaller/core/get_it.dart';
 import 'package:enstaller/core/model/user_model.dart';
+import 'package:enstaller/core/service/devhttpoverride.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/userprovider.dart';
 import 'package:enstaller/ui/login_screen.dart';
@@ -15,6 +18,7 @@ import 'core/viewmodel/appthemeviewmodel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  //HttpOverrides.global = new DevHttpOverrides();
   setupLocator();
   Prefs.getUser().then((value){
     runApp(MyApp(logInUser: value,));

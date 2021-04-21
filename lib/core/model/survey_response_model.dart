@@ -54,7 +54,9 @@ class SurveyResponseModel {
       this.textEditingController,
       this.barCodeScanVal,
       this.validate,
-      this.enable: true});
+      this.enable: true,
+      @required this.requireExplainationstr
+      });
   String validate;
   int intId;
   bool enable;
@@ -91,6 +93,7 @@ class SurveyResponseModel {
   ByteData signatureImage;
   TextEditingController textEditingController;
   String barCodeScanVal;
+  String requireExplainationstr;
 
   factory SurveyResponseModel.fromJson(Map<String, dynamic> json) =>
       SurveyResponseModel(
@@ -136,6 +139,9 @@ class SurveyResponseModel {
             : json["dropDownValue"],
         yesNoPressedVal:
             json["yesNoPressedVal"] == null ? 2 : json["yesNoPressedVal"],
+        requireExplainationstr:
+            json["requireExplainationstr"] == null ? null : json["requireExplainationstr"],
+            
         image: json["image"] == null ? null : json["image"],
         signatureImage:
             json["signatureImage"] == null ? null : json["signatureImage"],

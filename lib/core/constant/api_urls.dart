@@ -12,6 +12,7 @@ class ApiUrls{
   static String getCustomerMeterListByCustomerUrl='CustomerMeter/GetCustomerMeterListByCustomer';
   static String appointmentDataEventsbyEngineerUrl='AppointmentEvents/AppointmentDataEventsbyEngineer';
   static String updateAppointmentStatusUrl='appointments/UpdateAppointmentStatus';
+  static String abortappointmentreason='appointments/UpdateAbortAppointmentbyReason';
   static String getSurveyQuestionAppointmentWiseUrl='SurveyQuetion/GetSurveyQuestionAppointmentWise';
   static String addSurveyQuestionAnswerDetailUrl='SurveyQuestionAnswer/AddSurveyQuestionAnswerDetail';
   static String supplierDocumentUpdateEngineerRead = 'SupplierDocument/SupplierDocumentUpdateEngineerRead';

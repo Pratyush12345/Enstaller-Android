@@ -173,6 +173,28 @@ class ApiService extends BaseApi{
   }
   Future<dynamic> updateAppointmentStatus(AppointmentStatusUpdateCredentials credentials){
     print(credentials.toJson());
+    return postRequestMap(ApiUrls.updateAppointmentStatusUrl, (r) {
+      final response = json.decode(r.body);
+      print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+      print(response);
+      print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+      
+      if (response) {
+        
+        return ResponseModel(
+            statusCode: 1,
+            response: 'Successfully Updated'
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: 'Please try again'
+        );
+      }
+    },credentials.toJson());
+  }
+  Future<dynamic> abortappointmentbyreason(AbortAppointmentReasonModel credentials){
+    print(credentials.toJson());
     return postRequest(ApiUrls.updateAppointmentStatusUrl, (r) {
       final response = json.decode(r.body);
       if (response) {
