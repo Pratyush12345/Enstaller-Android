@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'dart:io';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
@@ -22,6 +23,7 @@ import 'package:enstaller/ui/util/onchangeyesnoprovider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
@@ -84,7 +86,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           ),
           body: BaseView<SurveyScreenViewModel>(
             onModelReady: (model) => model.initializeData(
-                widget.arguments.appointmentID, widget.arguments.edit),
+                widget.arguments.appointmentID, widget.arguments.edit, context),
             builder: (context, model, child) {
               if (model.state == ViewState.Busy) {
                 print('busyyyyyyyyyy');
@@ -279,31 +281,53 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               // model.clearAnswer();
                               model.onValidation();
                               for (int i = 0; i < questions.length; i++) {
+                                print(questions[i].validate);
                                 if (questions[i].validate != null || questions[i].intQuestionNo == 7|| questions[i].intQuestionNo == 8
                                    || model.sectionDisableQuestions[questions[i].intSectionId].contains(questions[i].intQuestionNo.toString())
                                    || questions[i].isMandatoryOptional == "O") {
-                                  //setState(() {
+                                  
                                   validateconter++;
-                                  //});
-                                  if(questions[i].validate != null && questions[i].validate != "NotNull" 
-                                  &&questions[i].intQuestionNo!=null && widget.arguments.appointmentID!=null 
-                                  && (model.selected + 1).toString()!=null && model.user.intEngineerId!=null
-                                  && !model.sectionDisableQuestions[questions[i].intSectionId].contains(questions[i].intQuestionNo.toString()) )
-                                  model.onAddAnswer(AnswerCredential(
-                                      intsurveyquetionid:
-                                          questions[i].intQuestionNo.toString(),
-                                      intappointmentid:
-                                          widget.arguments.appointmentID,
-                                      intsurveyid:
-                                          (model.selected + 1).toString(),
-                                      stranswer: questions[i].validate,
-                                      intcreatedby: model.user.intEngineerId,
-                                      bisalive: questions[i].bisAlive
-                                          ? 1.toString()
-                                          : 0.toString(),
-                                      strfilename: "",
-                                      strRequireExplaination: questions[i].requireExplainationstr??""
-                                      ));
+                                  String reqexp = questions[i].requireExplainationstr;
+                                    if(reqexp==null)
+                                    reqexp = "";
+                                  int index = -1; 
+                                  print("length of anserlist is ....................${model.answerList.length} ");
+                                  index = model.answerList.indexWhere((element) => element.intsurveyquetionid.trim() == questions[i].intQuestionNo.toString().trim());
+                                  if(index == -1){
+                                      if(questions[i].validate != null && questions[i].validate != "NotNull" 
+                                      && questions[i].intQuestionNo!=null && widget.arguments.appointmentID!=null 
+                                      && (model.selected + 1).toString()!=null && model.user.intEngineerId!=null
+                                      && !model.sectionDisableQuestions[questions[i].intSectionId].contains(questions[i].intQuestionNo.toString()) ){
+                                          model.onAddAnswer(AnswerCredential(
+                                          intsurveyquetionid:
+                                              questions[i].intQuestionNo.toString(),
+                                          intappointmentid:
+                                              widget.arguments.appointmentID,
+                                          intsurveyid:
+                                              (model.selected + 1).toString(),
+                                          stranswer: questions[i].validate,
+                                          intcreatedby: model.user.intEngineerId,
+                                          bisalive: questions[i].bisAlive,
+                                          strfilename: "",
+                                          strRequireExplaination: reqexp
+                                          ));
+                                      }
+                                  }
+                                  else{
+                                      model.onAddAnsweratindex(AnswerCredential(
+                                          intsurveyquetionid:
+                                              questions[i].intQuestionNo.toString(),
+                                          intappointmentid:
+                                              widget.arguments.appointmentID,
+                                          intsurveyid:
+                                              (model.selected + 1).toString(),
+                                          stranswer: questions[i].validate,
+                                          intcreatedby: model.user.intEngineerId,
+                                          bisalive: questions[i].bisAlive,
+                                          strfilename: "",
+                                          strRequireExplaination: reqexp
+                                          ), index );
+                                  }
                                 } else {
                                   print(validateconter.toString() + 'line 327');
                                   print(questions.length);
@@ -332,7 +356,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               print("llllllllllllllllllllll");
                               if (validateconter == questions.length) {
                                 print('inside next');
-                                model.incrementCounter(widget.arguments.edit);
+                                model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID);
                                 print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
                                 print(questions[0].strSectionName);
                                 print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
@@ -353,7 +377,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               }
                             } else {
                               print("ffffffffff");
-                              model.incrementCounter(widget.arguments.edit);
+                              model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID);
                             }
                           },
                         ),
@@ -408,7 +432,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 color: AppColors.green,
                                 buttonText: AppStrings.next,
                                 onTap: () {
-                                  model.incrementCounter(widget.arguments.edit);
+                                  model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID);
                                 },
                               )
                             : Container(),
@@ -1252,6 +1276,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
     );
   }
 
+   File createFile(String path) {
+    final file = File(path);
+    if (!file.existsSync()) {
+      file.createSync(recursive: true);
+    }
+
+    return file;
+  }
+
 //chooose file
   Future<void> _choosFile(
       {SurveyResponseModel surveyResponseModel,
@@ -1260,11 +1293,25 @@ class _SurveyScreenState extends State<SurveyScreen> {
       ImageSource imageSource}) async {
     var image = await ImagePicker.pickImage(source: imageSource);
     if (image != null) {
+      
+      var compressedFile = await FlutterImageCompress.compressWithFile(
+      image?.path,
+      quality: 50,
+      minWidth: 1800,
+      minHeight: 1280,
+    );
+      final dir = await path_provider.getTemporaryDirectory();
+
       setState(() {
-        surveyResponseModel?.image = image;
+
+        File file = createFile("${dir.absolute.path}/${image.path}/test.png");
+        file.writeAsBytesSync(compressedFile);
+        surveyResponseModel?.image = file;
+        surveyResponseModel?.imagePath = image.path;
+      
 //        List<int> imageBytes = image.readAsBytesSync();
 //        String base64Image = base64Encode(imageBytes);
-        String base64Image = base64Encode(image.readAsBytesSync());
+        String base64Image = base64Encode(compressedFile);
         print('image$base64Image');
 //        String base64Image = BASE64.encode(imageBytes);
         surveyResponseModel.validate = 'data:image/png;base64,' + base64Image;
@@ -1326,6 +1373,9 @@ class _MyTileState extends State<MyTile> {
                   if (controller.text != '') {
                     widget.surveyResponseModel.validate = controller.text;
                   }
+                  else{
+                    widget.surveyResponseModel.validate = null;
+                  }
                 });
               },
             ),
@@ -1342,6 +1392,11 @@ class _MyTileState extends State<MyTile> {
                 if (controller.text != '') {
                   widget.surveyResponseModel.validate = controller.text;
                 }
+                else{
+                    widget.surveyResponseModel.validate = null;
+                  }
+                final onchange = Provider.of<OnChangeYesNo>(context, listen: false).setState();
+  
               });
             },
           )
@@ -1380,7 +1435,7 @@ class _MyTile2State extends State<MyTile2> {
           Expanded(
             child: TextField(
               maxLines: null,
-              controller: controller..text = widget.surveyResponseModel.validate,
+              controller: controller..text = widget.surveyResponseModel.requireExplainationstr,
               enabled: editable,
               keyboardType: widget.isOnlyNumeric
                   ? TextInputType.number

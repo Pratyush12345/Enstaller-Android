@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:enstaller/ui/util/onchangeyesnoprovider.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -15,13 +17,15 @@ import 'package:enstaller/core/model/survey_response_model.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/scheduler.dart';
 
 class SurveyScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
   List<SurveyResponseModel> _surveyQuestion = [];
+  List<SurveyResponseModel> _localSurveyQuestion = [];
+  List<String> _listofLocalSurveyQuestion = [];
   Map<int, List<SurveyResponseModel>> sectionQuestions = {};
   Map<int, List<SurveyResponseModel>> _sectionQuestions = {};
   Map<int, List<QuestionAnswer>> sectionAnswers = {};
@@ -29,6 +33,8 @@ class SurveyScreenViewModel extends BaseModel {
   Map<int, String> sectionNames = {};
   Map<int, List> sectionDisableQuestions = {};
   Map<int, List> sectionEnableQuestions = {};
+  List<SectionDisableModel> _listSectionDisable = [];
+  List<String> _listSectionDisableString = [];
   int selected = 0;
   int enableIndex = 0;
   Set<String> _setofUnSubmittedForm = {};
@@ -65,14 +71,45 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   
-  void initializeData(String appointmentID, bool edit) async {
+  void initializeData(String appointmentID, bool edit, BuildContext context) async {
     setState(ViewState.Busy);
     user = await Prefs.getUser();
     if (!edit) {
       
       _surveyQuestion =
           await _apiService.getSurveyQuestionAppointmentWise(appointmentID);
-      
+      SharedPreferences _preferences = await SharedPreferences.getInstance();
+      _listofLocalSurveyQuestion = _preferences.getStringList("saved+$appointmentID")??[];
+      _listSectionDisableString =  _preferences.getStringList("disabled+$appointmentID")??[];
+
+      final dir = await path_provider.getTemporaryDirectory();
+       print("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+     print(_listofLocalSurveyQuestion.length);
+     
+     print("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+   
+      if(_listofLocalSurveyQuestion.isNotEmpty)
+      _listofLocalSurveyQuestion.forEach((element) { 
+        SurveyResponseModel surveyResponseModel = SurveyResponseModel.fromLocalJson(jsonDecode(element), dir.absolute.path);
+        print("---------------------");
+        print(surveyResponseModel.validate);
+        print("---------------------"); 
+        _localSurveyQuestion.add(surveyResponseModel);
+      });
+
+      if(_listSectionDisableString.isNotEmpty)
+      _listSectionDisableString.forEach((element) { 
+         _listSectionDisable.add(SectionDisableModel.fromJson(jsonDecode(element)));
+      });
+
+      _localSurveyQuestion.forEach((element) { 
+         int index = _surveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
+
+          if(index!=-1) 
+          _surveyQuestion[index] = element;
+          
+      });
+
       _surveyQuestion.forEach((element) {
         List<SurveyResponseModel> list = [];
         List templist = [];
@@ -91,8 +128,16 @@ class SurveyScreenViewModel extends BaseModel {
   
       });
       _surveyQuestion.forEach((element) {
-        if (_sectionQuestions[element.intSectionId].indexOf(element) == -1)
-          _sectionQuestions[element.intSectionId].add(element);
+        if (_sectionQuestions[element.intSectionId].indexOf(element) == -1){
+          // int index = _localSurveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
+          //  if(index ==-1){
+          //    _sectionQuestions[element.intSectionId].add(element);
+          //  }else{
+          //    _sectionQuestions[element.intSectionId].add(_localSurveyQuestion[index]);
+          // }
+           _sectionQuestions[element.intSectionId].add(element);
+        }
+       
         if (element.strQuestiontype == 'YN') {
          if (element.yesNoPressedVal == 1) {
           if (element.strDisableQuestions != null &&
@@ -165,13 +210,34 @@ class SurveyScreenViewModel extends BaseModel {
         else if(element.strQuestiontype == 'R'){
            element.validate = "NotNull";
         }
-          if (sectionQuestions[element.intSectionId].indexOf(element) == -1)
-            sectionQuestions[element.intSectionId].add(element);
+          
+          if (sectionQuestions[element.intSectionId].indexOf(element) == -1){
+          //  int index = _localSurveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
+          //   if(index == -1){
+          //   sectionQuestions[element.intSectionId].add(element);
+          //   }else{
+          //   sectionQuestions[element.intSectionId].add(_localSurveyQuestion[index]);
+          //   }
+             sectionQuestions[element.intSectionId].add(element);
+          }
           print('added${element.intQuestionNo}');
           print(_sectionQuestions[1].length.toString() + 'line 157');
-
+          print(sectionQuestions[1].length.toString() + 'line 157');
+          
         
       });
+
+      _listSectionDisable.forEach((element) { 
+        sectionDisableQuestions[element.intSectionId] = element.listQnDisable;
+      });
+
+      sectionQuestions.forEach((key, value) { 
+        _sectionQuestions[key] = value;
+      });
+
+      final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
+
+
     } 
     else {
       List<QuestionAnswer> _answers =
@@ -287,11 +353,15 @@ class SurveyScreenViewModel extends BaseModel {
       sectionQuestions[key] = [];
     });
     _surveyQuestion.forEach((element) {
+      print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+      print(surveyResponseModel.intQuestionNo);
+      print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
       if (_sectionQuestions[element.intSectionId].indexOf(element) == -1)
         _sectionQuestions[element.intSectionId].add(element);
       if (element.strQuestiontype == 'YN' && surveyResponseModel.intQuestionNo == element.intQuestionNo) {
           
           if (element.yesNoPressedVal == 1) {
+            print("11111111111111111111111111111111111111111111111111111111");
           if ((element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty) || (element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty)) {
@@ -329,31 +399,47 @@ class SurveyScreenViewModel extends BaseModel {
              enablenumberString =  element.strEnableQuestions.split('Yes: ')[1].split(" ")[0].trim();
              disablenumberString = element.strDisableQuestions.split('Yes: ')[1].split(" ")[0].trim();
              
-             if(enablenumberString!=null && disablenumberString!=null && surveyResponseModel.intQuestionNo == 86)
+             if(enablenumberString!=null && disablenumberString!=null && !enablenumberString.contains(",") && !disablenumberString.contains(","))
              {
                if (!sectionDisableQuestions[element.intSectionId]
-                  .contains("88")) {
-                sectionDisableQuestions[element.intSectionId].add("88");
+                  .contains(disablenumberString)) {
+                sectionDisableQuestions[element.intSectionId].add(disablenumberString);
               }
               if (sectionDisableQuestions[element.intSectionId]
-                  .contains("87")) {
-                sectionDisableQuestions[element.intSectionId].remove("87");
+                  .contains(enablenumberString)) {
+                sectionDisableQuestions[element.intSectionId].remove(enablenumberString);
               } 
              }
              else if(enablenumberString!=null && disablenumberString!=null)
-             if(numberString!=null){
-            List<String> enablelistData = enablenumberString.trim().split(",");
+             {
+               List<String> enablelistData = enablenumberString.trim().split(",");
             for (int i = 0; i < enablelistData.length; i++) {
-              if (sectionDisableQuestions[element.intSectionId]
+              try{
+              SurveyResponseModel model = _surveyQuestion.firstWhere((e) =>e.intQuestionNo.toString().trim() == enablelistData[i].trim());    
+                
+              if (sectionDisableQuestions[model.intSectionId]
                   .contains(enablelistData[i].trim())) {
-                sectionDisableQuestions[element.intSectionId].remove(enablelistData[i].trim());
+                sectionDisableQuestions[model.intSectionId].remove(enablelistData[i].trim());
+
+              }
+              }
+              catch(e){
+                print(e);
               }
             }
             List<String> disablelistData = disablenumberString.trim().split(",");
             for (int i = 0; i < disablelistData.length; i++) {
-              if (!sectionDisableQuestions[element.intSectionId]
+              try{
+              SurveyResponseModel model = _surveyQuestion.firstWhere((e) =>e.intQuestionNo.toString().trim() == disablelistData[i].trim());    
+                
+              if (!sectionDisableQuestions[model.intSectionId]
                   .contains(disablelistData[i].trim())) {
-                sectionDisableQuestions[element.intSectionId].add(disablelistData[i].trim());
+                sectionDisableQuestions[model.intSectionId].add(disablelistData[i].trim());
+
+              }
+              }
+              catch(e){
+                print(e);
               }
             }
             }
@@ -363,7 +449,7 @@ class SurveyScreenViewModel extends BaseModel {
           
         } 
         else if (element.yesNoPressedVal == 0 && surveyResponseModel.intQuestionNo == element.intQuestionNo) {
-          
+          print("0000000000000000000000000000000000000000");
           if ((element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty) || (element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty)) {
@@ -389,18 +475,13 @@ class SurveyScreenViewModel extends BaseModel {
             print("UUUUUUUUUUUUUUUUUUUUUU");
             print(listData);
             print(sectionDisableQuestions[element.intSectionId]);
-            print("UUUUUUUUUUUUUUUUUUUUUU");
             for (int i = 0; i < listData.length; i++) {
               if (!sectionDisableQuestions[element.intSectionId]
                   .contains(listData[i].trim())) {
                     
-                    print("OOOOOOOOOOOOO"+listData[i].trim());
                 sectionDisableQuestions[element.intSectionId].add(listData[i].trim());
               }
             }
-            print("UUUUUUUUUUUUUUUUUUUUUU");
-            print(sectionDisableQuestions[element.intSectionId]);
-            print("UUUUUUUUUUUUUUUUUUUUUU");
             
             }
             
@@ -410,31 +491,47 @@ class SurveyScreenViewModel extends BaseModel {
              enablenumberString =  element.strEnableQuestions.split('No: ')[1].split(" ")[0].trim();
              disablenumberString = element.strDisableQuestions.split('No: ')[1].split(" ")[0].trim();
              
-             if(enablenumberString!=null && disablenumberString!=null && surveyResponseModel.intQuestionNo == 86)
+             if(enablenumberString!=null && disablenumberString!=null && !enablenumberString.contains(",") && !disablenumberString.contains(",") )
              {
                if (!sectionDisableQuestions[element.intSectionId]
-                  .contains("87")) {
-                sectionDisableQuestions[element.intSectionId].add("87");
+                  .contains(disablenumberString)) {
+                sectionDisableQuestions[element.intSectionId].add(disablenumberString);
               }
               if (sectionDisableQuestions[element.intSectionId]
-                  .contains("88")) {
-                sectionDisableQuestions[element.intSectionId].remove("88");
+                  .contains(enablenumberString)) {
+                sectionDisableQuestions[element.intSectionId].remove(enablenumberString);
               } 
              }
              else if(enablenumberString!=null && disablenumberString!=null)
-             if(numberString!=null){
+            {
             List<String> enablelistData = enablenumberString.trim().split(",");
             for (int i = 0; i < enablelistData.length; i++) {
-              if (sectionDisableQuestions[element.intSectionId]
+              try{
+              SurveyResponseModel model = _surveyQuestion.firstWhere((e) =>e.intQuestionNo.toString().trim() == enablelistData[i].trim());    
+                
+              if (sectionDisableQuestions[model.intSectionId]
                   .contains(enablelistData[i].trim())) {
-                sectionDisableQuestions[element.intSectionId].remove(enablelistData[i].trim());
+                sectionDisableQuestions[model.intSectionId].remove(enablelistData[i].trim());
+
+              }
+              }
+              catch(e){
+                print(e);
               }
             }
             List<String> disablelistData = disablenumberString.trim().split(",");
             for (int i = 0; i < disablelistData.length; i++) {
-              if (!sectionDisableQuestions[element.intSectionId]
+              try{
+              SurveyResponseModel model = _surveyQuestion.firstWhere((e) =>e.intQuestionNo.toString().trim() == disablelistData[i].trim());    
+                
+              if (!sectionDisableQuestions[model.intSectionId]
                   .contains(disablelistData[i].trim())) {
-                sectionDisableQuestions[element.intSectionId].add(disablelistData[i].trim());
+                sectionDisableQuestions[model.intSectionId].add(disablelistData[i].trim());
+
+              }
+              }
+              catch(e){
+                print(e);
               }
             }
             }
@@ -446,6 +543,8 @@ class SurveyScreenViewModel extends BaseModel {
                 selected = sectionQuestions.keys.length - 1;
                 enableIndex = -1;
              }
+             answerList.removeWhere((element) => element.intsurveyid != (selected+1).toString());
+             
             setState(ViewState.Idle);  
           }
         }
@@ -474,17 +573,37 @@ class SurveyScreenViewModel extends BaseModel {
             }
           });
         }
+        else if (element.dropDownValue.trim() == 'Energised' && surveyResponseModel.intQuestionNo == 39) {
+          
+          String numberString =
+              element.strDisableQuestions.split('Energised:')[1];
+          List<String> listData = numberString.trim().split(",");
+          listData.forEach((listElement) {
+            if (!sectionDisableQuestions[element.intSectionId]
+                .contains(listElement.trim())) {
+              sectionDisableQuestions[element.intSectionId].add(listElement.trim());
+            }
+          });
+        } else if (element.dropDownValue.trim() == 'De-Energised' && surveyResponseModel.intQuestionNo == 39) {
+          String numberString =
+              element.strEnableQuestions.split('De-Energised:')[1];
+          List<String> listData = numberString.trim().split(",");
+          listData.forEach((listElement) {
+            if (sectionDisableQuestions[element.intSectionId]
+                .contains(listElement.trim())) {
+              sectionDisableQuestions[element.intSectionId].remove(listElement.trim());
+            }
+          });
+        }
         else if(surveyResponseModel.intQuestionNo == 28 && element.intQuestionNo == 28){
-          print("whatssssssssssssssssssssssssssssssssssssssss");
           String enablenumberString, disablenumberString;
           if(element.strEnableQuestions.contains('${element.dropDownValue.trim()}: '))
           enablenumberString = element.strEnableQuestions.split('${element.dropDownValue.trim()}: ')[1]?.split(" ")[0]?.trim();
           if(element.strDisableQuestions.contains('${element.dropDownValue.trim()}: '))
           disablenumberString = element.strDisableQuestions.split('${element.dropDownValue.trim()}: ')[1]?.split(" ")[0]?.trim();
             
-            if(enablenumberString!=null && disablenumberString!=null ){
+            if(enablenumberString!=null || disablenumberString!=null ){
             for (int i = 29; i <= 56; i++) {
-              print("22222222222222222222222222222222222222222");
               if(enablenumberString.contains(i.toString())) {
                 if (sectionDisableQuestions[element.intSectionId]
                   .contains(i.toString())) {
@@ -494,8 +613,6 @@ class SurveyScreenViewModel extends BaseModel {
               else if(disablenumberString.contains(i.toString())){
                 if (!sectionDisableQuestions[element.intSectionId]
                   .contains(i.toString())) {
-                    
-                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!"+i.toString());
                 sectionDisableQuestions[element.intSectionId].add(i.toString());
                 }
               } 
@@ -503,7 +620,60 @@ class SurveyScreenViewModel extends BaseModel {
           }
             
         }
+        else if(surveyResponseModel.intQuestionNo == 43 && element.intQuestionNo == 43){
+          String enablenumberString, disablenumberString;
+          if(element.strEnableQuestions.contains('${element.dropDownValue.trim()}: '))
+          enablenumberString = element.strEnableQuestions.split('${element.dropDownValue.trim()}: ')[1]?.split(" ")[0]?.trim();
+          if(element.strDisableQuestions.contains('${element.dropDownValue.trim()}: '))
+          disablenumberString = element.strDisableQuestions.split('${element.dropDownValue.trim()}: ')[1]?.split(" ")[0]?.trim();
+            
+            if(enablenumberString!=null || disablenumberString!=null ){
+            for (int i = 44; i <= 71; i++) {
+              if(enablenumberString.contains(i.toString())) {
+                if (sectionDisableQuestions[element.intSectionId]
+                  .contains(i.toString())) {
+                sectionDisableQuestions[element.intSectionId].remove(i.toString());
+                }
+              }
+              else if(disablenumberString.contains(i.toString())){
+                if (!sectionDisableQuestions[element.intSectionId]
+                  .contains(i.toString())) {
+                sectionDisableQuestions[element.intSectionId].add(i.toString());
+                }
+              } 
+            }
+          }
+            
+        }
+        
         else if(surveyResponseModel.intQuestionNo == 60 && element.intQuestionNo == 60){
+          String enablenumberString, disablenumberString;
+          if(element.strEnableQuestions.contains('${element.dropDownValue.trim()}: '))
+          enablenumberString = element.strEnableQuestions.split('${element.dropDownValue.trim()}: ')[1].split(" ")[0].trim();
+          if(element.strDisableQuestions.contains('${element.dropDownValue.trim()}: '))
+          disablenumberString = element.strDisableQuestions.split('${element.dropDownValue.trim()}: ')[1].split(" ")[0].trim();
+            
+            if(enablenumberString!=null || disablenumberString!=null ){
+             enablenumberString = enablenumberString??"";
+             disablenumberString = disablenumberString??"";
+            for (int i = 61; i <= 84; i++) {
+              if(enablenumberString.contains(i.toString())) {
+                if (sectionDisableQuestions[element.intSectionId]
+                  .contains(i.toString())) {
+                sectionDisableQuestions[element.intSectionId].remove(i.toString());
+                }
+              }
+              else if(disablenumberString.contains(i.toString())){
+                if (!sectionDisableQuestions[element.intSectionId]
+                  .contains(i.toString())) {
+                sectionDisableQuestions[element.intSectionId].add(i.toString());
+                }
+              } 
+            }
+          }
+            
+        }
+        else if(surveyResponseModel.intQuestionNo == 75 && element.intQuestionNo == 75){
           
           String enablenumberString, disablenumberString;
           if(element.strEnableQuestions.contains('${element.dropDownValue.trim()}: '))
@@ -511,8 +681,8 @@ class SurveyScreenViewModel extends BaseModel {
           if(element.strDisableQuestions.contains('${element.dropDownValue.trim()}: '))
           disablenumberString = element.strDisableQuestions.split('${element.dropDownValue.trim()}: ')[1].split(" ")[0].trim();
             
-            if(enablenumberString!=null && disablenumberString!=null ){
-            for (int i = 61; i <= 84; i++) {
+            if(enablenumberString!=null || disablenumberString!=null ){
+            for (int i = 76; i <= 99; i++) {
               
               if(enablenumberString.contains(i.toString())) {
                 if (sectionDisableQuestions[element.intSectionId]
@@ -530,7 +700,8 @@ class SurveyScreenViewModel extends BaseModel {
           }
             
         }
-        else if(surveyResponseModel.intQuestionNo == 22 && element.intQuestionNo == 22){
+        else if((surveyResponseModel.intQuestionNo == 22 && element.intQuestionNo == 22)
+                ||(surveyResponseModel.intQuestionNo == 37 && element.intQuestionNo == 37)){
           String enablenumberString, disablenumberString;
           if(element.strEnableQuestions.contains('${element.dropDownValue.trim()}: '))
           enablenumberString = element.strEnableQuestions.split('${element.dropDownValue.trim()}: ')[1].split(" ")[0].trim();
@@ -539,15 +710,15 @@ class SurveyScreenViewModel extends BaseModel {
             
             if(enablenumberString!=null && disablenumberString == null){
                 if (sectionDisableQuestions[element.intSectionId]
-                  .contains("23")) {
-                sectionDisableQuestions[element.intSectionId].remove("23");
+                  .contains(enablenumberString)) {
+                sectionDisableQuestions[element.intSectionId].remove(enablenumberString);
                 }
                
           }
           else{
             if (!sectionDisableQuestions[element.intSectionId]
-                  .contains("23")) {
-                sectionDisableQuestions[element.intSectionId].add("23");
+                  .contains(disablenumberString)) {
+                sectionDisableQuestions[element.intSectionId].add(disablenumberString);
                 }
           }
           
@@ -603,10 +774,45 @@ class SurveyScreenViewModel extends BaseModel {
     
     setState(ViewState.Idle);
   }
+  void onAddAnsweratindex(AnswerCredential credential, int index) {
+    setState(ViewState.Busy);
 
+    answerList[index] = credential;
+    
+    setState(ViewState.Idle);
+  }
+
+  _saveDataLocally(String appointmentid) async{
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          sectionQuestions.forEach((key, value) {
+             value.forEach((element) { 
+                 
+                 int index = _localSurveyQuestion.indexWhere((e) => e.intQuestionNo == element.intQuestionNo);
+                 if(index ==-1){
+                   
+                   _localSurveyQuestion.add(element);
+                  _listofLocalSurveyQuestion.add(jsonEncode(element.toLocalJson())); 
+                 }else{
+                   _localSurveyQuestion[index] = element;
+                  _listofLocalSurveyQuestion[index] = (jsonEncode(element.toLocalJson())); 
+                 }
+             });
+
+          });
+          List<String> _list = [];
+          sectionDisableQuestions.forEach((key, value) { 
+            _list.add(jsonEncode(SectionDisableModel(
+              intSectionId: key,
+              listQnDisable: value
+            ).toJson()));
+          });
+
+          preferences.setStringList("saved+$appointmentid", _listofLocalSurveyQuestion);
+          preferences.setStringList("disabled+$appointmentid", _list);    
+  }
   
   
-  void incrementCounter(bool isedit) {
+  void incrementCounter(bool isedit, String appointmentId) {
     setState(ViewState.Busy);
     if(isedit){
      if (selected < sectionQuestions.keys.length - 1) {
@@ -616,6 +822,7 @@ class SurveyScreenViewModel extends BaseModel {
     if (selected < sectionQuestions.keys.length - 2) {
       selected++;
     }
+    _saveDataLocally(appointmentId);
     }
     setState(ViewState.Idle);
   }
@@ -627,10 +834,6 @@ class SurveyScreenViewModel extends BaseModel {
 
     print(selected.toString() + 'line 1130');
     
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    print(selected);
-    print(sectionQuestions.keys.length - 1);
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^");
     if (selected <= sectionQuestions.keys.length - 2) {
       selected++;
       enableIndex++;
@@ -646,10 +849,13 @@ class SurveyScreenViewModel extends BaseModel {
           ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
             AbortAppointmentReasonModel(
               intId: int.parse( appointmentid),
-              isabort: false,
+              isabort: true,
               strCancellationReason: GlobalVar.abortReason
             )
           );    
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          pref.remove("saved+${appointmentid.trim()}");
+          pref.remove("disabled+${appointmentid.trim()}");
           print(abortreasonmodel.response);
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
@@ -680,6 +886,7 @@ class SurveyScreenViewModel extends BaseModel {
               "listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
           preferences.setStringList(
               "key+$appointmentid", _list);
+              
           openJumboTab(dsmodel, appointmentid);
           
           AppConstants.showSuccessToast(context, "Submitted Offline");
@@ -697,6 +904,9 @@ class SurveyScreenViewModel extends BaseModel {
           ResponseModel responseModel =
               await _apiService.submitListSurveyAnswer(answerList);
           dsmodel.onUpdateStatusOnCompleted(context, appointmentid);    
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          pref.remove("saved+${appointmentid.trim()}");
+          pref.remove("disabled+${appointmentid.trim()}");
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
             setState(ViewState.Idle);
@@ -832,6 +1042,9 @@ setState(ViewState.Idle);
       if (status != "NONE") {
         ResponseModel responseModel =
             await _apiService.submitListSurveyAnswer(_listofanswer);
+            SharedPreferences pref = await SharedPreferences.getInstance();
+          pref.remove("saved+${appointmentid.trim()}");
+          pref.remove("disabled+${appointmentid.trim()}");
         print(responseModel.response);
       } else {
         SharedPreferences preferences = await SharedPreferences.getInstance();

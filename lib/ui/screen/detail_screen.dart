@@ -25,6 +25,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/flutter_google_maps.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailScreenArguments {
@@ -344,6 +345,9 @@ class _DetailScreenState extends State<DetailScreen> {
                             radius: 15,
                             textStyle: TextStyle(color: AppColors.whiteColor),
                             onTap: ()  async{
+                              //SharedPreferences pref = await SharedPreferences.getInstance();
+                              // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
+                              // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
           //                     ApiService _apiService = ApiService();
   
           //                     ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
