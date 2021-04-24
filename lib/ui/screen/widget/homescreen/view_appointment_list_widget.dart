@@ -4,6 +4,8 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/model/app_table.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
+import 'package:enstaller/core/viewmodel/home_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/detail_screen.dart';
 import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,22 @@ import 'package:flutter_svg/svg.dart';
 
 class ViewAppointmentListWidget extends StatelessWidget {
   final List<AppTable>tables;
-  ViewAppointmentListWidget({this.tables});
+  final HomeScreenViewModel homeScreenViewModel;
+  Map<String,String> _jobtype = {
+    "Dual SMETS2 Meter Exchange" : "DSME",
+    "Electric SMETS2 Meter Exchange" : "ESME",
+    "Gas SMETS2 Meter Exchange" : "GSME",
+    "Emergency Exchange Electric" : "EEE",
+    "Emergency Exchange Gas" : "EEG",
+    "Traditional Gas Exchange" : "TGE",
+    "Traditional Electric Exchange" : "TEE",
+    "AMR Install" : "AI",
+    "Site Survey" : "SS",
+    "Recommision": "RE",
+    "Half Day Hire" : "HDH",
+    "Full Day Hire" : "FDH"
+  };
+  ViewAppointmentListWidget({this.tables, this.homeScreenViewModel});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -26,13 +43,16 @@ class ViewAppointmentListWidget extends StatelessWidget {
         return InkWell(
           onTap:
               () {
-
             Navigator.of(context).pushNamed(DetailScreen.routeName,arguments:DetailScreenArguments(
                 appointmentID: tables[childrenIndex].intId.toString(),
                 strBookingReference:  tables[childrenIndex].strBookingReference,
                 customerID:  tables[childrenIndex].intCustomerId.toString()
             )).then((value) {
               FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+              if(GlobalVar.isloadDashboard){
+              homeScreenViewModel.getAppointmentList();
+              GlobalVar.isloadDashboard = false;
+              }
             });
 
           },
@@ -63,7 +83,7 @@ class ViewAppointmentListWidget extends StatelessWidget {
                     Container(
                       height: 50,
                       width: 50,
-                      child: Center(child: Text(AppConstants.nameTitle(tables[childrenIndex].strContactName),
+                      child: Center(child: Text( _jobtype[(tables[childrenIndex].strJobType.trim())]?? "" ,
                       style: TextStyle(fontWeight: FontWeight.bold),)),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,

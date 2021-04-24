@@ -169,22 +169,22 @@ class AppDrawerWidget extends StatelessWidget {
                       builder: (context) => ProfilePage()));
                 },
               ),
-              DrawerRowWidget(
-                title: 'Email Notification',
-                assetPath: ImageFile.email_notification,
-                onTap: (){
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (context) => EmailNotificationScreen()));
-                },
-              ),
-              DrawerRowWidget(
-                title: 'SMS Notification',
-                assetPath: ImageFile.sms_notification,
-                onTap: (){
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (context) => SMSNotificationScreen()));
-                },
-              ),
+              // DrawerRowWidget(
+              //   title: 'Email Notification',
+              //   assetPath: ImageFile.email_notification,
+              //   onTap: (){
+              //     Navigator.of(context).push(new MaterialPageRoute(
+              //         builder: (context) => EmailNotificationScreen()));
+              //   },
+              // ),
+              // DrawerRowWidget(
+              //   title: 'SMS Notification',
+              //   assetPath: ImageFile.sms_notification,
+              //   onTap: (){
+              //     Navigator.of(context).push(new MaterialPageRoute(
+              //         builder: (context) => SMSNotificationScreen()));
+              //   },
+              // ),
               DrawerRowWidget(
                 title: 'Logout',
                 assetPath: ImageFile.logout,

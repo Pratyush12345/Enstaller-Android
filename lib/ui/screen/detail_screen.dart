@@ -89,6 +89,8 @@ class _DetailScreenState extends State<DetailScreen> {
       "SMETS2 3ph Elec": 7
     }
   };
+  ApiService _apiService = ApiService();
+  
 
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -203,287 +205,299 @@ class _DetailScreenState extends State<DetailScreen> {
 //                : SizedBox(),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _engineerInfo(model),
-                        // model.appointmentDetails.appointment
-                        //             .appointmentEventType !=
-                        //         AppStrings.completed
-                        //     ? Padding(
-                        //         padding: SizeConfig.sidepadding,
-                        //         child: AppButton(
-                        //           height: 40,
-                        //           radius: 15,
-                        //           color: AppColors.green,
-                        //           textStyle:
-                        //               TextStyle(color: AppColors.whiteColor),
-                        //           buttonText: AppStrings.updateStatusC,
-                        //           onTap: () {
-                        //             AppConstants.showAppDialog(
-                        //                 context: context,
-                        //                 child: UpdateStatusDialogWidget(
-                        //                   model: model,
-                        //                   appointmentID:
-                        //                       widget.arguments.appointmentID,
-                        //                 ));
-                        //           },
-                        //         ),
-                        //       )
-                        //     : Container(),
-                        _surveyInfo(model),
-                        Padding(
-                          padding: SizeConfig.padding,
-                          child: ListView.builder(
-                              key: Key('builder ${selected.toString()}'),
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: 5,
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext ctxt, int index) {
-                                return ConfigurableExpansionTile(
-                                    key: Key(index.toString()),
-                                    initiallyExpanded: index == selected,
-                                    header: Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 20,
-                                            top: 20,
-                                            bottom: 10,
-                                            right: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              _getHeaderText(index),
-                                              style: getTextStyle(
-                                                  color: Colors.white,
-                                                  isBold: true,
-                                                  fontSize: 16.0),
-                                            ),
-                                            Icon(
-                                              Icons.add,
-                                              color: AppColors.whiteColor,
-                                            )
-                                          ],
+                : RefreshIndicator(
+                   onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.initializeData(
+          widget.arguments.appointmentID, widget.arguments.customerID)),
+                                  child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _engineerInfo(model),
+                          // model.appointmentDetails.appointment
+                          //             .appointmentEventType !=
+                          //         AppStrings.completed
+                          //     ? Padding(
+                          //         padding: SizeConfig.sidepadding,
+                          //         child: AppButton(
+                          //           height: 40,
+                          //           radius: 15,
+                          //           color: AppColors.green,
+                          //           textStyle:
+                          //               TextStyle(color: AppColors.whiteColor),
+                          //           buttonText: AppStrings.updateStatusC,
+                          //           onTap: () {
+                          //             AppConstants.showAppDialog(
+                          //                 context: context,
+                          //                 child: UpdateStatusDialogWidget(
+                          //                   model: model,
+                          //                   appointmentID:
+                          //                       widget.arguments.appointmentID,
+                          //                 ));
+                          //           },
+                          //         ),
+                          //       )
+                          //     : Container(),
+                          _surveyInfo(model),
+                          Padding(
+                            padding: SizeConfig.padding,
+                            child: ListView.builder(
+                                key: Key('builder ${selected.toString()}'),
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: 5,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return ConfigurableExpansionTile(
+                                      key: Key(index.toString()),
+                                      initiallyExpanded: index == selected,
+                                      header: Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 20,
+                                              top: 20,
+                                              bottom: 10,
+                                              right: 20),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                _getHeaderText(index),
+                                                style: getTextStyle(
+                                                    color: Colors.white,
+                                                    isBold: true,
+                                                    fontSize: 16.0),
+                                              ),
+                                              Icon(
+                                                Icons.add,
+                                                color: AppColors.whiteColor,
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    headerBackgroundColorStart: AppColors.green,
-                                    headerBackgroundColorEnd: AppColors.green,
-                                    onExpansionChanged: (value) {
-                                      if (value) {
-                                        setState(() {
-                                          selected = index;
-                                        });
-                                        if (value == true && index == 4) {
+                                      headerBackgroundColorStart: AppColors.green,
+                                      headerBackgroundColorEnd: AppColors.green,
+                                      onExpansionChanged: (value) {
+                                        if (value) {
                                           setState(() {
-                                            isToShowBottomBar = true;
+                                            selected = index;
                                           });
+                                          if (value == true && index == 4) {
+                                            setState(() {
+                                              isToShowBottomBar = true;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              isToShowBottomBar = false;
+                                            });
+                                          }
                                         } else {
                                           setState(() {
                                             isToShowBottomBar = false;
+                                            selected = -1;
                                           });
                                         }
-                                      } else {
-                                        setState(() {
-                                          isToShowBottomBar = false;
-                                          selected = -1;
-                                        });
-                                      }
-                                    },
-                                    headerExpanded: Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 20,
-                                            top: 20,
-                                            bottom: 10,
-                                            right: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              _getHeaderText(index),
-                                              style: getTextStyle(
-                                                  color: Colors.white,
-                                                  isBold: true,
-                                                  fontSize: 16.0),
-                                            ),
-                                            RotatedBox(
-                                                quarterTurns: 2,
-                                                child: Icon(
-                                                  Icons.remove,
-                                                  color: AppColors.whiteColor,
-                                                ))
-                                          ],
+                                      },
+                                      headerExpanded: Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 20,
+                                              top: 20,
+                                              bottom: 10,
+                                              right: 20),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                _getHeaderText(index),
+                                                style: getTextStyle(
+                                                    color: Colors.white,
+                                                    isBold: true,
+                                                    fontSize: 16.0),
+                                              ),
+                                              RotatedBox(
+                                                  quarterTurns: 2,
+                                                  child: Icon(
+                                                    Icons.remove,
+                                                    color: AppColors.whiteColor,
+                                                  ))
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    children: [
-                                      _getChildrenWidget(selected, model)
-                                    ]);
-                              }),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "AVAILABLE ACTION",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontWeight: FontWeight.normal),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Padding(
-                          padding: SizeConfig.sidepadding,
-                          child: AppButton(
-                            height: 40,
-                            color: AppColors.darkBlue,
-                            buttonText: AppStrings.abort_text,
-                            radius: 15,
-                            textStyle: TextStyle(color: AppColors.whiteColor),
-                            onTap: ()  async{
-                              //SharedPreferences pref = await SharedPreferences.getInstance();
-                              // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
-                              // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
-          //                     ApiService _apiService = ApiService();
-  
-          //                     ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
-          //   AbortAppointmentReasonModel(
-          //     intId: 50188,
-          //     isabort: false,
-          //     strCancellationReason: "Health and Safety"
-          //   )
-          // );
-          // print(abortreasonmodel.response);
-    //                           var AppointmentType =
-    //     model.appointmentDetails.appointment.strAppointmentType.trim();
-    // if (AppointmentType == "Scheduled Exchange" ||
-    //     AppointmentType == "Emergency Exchange" ||
-    //     AppointmentType == "New Connection" ||
-    //     AppointmentType == "Meter Removal") {
-    //   var appointId = encryption(widget.arguments.appointmentID);
-    //   var url =
-    //       'https://enstaller.enpaas.com/jmbCloseJob/AddCloseJob?intAppointmentId=' +
-    //           appointId;
-    //           print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
-    //   print(url);
-      
-    //           print("urrrrrrrrrrrrrrrrrrrrrrrrrllllllllllllllllllllll");
-    //   launchurl(url);
-      
-    //}
-                              // AppConstants.showAppDialog(
-                              //     context: context,
-                              //     child: AbortAppoinmentWidget(
-                              //       appointmentID:
-                              //           widget.arguments.appointmentID,
-                              //     ));
-                            },
+                                      children: [
+                                        _getChildrenWidget(selected, model)
+                                      ]);
+                                }),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        
-                        Padding(
-                          padding: SizeConfig.sidepadding,
-                          child: AppButton(
-                            height: 40,
-                            color: AppColors.darkBlue,
-                            buttonText: AppStrings.ADD_COMMENT,
-                            radius: 15,
-                            textStyle: TextStyle(color: AppColors.whiteColor),
-                            onTap: () {
-                              AppConstants.showAppDialog(
-                                  context: context,
-                                  child: CommentDialogWidget(
-                                    appointmentID:
-                                        widget.arguments.appointmentID,
-                                  ));
-                            },
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _getDisplayButton(_checkbuttonindex(model), model),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: SizeConfig.sidepadding,
-                          child: Container(
-                            height: 300,
-                            child: GoogleMap(
-                              markers: {
-                                Marker(
-                                  GeoCoord(34.0469058, -118.3503948),
-                                ),
-                              },
-                              initialZoom: 12,
-                              initialPosition:
-                                  GeoCoord(34.0469058, -118.3503948),
-                              // Los Angeles, CA
-                              mapType: MapType.roadmap,
-                              interactive: true,
-                              mobilePreferences: const MobileMapPreferences(
-                                trafficEnabled: true,
-                                zoomControlsEnabled: false,
-                              ),
-                            ),
+                          Text(
+                            "AVAILABLE ACTION",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontWeight: FontWeight.normal),
                           ),
-                        ),
-                        SizeConfig.verticalSpaceSmall(),
-                        Padding(
-                          padding: SizeConfig.sidepadding,
-                          child: InkWell(
-                            onTap: () async {
-                              final url = Uri.encodeFull(
-                                  'https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
-//                  String googleUrl = 'https://www.google.com/maps/search/?api=1&query=${model.currentLocation.latitude},${model.currentLocation.longitude}';
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                throw 'Could not open the map.';
-                              }
-                            },
-                            child: Container(
-                              width: SizeConfig.screenWidth,
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: AppButton(
                               height: 40,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                      height: SizeConfig.screenHeight * .02,
-                                      width: SizeConfig.screenHeight * .02,
-                                      child: Image.asset(ImageFile.direction)),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    AppStrings.GET_DIRECTIONS,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.whiteColor),
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                  color: AppColors.green,
-                                  borderRadius: BorderRadius.circular(15)),
+                              color: AppColors.darkBlue,
+                              buttonText: AppStrings.abort_text,
+                              radius: 15,
+                              textStyle: TextStyle(color: AppColors.whiteColor),
+                              onTap: ()  async{
+                                SharedPreferences pref = await SharedPreferences.getInstance();
+                                pref.remove("saved+${widget.arguments.appointmentID.trim()}");
+                                pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
+                              },
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 60,
-                        ),
-                      ],
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: AppButton(
+                              height: 40,
+                              color: AppColors.darkBlue,
+                              buttonText: AppStrings.forward_button,
+                              radius: 15,
+                              textStyle: TextStyle(color: AppColors.whiteColor),
+                              onTap: ()  async{
+                                ResponseModel responseModel = await _apiService.updateCallForwardAppointment(widget.arguments.appointmentID.trim());
+                                print(responseModel.statusCode.toString()+"......line373");
+                               if(responseModel.statusCode ==1)
+                               model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
+                              }
+                                ,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          if(model.appointmentDetails.appointment.bCompleteForwardCall)
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: AppButton(
+                              height: 40,
+                              color: AppColors.darkBlue,
+                              buttonText: AppStrings.EnRoute,
+                              radius: 15,
+                              textStyle: TextStyle(color: AppColors.whiteColor),
+                              onTap: ()  async{
+
+                                model.onUpdateStatusOnRoute(context, widget.arguments.appointmentID);
+                                model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
+                              
+                                 
+                                },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: AppButton(
+                              height: 40,
+                              color: AppColors.darkBlue,
+                              buttonText: AppStrings.ADD_COMMENT,
+                              radius: 15,
+                              textStyle: TextStyle(color: AppColors.whiteColor),
+                              onTap: () {
+                                AppConstants.showAppDialog(
+                                    context: context,
+                                    child: CommentDialogWidget(
+                                      appointmentID:
+                                          widget.arguments.appointmentID,
+                                    ));
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _getDisplayButton(_checkbuttonindex(model), model),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: Container(
+                              height: 300,
+                              child: GoogleMap(
+                                markers: {
+                                  Marker(
+                                    GeoCoord(34.0469058, -118.3503948),
+                                  ),
+                                },
+                                initialZoom: 12,
+                                initialPosition:
+                                    GeoCoord(34.0469058, -118.3503948),
+                                // Los Angeles, CA
+                                mapType: MapType.roadmap,
+                                interactive: true,
+                                mobilePreferences: const MobileMapPreferences(
+                                  trafficEnabled: true,
+                                  zoomControlsEnabled: false,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizeConfig.verticalSpaceSmall(),
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: InkWell(
+                              onTap: () async {
+                                final url = Uri.encodeFull(
+                                    'https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
+//                  String googleUrl = 'https://www.google.com/maps/search/?api=1&query=${model.currentLocation.latitude},${model.currentLocation.longitude}';
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not open the map.';
+                                }
+                              },
+                              child: Container(
+                                width: SizeConfig.screenWidth,
+                                height: 40,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                        height: SizeConfig.screenHeight * .02,
+                                        width: SizeConfig.screenHeight * .02,
+                                        child: Image.asset(ImageFile.direction)),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      AppStrings.GET_DIRECTIONS,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.whiteColor),
+                                    ),
+                                  ],
+                                ),
+                                decoration: BoxDecoration(
+                                    color: AppColors.green,
+                                    borderRadius: BorderRadius.circular(15)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 60,
+                          ),
+                        ],
+                      ),
                     ),
-                  ));
+                ));
       },
     );
   }
@@ -708,7 +722,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                       AppStrings.yes
                                   ? true
                                   : false;
-                      if(!_isedit)
+                      String _status = model.appointmentDetails.appointment.appointmentEventType??"";            
+                      print(_status);
+                      if(!_isedit && _status!="OnSite")
                       model.onUpdateStatusOnSite(context, widget.arguments.appointmentID);
                     
                       Navigator.of(context).pushNamed(SurveyScreen.routeName,

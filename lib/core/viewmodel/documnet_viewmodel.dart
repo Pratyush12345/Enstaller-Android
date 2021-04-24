@@ -77,12 +77,18 @@ class DocumnetViewModel extends BaseModel{
     setState(ViewState.Idle);
   }
   Future<String> pdfview(String url) async{
+    try{
    var reponse = await http.get(url);
    var dir = await getTemporaryDirectory();
    File file = new File(dir.path+"pdf");
    file.writeAsBytesSync(reponse.bodyBytes, flush: true);
    return file.path;
+    }catch(e){
+      print("error..........................");
+      print(e);
+    }
   }
+
   int getCurrentDay(DateTime date){
     return date.day;
   }

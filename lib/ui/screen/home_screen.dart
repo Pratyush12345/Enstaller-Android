@@ -131,37 +131,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),),
               centerTitle: true,
               actions: [
-                // model.dateSelected?InkWell(child: Icon(Icons.clear), onTap: (){
-                //   model.onToggleDateSelected();
-                // }):InkWell(
-                //   child: Image.asset(
-                //     ImageFile.calendarIcon,
-                //     width: MediaQuery.of(context).size.width * 0.06,
-                //     height: MediaQuery.of(context).size.height * 0.06,
-                //   ),
-                //   onTap: ()async{
-                //     final DateTime picked = await showDatePicker(
-                //         context: context,
-                //         initialDate: selectedDate,
-                //         firstDate: DateTime(2000,12,1),
-                //         lastDate:  DateTime(3000,12,1),);
-                //     if (picked != null && picked != selectedDate)
-                //       setState(() {
-                //         selectedDate = picked;
-                //         model.onSelectIndex(selectedDate.day-1);
-                //         _scrollController.jumpTo((SizeConfig.screenHeight*.15+SizeConfig.verticalC13Padding.top+
-                //             SizeConfig.verticalC13Padding.bottom)*(selectedDate.day-1));
-                //         model.onToggleDateSelected();
-
-
-                //       });
-                //   },
-                // ),
-                // SizedBox(
-                //   width: MediaQuery.of(context).size.width * 0.03,
-                // ),
-                // Icon(Icons.notifications_none,
-                // size: MediaQuery.of(context).size.height * 0.035,),
 
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
@@ -172,104 +141,116 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? AppConstants.circulerProgressIndicator()
                 :Padding(
               padding: SizeConfig.padding,
-              child: model.dateSelected?SingleChildScrollView(
-                child: ViewSingleDateWidget(
-                  day: (selectedDate.day < 9
-                          ? int.parse("0${selectedDate.day}")
-                          : (selectedDate.day)) ,
-                  appointmentList: model.appointMentList,
-                  dateString: selectedDate.year.toString() +
-                      "-" +
-                      selectedDate.month.toString() +
-                      "-" +
-                      (selectedDate.day < 9
-                          ? "0${selectedDate.day}"
-                          : (selectedDate.day).toString()),
+              child: model.dateSelected?RefreshIndicator(
+                 onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getAppointmentList()),
+                  
+                              child: SingleChildScrollView(
+                    child: ViewSingleDateWidget(
+                      day: (selectedDate.day < 9
+                              ? int.parse("0${selectedDate.day}")
+                              : (selectedDate.day)) ,
+                      appointmentList: model.appointMentList,
+                      dateString: selectedDate.year.toString() +
+                          "-" +
+                          selectedDate.month.toString() +
+                          "-" +
+                          (selectedDate.day < 9
+                              ? "0${selectedDate.day}"
+                              : (selectedDate.day).toString()),
+                    ),
                 ),
-              ):ListView.builder(
-                controller: _scrollController,
-                  itemCount: 2
-                  //model.appointMentList.length
-                  ,
-                  itemBuilder: (context, int index) {
-                    return Padding(
-                      padding: SizeConfig.verticalC8Padding,
-                      child: InkWell(
-                        onTap: () {},
-                        child: BaseView<HomeScreenViewModel>(
-                          
-                          builder: (context,pModel,child){
-                            var date = DateTime.now()?.year.toString() +
-                                "-" +
-                                DateTime.now()?.month.toString() +
-                                "-" +
-                                (index == 0
-                                    ? getCurrentDay(DateTime.now()).toString()
-                                    : getNextDay(DateTime.now()).toString());
+              ):RefreshIndicator(
+                onRefresh: () => Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getAppointmentList()),
+                  
+                              child: ListView.builder(
+                    controller: _scrollController,
+                      itemCount: 2
+                      //model.appointMentList.length
+                      ,
+                      itemBuilder: (context, int index) {
+                        return Padding(
+                          padding: SizeConfig.verticalC8Padding,
+                          child: InkWell(
+                            onTap: () {
+                            },
+                            child: BaseView<HomeScreenViewModel>(
+                              
+                              builder: (context,pModel,child){
+                                var date = DateTime.now()?.year.toString() +
+                  "-" +
+                  DateTime.now()?.month.toString() +
+                  "-" +
+                  (index == 0
+                      ? getCurrentDay(DateTime.now()).toString()
+                      : getNextDay(DateTime.now()).toString());
 
-                            String dateString = index==0? DateFormat.MMMM().format(DateTime.now()) +
-                                                        " " + getCurrentDay(DateTime.now()).toString() : DateFormat.MMMM().format(getNextDate(DateTime.now())) +
-                                                        " " +getNextDay(DateTime.now()).toString();
-                            return HomePageExpansionWidget(
-                              onTap: (){
-                                model.onSelectIndex(index); 
+                                String dateString = index==0? DateFormat.MMMM().format(DateTime.now()) +
+                                          " " + getCurrentDay(DateTime.now()).toString() : DateFormat.MMMM().format(getNextDate(DateTime.now())) +
+                                          " " +getNextDay(DateTime.now()).toString();
+                                return HomePageExpansionWidget(
+                                  onTap: (){
+                  model.onSelectIndex(index); 
 //                              pModel.getTable(date);
-                              },
-                              showSecondWidget:index==model.selectedIndex ,
-                              firstWidget: HomePageListWidget(
+                                  },
+                                  showSecondWidget:index==model.selectedIndex ,
+                                  firstWidget: HomePageListWidget(
 
-                                height: SizeConfig.screenHeight*.15,
-                                dateString: dateString ,
-                                expanded: index==model.selectedIndex,
-                              ),
-                              secondWidget:  Container(
+                  height: SizeConfig.screenHeight*.15,
+                  dateString: dateString ,
+                  expanded: index==model.selectedIndex,
+                                  ),
+                                  secondWidget:  Container(
 //                                color:  AppColors.appbarColor,
-                                child: BaseView<HomeScreenViewModel>(
-                                  onModelReady: (model)=>model.getTable(index==0? getCurrentDay(DateTime.now()):  getNextDay(DateTime.now()), _listofappointment),
-                                  builder: (context,secondModel,child){
-                                    if(secondModel.state==ViewState.Busy){
-                                      return AppConstants.circulerProgressIndicator();
-                                    }
-                                    return Container(
+                  child: BaseView<HomeScreenViewModel>(
+                    onModelReady: (model)=>model.getTable(index==0? getCurrentDay(DateTime.now()):  getNextDay(DateTime.now()), _listofappointment),
+                    builder: (context,secondModel,child){
+                      if(secondModel.state==ViewState.Busy){
+                        return AppConstants.circulerProgressIndicator();
+                      }
+                      return Container(
 //                                      color: AppColors.expansionColor,
 
-                                      child: ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                              maxHeight:
-                                              AppConstants.getExpandedListHeight(secondModel.tables.isEmpty,secondModel.tables.length)),
-                                          child: (secondModel.tables.length>0)
-                                              ? ViewAppointmentListWidget(
-                                            tables: secondModel.tables,
-                                          ) : Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(7),
-                                              color:
-                                              Colors.white,
-                                                border: Border.all(color: AppColors.lightGrayDotColor)
-                                            ),
-                                            padding:
-                                            EdgeInsets.all(0),
-
-                                            height:
-                                            MediaQuery.of(context).size.height * 0.21,
-                                            width:
-                                            double.infinity,
-                                            child:
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text(AppStrings.noDataFound),
-                                            ),
-                                          )),
-                                    );
-                                  },
-                                ),
+                        child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxHeight:
+                                AppConstants.getExpandedListHeight(secondModel.tables.isEmpty,secondModel.tables.length)),
+                            child: (secondModel.tables.length>0)
+                                ? ViewAppointmentListWidget(
+                              tables: secondModel.tables,
+                              homeScreenViewModel: model,
+                            ) : Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color:
+                                Colors.white,
+                                  border: Border.all(color: AppColors.lightGrayDotColor)
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  }),
+                              padding:
+                              EdgeInsets.all(0),
+
+                              height:
+                              MediaQuery.of(context).size.height * 0.21,
+                              width:
+                              double.infinity,
+                              child:
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(AppStrings.noDataFound),
+                              ),
+                            )),
+                      );
+                    },
+                  ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+              ),
             ),
           );
         },

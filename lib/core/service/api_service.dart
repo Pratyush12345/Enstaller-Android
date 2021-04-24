@@ -175,9 +175,6 @@ class ApiService extends BaseApi{
     print(credentials.toJson());
     return postRequestMap(ApiUrls.updateAppointmentStatusUrl, (r) {
       final response = json.decode(r.body);
-      print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-      print(response);
-      print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
       
       if (response) {
         
@@ -248,6 +245,28 @@ class ApiService extends BaseApi{
 
         }, 'intappointmentId=$appointmentID') ;
   }
+
+  Future <dynamic> updateCallForwardAppointment(String appointmentID){
+    return getRequestWithParam(ApiUrls.updateCallForwardAppointment,
+            (r) {
+          final response = json.decode(r.body);
+      
+          if (response) {
+        
+        return ResponseModel(
+            statusCode: 1,
+            response: 'Successfully Updated'
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: 'Please try again'
+        );
+      }
+          
+        }, 'intId=$appointmentID') ;
+  }
+
   Future<dynamic> submitSurveyAnswer(AnswerCredential credentials){
 
     return postRequest(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
@@ -258,9 +277,6 @@ class ApiService extends BaseApi{
           response: 'Successfully Updated'
       );
     },credentials.toJson());
-
-
-
   }
 
   Future<dynamic> onclickpdf( PDFOpenModel pdFopenModel){

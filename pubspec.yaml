@@ -62,7 +62,7 @@ dependencies:
   html: ^0.14.0+4 
   dropdown_below: ^0.0.6 
   flutter_image_compress:
-  
+  syncfusion_flutter_pdfviewer:
 
 
 

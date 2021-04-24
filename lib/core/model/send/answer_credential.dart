@@ -81,4 +81,6 @@ class AbortAppointmentReasonModel {
 class GlobalVar{
   static String abortReason = "";
   static bool isloadAppointmentDetail = false;
+  static bool isloadDashboard = false;
+  
 }

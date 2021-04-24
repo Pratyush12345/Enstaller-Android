@@ -53,8 +53,8 @@ class LogInViewModel extends BaseModel{
       Prefs.setUserProfile(response.userDetails);
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('ups', passwordController.text);
-
-      Navigator.of(context).pushNamed("/home");
+       print("replaceeeeeeeeeeeeeeeeeee");
+      Navigator.of(context).pushReplacementNamed("/home");
     }
   }
 }

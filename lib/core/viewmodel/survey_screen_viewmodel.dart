@@ -24,7 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 class SurveyScreenViewModel extends BaseModel {
   ApiService _apiService = ApiService();
   List<SurveyResponseModel> _surveyQuestion = [];
-  List<SurveyResponseModel> _localSurveyQuestion = [];
+  List<SurveyResponseModel> localSurveyQuestion = [];
   List<String> _listofLocalSurveyQuestion = [];
   Map<int, List<SurveyResponseModel>> sectionQuestions = {};
   Map<int, List<SurveyResponseModel>> _sectionQuestions = {};
@@ -35,7 +35,7 @@ class SurveyScreenViewModel extends BaseModel {
   Map<int, List> sectionEnableQuestions = {};
   List<SectionDisableModel> _listSectionDisable = [];
   List<String> _listSectionDisableString = [];
-  int selected = 0;
+  int selected = 0, currentSectionId = 0;
   int enableIndex = 0;
   Set<String> _setofUnSubmittedForm = {};
   UserModel user;
@@ -83,32 +83,32 @@ class SurveyScreenViewModel extends BaseModel {
       _listSectionDisableString =  _preferences.getStringList("disabled+$appointmentID")??[];
 
       final dir = await path_provider.getTemporaryDirectory();
-       print("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
-     print(_listofLocalSurveyQuestion.length);
-     
-     print("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
-   
-      if(_listofLocalSurveyQuestion.isNotEmpty)
+      
+      if(_listofLocalSurveyQuestion.isNotEmpty){
       _listofLocalSurveyQuestion.forEach((element) { 
         SurveyResponseModel surveyResponseModel = SurveyResponseModel.fromLocalJson(jsonDecode(element), dir.absolute.path);
-        print("---------------------");
-        print(surveyResponseModel.validate);
-        print("---------------------"); 
-        _localSurveyQuestion.add(surveyResponseModel);
+        localSurveyQuestion.add(surveyResponseModel);
       });
 
       if(_listSectionDisableString.isNotEmpty)
       _listSectionDisableString.forEach((element) { 
          _listSectionDisable.add(SectionDisableModel.fromJson(jsonDecode(element)));
       });
-
-      _localSurveyQuestion.forEach((element) { 
+       
+       int lastsection = localSurveyQuestion[0].intSectionId;
+        selected =1; 
+      localSurveyQuestion.forEach((element) { 
          int index = _surveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
-
           if(index!=-1) 
           _surveyQuestion[index] = element;
           
+          if(element.intSectionId!=lastsection){
+            selected++;
+            
+            lastsection = element.intSectionId;
+          }
       });
+      }
 
       _surveyQuestion.forEach((element) {
         List<SurveyResponseModel> list = [];
@@ -129,12 +129,6 @@ class SurveyScreenViewModel extends BaseModel {
       });
       _surveyQuestion.forEach((element) {
         if (_sectionQuestions[element.intSectionId].indexOf(element) == -1){
-          // int index = _localSurveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
-          //  if(index ==-1){
-          //    _sectionQuestions[element.intSectionId].add(element);
-          //  }else{
-          //    _sectionQuestions[element.intSectionId].add(_localSurveyQuestion[index]);
-          // }
            _sectionQuestions[element.intSectionId].add(element);
         }
        
@@ -212,12 +206,6 @@ class SurveyScreenViewModel extends BaseModel {
         }
           
           if (sectionQuestions[element.intSectionId].indexOf(element) == -1){
-          //  int index = _localSurveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
-          //   if(index == -1){
-          //   sectionQuestions[element.intSectionId].add(element);
-          //   }else{
-          //   sectionQuestions[element.intSectionId].add(_localSurveyQuestion[index]);
-          //   }
              sectionQuestions[element.intSectionId].add(element);
           }
           print('added${element.intQuestionNo}');
@@ -353,16 +341,12 @@ class SurveyScreenViewModel extends BaseModel {
       sectionQuestions[key] = [];
     });
     _surveyQuestion.forEach((element) {
-      print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-      print(surveyResponseModel.intQuestionNo);
-      print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
       if (_sectionQuestions[element.intSectionId].indexOf(element) == -1)
         _sectionQuestions[element.intSectionId].add(element);
       if (element.strQuestiontype == 'YN' && surveyResponseModel.intQuestionNo == element.intQuestionNo) {
           
           if (element.yesNoPressedVal == 1) {
-            print("11111111111111111111111111111111111111111111111111111111");
-          if ((element.strDisableQuestions != null &&
+            if ((element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty) || (element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty)) {
                 
@@ -449,7 +433,6 @@ class SurveyScreenViewModel extends BaseModel {
           
         } 
         else if (element.yesNoPressedVal == 0 && surveyResponseModel.intQuestionNo == element.intQuestionNo) {
-          print("0000000000000000000000000000000000000000");
           if ((element.strDisableQuestions != null &&
               element.strDisableQuestions.isNotEmpty) || (element.strEnableQuestions != null &&
               element.strEnableQuestions.isNotEmpty)) {
@@ -683,7 +666,9 @@ class SurveyScreenViewModel extends BaseModel {
             
             if(enablenumberString!=null || disablenumberString!=null ){
             for (int i = 76; i <= 99; i++) {
-              
+              enablenumberString = enablenumberString??"";
+              disablenumberString = disablenumberString??"";
+             
               if(enablenumberString.contains(i.toString())) {
                 if (sectionDisableQuestions[element.intSectionId]
                   .contains(i.toString())) {
@@ -787,15 +772,18 @@ class SurveyScreenViewModel extends BaseModel {
           sectionQuestions.forEach((key, value) {
              value.forEach((element) { 
                  
-                 int index = _localSurveyQuestion.indexWhere((e) => e.intQuestionNo == element.intQuestionNo);
+                 if(key <= currentSectionId){
+                 int index = localSurveyQuestion.indexWhere((e) => e.intQuestionNo == element.intQuestionNo);
                  if(index ==-1){
                    
-                   _localSurveyQuestion.add(element);
+                   localSurveyQuestion.add(element);
                   _listofLocalSurveyQuestion.add(jsonEncode(element.toLocalJson())); 
                  }else{
-                   _localSurveyQuestion[index] = element;
+                   localSurveyQuestion[index] = element;
                   _listofLocalSurveyQuestion[index] = (jsonEncode(element.toLocalJson())); 
                  }
+                 }
+
              });
 
           });
@@ -812,9 +800,10 @@ class SurveyScreenViewModel extends BaseModel {
   }
   
   
-  void incrementCounter(bool isedit, String appointmentId) {
+  void incrementCounter(bool isedit, String appointmentId, int _currentSectionId) {
     setState(ViewState.Busy);
     if(isedit){
+      print("tttttttttttttt");
      if (selected < sectionQuestions.keys.length - 1) {
       selected++;
     }
@@ -822,6 +811,7 @@ class SurveyScreenViewModel extends BaseModel {
     if (selected < sectionQuestions.keys.length - 2) {
       selected++;
     }
+    currentSectionId = _currentSectionId;
     _saveDataLocally(appointmentId);
     }
     setState(ViewState.Idle);
@@ -863,6 +853,7 @@ class SurveyScreenViewModel extends BaseModel {
             //await Future.delayed(Duration(seconds: 1));
             AppConstants.showSuccessToast(context, "Survey Aborted");
             GlobalVar.isloadAppointmentDetail = true;
+            GlobalVar.isloadDashboard = true;
             
           }
           else{

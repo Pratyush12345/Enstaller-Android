@@ -25,6 +25,7 @@ class ApiUrls{
   static String getSMSClickSendNotificationUserWise = 'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
   static String getMAICheckProcess = 'DCCMAI/GetMAICheckProcess';
   //order
+  static String updateCallForwardAppointment  = 'appointments/UpdateCallForwardAppointment';
   static String getItemsForOrder  = 'Order/BindUserContractWiseItemModel';
   static String getContractsForOrder  = 'Location/GetStockContractList';
   static String saveOrder='Order/InsertUpdateDeleteOrder';

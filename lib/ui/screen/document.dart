@@ -56,7 +56,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
               title: model.searchBool
                   ? TextField(
                       decoration:
-                          InputDecoration(hintText: AppStrings.searchHere),
+                          InputDecoration(hintText: AppStrings.searchHere,
+                          hintStyle: TextStyle(color: Colors.white ),
+                          enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white,
+                          )
+                          ),
+                          ),
                       onChanged: (val) {
                         model.onSearch(val);
                       },
@@ -161,7 +167,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
                     flex: 3,
                     child: Text(
                       document?.strDocType ?? "",
-                      style: TextStyle(color: AppColors.darkGrayColor),
+                      style: TextStyle(color: (document.bisEngineerRead ||
+                                    model.isfileopened[
+                                        document.intId.toString()])? AppColors.darkGrayColor :Colors.white),
                       textAlign: TextAlign.start,
                     )),
               ],
@@ -191,10 +199,12 @@ class _DocumentScreenState extends State<DocumentScreen> {
                         String _url = document.strValue +
                             "Upload/SupplierDoc/" +
                             document.strFileName;
+                         print("url...................$_url");   
                         String doc = await model.pdfview(_url);
+                        print("doc..............................$doc");
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => DocumentView(
-                                  doc: doc,
+                                  doc: _url,
                                 )));
                         model.onPDFOpen(context, document?.intId.toString());
                       },

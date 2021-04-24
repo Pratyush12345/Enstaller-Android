@@ -101,10 +101,11 @@ class SurveyResponseModel {
   factory SurveyResponseModel.fromLocalJson(Map<String, dynamic> json, String path) {
        
       File img; 
-      if(json["image"]!=null && json["imagePath"]!=null){
-         img = File("$path/${json["imagePath"]}/test.png");
-         img.writeAsStringSync(json["image"]);
-      }
+      // if(json["image"]!=null && json["imagePath"]!=null){
+      //    img = File("$path/${json["imagePath"]}/test.png");
+      //    print("image data ...............................................${json["image"]}");
+      //    img.writeAsStringSync(json["image"]);
+      // }
 
       return SurveyResponseModel(
         intId: json["intId"],

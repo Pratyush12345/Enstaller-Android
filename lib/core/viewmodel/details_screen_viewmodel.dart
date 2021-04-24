@@ -185,6 +185,23 @@ class DetailsScreenViewModel extends BaseModel {
               intId: appointmentID));
       if (response.statusCode == 1) {
               GlobalVar.isloadAppointmentDetail = true;
+              GlobalVar.isloadDashboard = true;
+      } else {
+        AppConstants.showFailToast(context, response.response);
+      }
+    
+  }
+  void onUpdateStatusOnRoute(BuildContext context, String appointmentID) async {
+      
+      ResponseModel response = await _apiService.updateAppointmentStatus(
+          AppointmentStatusUpdateCredentials(
+              strStatus: "On Route",
+              intBookedBy: user.intEngineerId.toString(),
+              intEngineerId: user.intEngineerId.toString(),
+              strEmailActionby: "Send by Engineer",
+              intId: appointmentID));
+      if (response.statusCode == 1) {
+              GlobalVar.isloadDashboard = true;
       } else {
         AppConstants.showFailToast(context, response.response);
       }
@@ -201,6 +218,7 @@ class DetailsScreenViewModel extends BaseModel {
               intId: appointmentID) );
       if (response.statusCode == 1) {
               GlobalVar.isloadAppointmentDetail = true;
+              GlobalVar.isloadDashboard = true;
       } else {
         AppConstants.showFailToast(context, response.response);
       }

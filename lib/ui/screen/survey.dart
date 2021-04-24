@@ -49,6 +49,8 @@ class SurveyScreen extends StatefulWidget {
 class _SurveyScreenState extends State<SurveyScreen> {
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  ScrollController scrollController = ScrollController();
+  
   Map<String, String> _processid = {
     "EMREM": "6",
     "GMREM": "81",
@@ -93,6 +95,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 return AppConstants.circulerProgressIndicator();
               } else {
                 return SingleChildScrollView(
+                  controller: scrollController,
                   child: Column(
                     children: [
                       SizedBox(
@@ -110,6 +113,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               model.sectionAnswers.keys.isEmpty
                           ? Center(child: Text(AppStrings.surveyDataNotFound))
                           : ListView.builder(
+                              controller: scrollController,
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               key: Key('builder ${model.selected.toString()}'),
@@ -235,7 +239,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
     
   }
-
+  void scrollup(){
+    scrollController.jumpTo(10.0);
+  }
+  
   //column data
   Widget _getColumnData(
       SurveyResponseModel surveyResponseModel, SurveyScreenViewModel model) {
@@ -356,7 +363,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               print("llllllllllllllllllllll");
                               if (validateconter == questions.length) {
                                 print('inside next');
-                                model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID);
+                                model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, questions[0].intSectionId);
+                                scrollup();
                                 print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
                                 print(questions[0].strSectionName);
                                 print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
@@ -377,7 +385,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               }
                             } else {
                               print("ffffffffff");
-                              model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID);
+                              print(questions[0].intSectionId);
+                              model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, questions[0].intSectionId);
                             }
                           },
                         ),
@@ -432,7 +441,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 color: AppColors.green,
                                 buttonText: AppStrings.next,
                                 onTap: () {
-                                  model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID);
+                                  
+                                  model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, 1);
                                 },
                               )
                             : Container(),
@@ -523,6 +533,34 @@ class _SurveyScreenState extends State<SurveyScreen> {
       ],
     );
   }
+  Widget _getImageWidget(SurveyResponseModel surveyResponseModel, SurveyScreenViewModel model){
+
+    int index = model.localSurveyQuestion.indexWhere((element) => 
+    element.intQuestionNo == surveyResponseModel.intQuestionNo && element.imagePath == surveyResponseModel.imagePath);
+    
+    try{
+      print("indexxxxxxxxxxxxxxxxxxxxxxxxxx........................$index");
+      if(index != -1){
+           model.localSurveyQuestion.removeAt(index);
+           return ShowBase64Image(
+                  base64String: surveyResponseModel.validate
+                  .replaceAll('data:image/png;base64,', ''));
+      } 
+       return Image.file(
+              surveyResponseModel?.image,
+              height: 100,
+              width: 100,
+              );
+
+    }catch(e){
+      print(e);
+      return ShowBase64Image(
+                  base64String: surveyResponseModel.validate
+                  .replaceAll('data:image/png;base64,', ''));
+                      
+      
+    } 
+  }
 
   Widget _getTypeWidget(SurveyResponseModel surveyResponseModel,
       SurveyScreenViewModel model, bool showMessage) {
@@ -535,6 +573,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
           }
           else if(surveyResponseModel.strRequireExplanation.trim() == "No"){
             reqexp = "false";
+          }
+          if(surveyResponseModel.yesNoPressedVal ==0){
+           surveyResponseModel.requireExplainationstr= "";
           }
           if (model.sectionDisableQuestions[surveyResponseModel.intSectionId]
               .contains(surveyResponseModel.intQuestionNo.toString()) 
@@ -652,7 +693,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           ),
                         ],
                       ),
-                      if(reqexp == surveyResponseModel?.validate&& reqexp!=null)
+                      if(reqexp == surveyResponseModel?.validate && reqexp!=null)
                       Column(
                         children: [
                           MyTile2(
@@ -690,8 +731,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
         for (var item in arr) {
           itemList.add(item.replaceAll(new RegExp(r"\s+"), " "));
         }
-        final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
-
+          final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
+        
         return Column(
           children: [
             Consumer<OnChangeYesNo>(
@@ -702,28 +743,59 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
                }
                else{
+                 
+                 bool reqexp;
+        
+          if(surveyResponseModel.strRequireExplanation?.trim() == "Other" && int.parse(surveyResponseModel?.validate??"2000") >=2007 ){
+            reqexp = true;
+          }
+          else {
+            reqexp = false;
+          }
+          if(surveyResponseModel.validate?.trim() != "Other"){
+           surveyResponseModel.requireExplainationstr= "";
+          }
+        
                return Column(
                  children: [
                     _getQuestion(surveyResponseModel),
-                   CustomDropDown(
-                    hintText: surveyResponseModel?.dropDownValue,
-                    items: itemList.map((String val) {
-                      return CustomDropDownItems(val, val);
-                    }).toList(),
-                    height: SizeConfig.screenHeight * 0.8,
-                    width: SizeConfig.screenWidth,
-                    callback: (String val) {
-                      print('object');
-                      print('val==$val');
-                      // setState(() {
-                      surveyResponseModel?.dropDownValue = val;
-                      surveyResponseModel?.validate = val;
-                      // });
-                      model.onChangeYesNo(surveyResponseModel);
-                      onchange.setState();
-                      
-                    },
+                   Column(
+                     children: [
+                       CustomDropDown(
+                        hintText: surveyResponseModel?.dropDownValue,
+                        items: itemList.map((String val) {
+                          return CustomDropDownItems(val, val);
+                        }).toList(),
+                        height: SizeConfig.screenHeight * 0.8,
+                        width: SizeConfig.screenWidth,
+                        callback: (String val) {
+                          print('object');
+                          print('val==$val');
+                          // setState(() {
+                          surveyResponseModel?.dropDownValue = val;
+                          surveyResponseModel?.validate = val;
+                          // });
+                          model.onChangeYesNo(surveyResponseModel);
+                          onchange.setState();
+                          
+                        },
               ),
+              if(reqexp && reqexp!=null)
+              Column(
+                        children: [
+                          MyTile2(
+                            isOnlyNumeric: false,
+                            surveyResponseModel: surveyResponseModel,
+                          ),
+                          showMessage && surveyResponseModel?.requireExplainationstr == null
+                          ? ErrorTextWidget()
+                          : Container(),
+                      SizedBox(height: 10)
+                    
+                        ],
+                      ),
+                     ],
+                   ),
               showMessage && surveyResponseModel?.validate == null && surveyResponseModel?.isMandatoryOptional =="M"
                 ? ErrorTextWidget()
                 : Container(),
@@ -744,50 +816,54 @@ class _SurveyScreenState extends State<SurveyScreen> {
               .contains(surveyResponseModel.intQuestionNo.toString())) {
             return Container();
           } else {
+            print("survey  nnnnnnnnnnnnnnnnnnnnnnnn................${surveyResponseModel.validate}");
             return Column(
               children: [
                 // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 InkWell(
                   onTap: () {
-                    _showMyDialog(surveyResponseModel: surveyResponseModel);
+                    _showMyDialog(surveyResponseModel: surveyResponseModel,
+                    model : model);
                   },
-                  child: (surveyResponseModel?.image == null)
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10.0, left: 10.0, right: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Color(0xFFF05A22),
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  AppStrings.choosePhoto,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
+                  child: (surveyResponseModel?.imagePath == null)
+                      ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10.0, left: 10.0, right: 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xFFF05A22),
+                                    style: BorderStyle.solid,
+                                    width: 1.0,
+                                  ),
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      AppStrings.choosePhoto,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 1,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      : Image.file(
-                          surveyResponseModel?.image,
-                          height: 100,
-                          width: 100,
-                        ),
+                            Text("")
+                        ],
+                      )
+                        : _getImageWidget(surveyResponseModel, model)
                 ),
                 showMessage && surveyResponseModel?.validate == null && surveyResponseModel?.isMandatoryOptional =="M"
                     ? ErrorTextWidget()
@@ -989,7 +1065,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     widget.arguments.dsmodel.electricGasMeterList
                                     );
                   },
-                  child: (surveyResponseModel.image == null)
+                  child: (surveyResponseModel.imagePath == null)
                       ? Padding(
                           padding: const EdgeInsets.only(
                               top: 10.0, left: 10.0, right: 20),
@@ -1196,7 +1272,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   Future<void> _showMyDialog(
-      {SurveyResponseModel surveyResponseModel, File image}) async {
+      {SurveyResponseModel surveyResponseModel, File image, SurveyScreenViewModel model}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -1217,6 +1293,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         mImage: image,
                         context: context,
                         imageSource: ImageSource.gallery,
+                        model: model
                       );
                     },
                     child: new CircleAvatar(
@@ -1249,6 +1326,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         mImage: image,
                         context: context,
                         imageSource: ImageSource.camera,
+                        model: model
                       );
                     },
                     child: new CircleAvatar(
@@ -1288,6 +1366,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 //chooose file
   Future<void> _choosFile(
       {SurveyResponseModel surveyResponseModel,
+      SurveyScreenViewModel model,
       File mImage,
       BuildContext context,
       ImageSource imageSource}) async {
@@ -1314,8 +1393,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
         String base64Image = base64Encode(compressedFile);
         print('image$base64Image');
 //        String base64Image = BASE64.encode(imageBytes);
-        surveyResponseModel.validate = 'data:image/png;base64,' + base64Image;
-
+        surveyResponseModel?.validate = 'data:image/png;base64,' + base64Image;
+        
         ///have to work
       });
     }
@@ -1338,11 +1417,24 @@ class MyTile extends StatefulWidget {
 // A custom list tile
 class _MyTileState extends State<MyTile> {
   // Initalliy make the TextField uneditable.
-  bool editable = false;
+  bool editable =false ;
   TextEditingController controller = TextEditingController();
+  FocusNode _focusNode;
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -1352,9 +1444,14 @@ class _MyTileState extends State<MyTile> {
         children: <Widget>[
           Expanded(
             child: TextField(
+              readOnly: !editable,
+              autofocus: editable,
+              focusNode: _focusNode,
               maxLines: null,
-              controller: controller..text = widget.surveyResponseModel.validate,
-              enabled: editable,
+              controller: controller
+              ..text = widget.surveyResponseModel.validate
+              ..selection = controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length)),
+              enabled: true,
               keyboardType: widget.isOnlyNumeric
                   ? TextInputType.number
                   : TextInputType.text,
@@ -1386,11 +1483,13 @@ class _MyTileState extends State<MyTile> {
             child: Text(!editable ? AppStrings.edit : AppStrings.done),
             onPressed: () {
               // When edit is pressed, make the editable true
-              FocusScope.of(context).unfocus();
+              
               setState(() {
+
                 editable = !editable;
                 if (controller.text != '') {
                   widget.surveyResponseModel.validate = controller.text;
+                  
                 }
                 else{
                     widget.surveyResponseModel.validate = null;
@@ -1398,6 +1497,12 @@ class _MyTileState extends State<MyTile> {
                 final onchange = Provider.of<OnChangeYesNo>(context, listen: false).setState();
   
               });
+              if(editable){
+                   _focusNode.requestFocus();
+                   
+              }else{
+                _focusNode.unfocus();
+              }
             },
           )
         ],
@@ -1422,6 +1527,18 @@ class _MyTile2State extends State<MyTile2> {
   // Initalliy make the TextField uneditable.
   bool editable = false;
   TextEditingController controller = TextEditingController();
+  FocusNode _focusNode;
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1434,9 +1551,14 @@ class _MyTile2State extends State<MyTile2> {
         children: <Widget>[
           Expanded(
             child: TextField(
+              autofocus: editable,
+              focusNode: _focusNode,
               maxLines: null,
-              controller: controller..text = widget.surveyResponseModel.requireExplainationstr,
-              enabled: editable,
+              controller: controller
+              ..text = widget.surveyResponseModel.requireExplainationstr
+              ..selection = controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length)),
+              enabled: true,
+              readOnly: !editable,
               keyboardType: widget.isOnlyNumeric
                   ? TextInputType.number
                   : TextInputType.text,
@@ -1465,13 +1587,18 @@ class _MyTile2State extends State<MyTile2> {
             child: Text(!editable ? AppStrings.edit : AppStrings.done),
             onPressed: () {
               // When edit is pressed, make the editable true
-              FocusScope.of(context).unfocus();
+              //FocusScope.of(context).unfocus();
               setState(() {
                 editable = !editable;
                 if (controller.text != '') {
                   widget.surveyResponseModel.requireExplainationstr = controller.text;
                 }
               });
+              if(editable){
+                   _focusNode.requestFocus();
+              }else{
+                _focusNode.unfocus();
+              }
             },
           )
         ],

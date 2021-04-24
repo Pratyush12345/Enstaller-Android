@@ -53,7 +53,13 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
               title: model.searchBool
                   ? TextField(
                       decoration:
-                          InputDecoration(hintText: AppStrings.searchHere),
+                          InputDecoration( hintText: AppStrings.searchHere,
+                          hintStyle: TextStyle(color: Colors.white ),
+                          enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white,
+                          )
+                          ),
+                          ),
                       onChanged: (val) {
                         model.onSearch(val);
                       },

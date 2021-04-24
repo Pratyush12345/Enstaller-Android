@@ -69,6 +69,7 @@ class Appointment {
   String strEmailActionby;
   int intjumborequestid;
   int intjumboresponseid;
+  bool bCompleteForwardCall;
 
   Appointment(
       {this.intId,
@@ -113,7 +114,8 @@ class Appointment {
         this.surveyReceived,
         this.strEmailActionby,
         this.intjumborequestid,
-        this.intjumboresponseid});
+        this.intjumboresponseid,
+        this.bCompleteForwardCall});
 
   Appointment.fromJson(Map<String, dynamic> json) {
     intId = json['intId'];
@@ -159,7 +161,7 @@ class Appointment {
     strEmailActionby = json['strEmailActionby'];
     intjumborequestid = json['jumborequest_id'];
     intjumboresponseid = json['jumboresponse_id'];
-    
+    bCompleteForwardCall = json["bCompleteForwardCall"];
   }
 
   Map<String, dynamic> toJson() {
@@ -207,6 +209,7 @@ class Appointment {
     data['strEmailActionby'] = strEmailActionby ;
     data['jumborequest_id'] = intjumborequestid;
     data['jumboresponse_id'] = intjumboresponseid;
+    data["bCompleteForwardCall"] = bCompleteForwardCall;
     return data;
   }
 }
