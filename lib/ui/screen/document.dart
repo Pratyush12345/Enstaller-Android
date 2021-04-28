@@ -200,8 +200,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
                             "Upload/SupplierDoc/" +
                             document.strFileName;
                          print("url...................$_url");   
-                        String doc = await model.pdfview(_url);
-                        print("doc..............................$doc");
+                        //String doc = await model.pdfview(_url);
+                        //print("doc..............................$doc");
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => DocumentView(
                                   doc: _url,

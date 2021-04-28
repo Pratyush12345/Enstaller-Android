@@ -8,6 +8,8 @@ import 'package:enstaller/core/model/contract_order_model.dart';
 import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/comment_model.dart';
+import 'package:enstaller/core/model/elec_closejob_model.dart';
+import 'package:enstaller/core/model/gas_job_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
 import 'package:enstaller/core/model/order_detail_model.dart';
 import 'package:enstaller/core/model/order_export_model.dart';
@@ -130,6 +132,42 @@ class ApiService extends BaseApi{
       }
     },credentials.toJson());
   }
+  Future<dynamic> saveElecJob(ElecCloseJobModel credentials){
+    print(credentials.toJson());
+    return postRequestMap(ApiUrls.saveCloseJobElectricity, (r) {
+      final response = json.decode(r.body);
+      if (response) {
+        return ResponseModel(
+            statusCode: 1,
+            response: 'Successfully Saved'
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: 'Please try again'
+        );
+      }
+    },credentials.toJson());
+  }
+
+  Future<dynamic> saveGasJob(GasCloseJobModel credentials){
+    print(credentials.toJson());
+    return postRequestMap(ApiUrls.saveCloseJobGas, (r) {
+      final response = json.decode(r.body);
+      if (response) {
+        return ResponseModel(
+            statusCode: 1,
+            response: 'Successfully Saved'
+        );
+      }else{
+        return ResponseModel(
+            statusCode: 0,
+            response: 'Please try again'
+        );
+      }
+    },credentials.toJson());
+  }
+
   Future<dynamic> getDocumentList(DocumentModel documentModel){
     print(documentModel.toJson());
     return postRequest(ApiUrls.getSupplierDocument, (r) {
@@ -310,6 +348,16 @@ class ApiService extends BaseApi{
 
         }, 'intCustomerId=$customerID') ;
   }
+
+  Future <dynamic> getTableById(String appointmentID){
+    return getRequestWithParam(ApiUrls.getJmbCloseAppointmentData,
+            (response) {
+          print(response.body);
+          return CheckCloseJobModel.fromJson(json.decode(response.body));
+
+        }, 'appointmentId=$appointmentID') ;
+  }
+
   Future <dynamic> getEngineerAppointments(String engeenerID,String date){
     return getRequestWithParam(ApiUrls.getEngineerAppointmentsUrl,
             (response) {

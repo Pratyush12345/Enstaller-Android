@@ -4,6 +4,7 @@ import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/activity_details_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/customer_details.dart';
+import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:enstaller/core/model/electric_and_gas_metter_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
@@ -48,6 +49,7 @@ class DetailsScreenViewModel extends BaseModel {
       "SMETS2 3ph Elec": 7
     }
   };
+  CheckCloseJobModel  checkCloseJobModel;
   String pincode;
   ApiService _apiService = ApiService();
   List<Appointment> appointMentList = [];
@@ -95,7 +97,8 @@ class DetailsScreenViewModel extends BaseModel {
     electricGasMeterList =
         await _apiService.getCustomerMeterListByCustomer(customerID);
     customerDetails = await _apiService.getCustomerById(customerID);
-     
+    checkCloseJobModel= await _apiService.getTableById(appointmentID); 
+    
     int id = _checkbuttonindex(appointmentDetails);
     if(id!=null){
     if(id!=2 && id!=6){

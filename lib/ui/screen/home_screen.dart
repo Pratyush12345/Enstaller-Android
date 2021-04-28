@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
@@ -55,13 +54,17 @@ class _HomeScreenState extends State<HomeScreen> {
   _listOfUnSubmittedForm.forEach((appointmentid) { 
     removeid = appointmentid;
        List<AnswerCredential> _answerlist = [];
+       String sectionName = "Not Abort";
        List<String> _listofEachKey = preferences.getStringList("key+$appointmentid");
        if(_listofEachKey!=null){
         _listofEachKey.forEach((element) { 
-           _answerlist.add(AnswerCredential.fromJson(jsonDecode(element)));
+           AnswerCredential answerCredential = AnswerCredential.fromJson(jsonDecode(element)); 
+           _answerlist.add(answerCredential);
+           if(int.parse(answerCredential.intsurveyid.trim()) == 8 || int.parse(answerCredential.intsurveyid.trim()) == 10 )
+           sectionName = "Abort";
         }); 
         preferences.remove("key+$appointmentid");
-        SurveyScreenViewModel().onSubmitOffline( appointmentid, _answerlist);
+        SurveyScreenViewModel().onSubmitOffline( appointmentid, _answerlist, sectionName);
        } 
      
   });

@@ -17,6 +17,7 @@ class ApiUrls{
   static String addSurveyQuestionAnswerDetailUrl='SurveyQuestionAnswer/AddSurveyQuestionAnswerDetail';
   static String supplierDocumentUpdateEngineerRead = 'SupplierDocument/SupplierDocumentUpdateEngineerRead';
   static String getCustomerByIdUrl='Customer/GetCustomerById';
+  static String getJmbCloseAppointmentData ='jmbClose/GetJmbCloseAppointmentData';
   static String getEngineerAppointmentsUrl='appointments/GetEngineerAppointments';
   static String getAppointmentByEngineerIdUrl='appointments/GetAppointmentByEngineerId';
   static String getSurveyQuestionAnswerDetailUrl='SurveyQuestionAnswer/GetSurveyQuestionAnswerDetail';
@@ -41,5 +42,7 @@ class ApiUrls{
   static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
   static String getStockOrderLineItemsByOrderId= 'Order/GetStockOrderLineItemsByOrderId';
   static String getSerialListByEmployeeId = 'stkEngineerWiseStock/GetSerialListByEmployeeId';
+  static String saveCloseJobElectricity = 'jmbCloseJob/SaveCloseJobElectricity';
+  static String saveCloseJobGas = 'jmbCloseJob/SaveCloseJobGas';
 
 }

@@ -10,7 +10,7 @@ class AppStrings {
   static const password = 'Password';
   static const completed = 'Completed';
   static const booked = 'Booked';
-  static const inRoute = 'InRoute';
+  static const inRoute = 'EnRoute';
   static const EnRoute = 'En Route';
   static const onSite = 'OnSite';
   static const started = 'Started';
@@ -87,7 +87,7 @@ class AppStrings {
   static const appointmentStatus = 'Appointment Status';
   static const addComment = 'Add Comment';
   static const abortappointmentCode = 'Abort Appointment code';
-  static const ADD_COMMENT = 'ADD COMMENT';
+  static const ADD_COMMENT = 'Add Comment';
   static const GET_DIRECTIONS = 'GET DIRECTIONS';
   static const noDataFound = 'No Data Found';
   static const subRegion = 'Sub Region';

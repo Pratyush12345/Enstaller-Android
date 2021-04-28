@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'dart:io';
 import 'package:barcode_scan/barcode_scan.dart';
@@ -34,7 +35,7 @@ class SurveyArguments {
   String appointmentID;
   bool edit;
   DetailsScreenViewModel dsmodel;
-  SurveyArguments({this.customerID,this.appointmentID, this.edit, this.dsmodel});
+  SurveyArguments({this.customerID,this.appointmentID, this.edit, this.dsmodel, });
 }
 
 class SurveyScreen extends StatefulWidget {
@@ -88,7 +89,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
           ),
           body: BaseView<SurveyScreenViewModel>(
             onModelReady: (model) => model.initializeData(
-                widget.arguments.appointmentID, widget.arguments.edit, context),
+                widget.arguments.appointmentID, widget.arguments.edit, context,  widget.arguments.dsmodel.checkCloseJobModel ),
             builder: (context, model, child) {
               if (model.state == ViewState.Busy) {
                 print('busyyyyyyyyyy');
@@ -746,7 +747,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                  
                  bool reqexp;
         
-          if(surveyResponseModel.strRequireExplanation?.trim() == "Other" && int.parse(surveyResponseModel?.validate??"2000") >=2007 ){
+          if(surveyResponseModel.strRequireExplanation?.trim() == "Other" && surveyResponseModel.validate?.trim() == "Other" ){
             reqexp = true;
           }
           else {
@@ -784,7 +785,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
               Column(
                         children: [
                           MyTile2(
-                            isOnlyNumeric: false,
+                            isOnlyNumeric: true,
                             surveyResponseModel: surveyResponseModel,
                           ),
                           showMessage && surveyResponseModel?.requireExplainationstr == null

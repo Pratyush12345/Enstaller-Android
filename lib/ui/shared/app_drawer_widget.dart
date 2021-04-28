@@ -9,6 +9,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
 import 'package:enstaller/ui/screen/check_request_screen.dart';
+import 'package:enstaller/ui/screen/elec_close_job.dart';
 import 'package:enstaller/ui/screen/email_notification.dart';
 import 'package:enstaller/ui/screen/add_order_screen.dart';
 import 'package:enstaller/ui/screen/order_screen.dart';
@@ -193,8 +194,6 @@ class AppDrawerWidget extends StatelessWidget {
                   Navigator.of(context).pushNamedAndRemoveUntil("/login",(Route<dynamic> route) => false);
                 },
               ),
-
-
             ],
           ),
         )

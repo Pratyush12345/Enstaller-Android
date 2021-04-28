@@ -1,5 +1,11 @@
 import 'dart:convert';
+import 'package:enstaller/core/model/elec_closejob_model.dart';
+import 'package:enstaller/core/model/send/appointmentStatusUpdateCredential.dart';
+import 'package:enstaller/ui/screen/both_close_job.dart';
+import 'package:enstaller/ui/screen/elec_close_job.dart';
+import 'package:enstaller/ui/screen/gas_close_job.dart';
 import 'package:enstaller/ui/util/onchangeyesnoprovider.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:connectivity/connectivity.dart';
@@ -41,6 +47,7 @@ class SurveyScreenViewModel extends BaseModel {
   UserModel user;
   final Connectivity _connectivity = Connectivity();
   List<AnswerCredential> answerList = [];
+  CheckCloseJobModel checkCloseJobModel;
   
   
   void onChangeSelected(int value) {
@@ -71,9 +78,10 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   
-  void initializeData(String appointmentID, bool edit, BuildContext context) async {
+  void initializeData(String appointmentID, bool edit, BuildContext context, CheckCloseJobModel closeJobModel) async {
     setState(ViewState.Busy);
     user = await Prefs.getUser();
+    checkCloseJobModel = closeJobModel;
     if (!edit) {
       
       _surveyQuestion =
@@ -904,7 +912,15 @@ class SurveyScreenViewModel extends BaseModel {
              
             AppConstants.showSuccessToast(context, "Survey Submitted");
             //Navigator.of(context).pop("Sign Off");
-            openJumboTab(dsmodel, appointmentid);
+
+            if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: checkCloseJobModel.table , fromTab: false,)));
+            else if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "GAS")
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: checkCloseJobModel.table, fromTab: false,)));
+            else if(checkCloseJobModel.table.length ==2)
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: checkCloseJobModel.table)));
+                                       
+            //openJumboTab(dsmodel, appointmentid);
             
           }
           else{
@@ -1025,8 +1041,14 @@ setState(ViewState.Idle);
 
 
   void onSubmitOffline(String appointmentid,
-      List<AnswerCredential> _listofanswer) async {
+      List<AnswerCredential> _listofanswer, String sectionName) async {
     print("**********offline********");
+    String abortReason = "";
+
+    if(sectionName == "Abort"){
+      abortReason = _listofanswer[0].stranswer;
+    }
+
     try {
       ConnectivityResult result = await _connectivity.checkConnectivity();
       String status = _updateConnectionStatus(result);
@@ -1034,9 +1056,33 @@ setState(ViewState.Idle);
         ResponseModel responseModel =
             await _apiService.submitListSurveyAnswer(_listofanswer);
             SharedPreferences pref = await SharedPreferences.getInstance();
+            if(sectionName == "Abort"){
+            ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
+            AbortAppointmentReasonModel(
+              intId: int.parse( appointmentid),
+              isabort: true,
+              strCancellationReason: abortReason
+            )
+          );
+          print(abortreasonmodel.response);
+            }
+            else{
+               ResponseModel response = await _apiService.updateAppointmentStatus(
+          AppointmentStatusUpdateCredentials(
+              strStatus: "Completed",
+              intBookedBy: user.intEngineerId.toString(),
+              intEngineerId: user.intEngineerId.toString(),
+              strEmailActionby: "Send by Engineer",
+              intId: appointmentid) );
+              if (response.statusCode == 1) {
+                      GlobalVar.isloadAppointmentDetail = true;
+                      GlobalVar.isloadDashboard = true;
+              }
+            }
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");
         print(responseModel.response);
+        
       } else {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         List<String> _list = [];

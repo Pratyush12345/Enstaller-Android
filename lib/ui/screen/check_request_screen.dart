@@ -18,8 +18,10 @@ class CheckRequestScreen extends StatefulWidget {
 
 class _CheckRequestScreenState extends State<CheckRequestScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  
   @override
   Widget build(BuildContext context) {
+    
     return BaseView<CheckRequestViewModel>(
       onModelReady: (model) => model.initializeData(),
       builder: (context, model, child) {
@@ -68,8 +70,10 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
                                     SizeConfig.padding.copyWith(bottom: 100),
                                 child: Padding(
                                   padding: SizeConfig.verticalC13Padding,
-                                  child: Container(
+                                  child: Container( 
+                                    height: (MediaQuery.of(context).size.height /20) * model.list.length,
                                     decoration: BoxDecoration(
+                                      
                                         color: AppColors
                                             .appointmentBackGroundColor,
                                         borderRadius:
