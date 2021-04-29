@@ -3,14 +3,18 @@ import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:enstaller/core/model/gas_job_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/service/api_service.dart';
+import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/gas_close_job_viewmodel.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 class GasCloseJob extends StatefulWidget {
   final List<CheckTable> list;
   final bool fromTab;
-  GasCloseJob({@required this.list, @required this.fromTab});
+  final DetailsScreenViewModel dsmodel;
+  
+  GasCloseJob({@required this.list, @required this.fromTab, @required this.dsmodel});
   
   @override
   _GasCloseJobState createState() => _GasCloseJobState();
@@ -25,6 +29,18 @@ class _GasCloseJobState extends State<GasCloseJob> {
   Map<int, int> _registerCount;
   Map<int, int> _converterCount;
   bool _showIndicator = false;
+  showDateTimePicker(TextEditingController controller) async{
+    DateTime date = await showDatePicker(
+      context: context, 
+      initialDate: DateTime.now(), 
+      firstDate: DateTime(DateTime.now().year - 5), 
+      lastDate: DateTime(DateTime.now().year + 5)
+      );
+      setState(() {
+        controller.text = date.year.toString()+"/"+date.month.toString() + "/"+ date.day.toString();
+      });
+  }
+
 
   _callAPI() async {
 
@@ -53,7 +69,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
             else if(element.type == "checkBox" )
             json[element.jsonfield] = element.checkBoxVal;
     });
-
+   
    if(_metermap.isNotEmpty){
        Map<String, dynamic> meterjson;
       _metermap.forEach((meterkey, meterval) { 
@@ -106,6 +122,11 @@ class _GasCloseJobState extends State<GasCloseJob> {
       setState(() {
       });
       if (response.statusCode == 1) {
+        if(!widget.fromTab){
+           widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+         }else{
+           GlobalVar.gasCloseJob++;
+         }
          AppConstants.showSuccessToast(context, response.response);
       } else {
         AppConstants.showFailToast(context, response.response);
@@ -154,7 +175,24 @@ class _GasCloseJobState extends State<GasCloseJob> {
             ),
             SizedBox(
               height: 8.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "header") {
@@ -163,7 +201,10 @@ class _GasCloseJobState extends State<GasCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
               ),
             ),
             
@@ -200,7 +241,24 @@ class _GasCloseJobState extends State<GasCloseJob> {
             ),
             SizedBox(
               height: 12.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -229,16 +287,19 @@ class _GasCloseJobState extends State<GasCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       child: Row(
                         children: [
                           if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _registerCount[meterpos]) {
                                   _registermap[meterpos].remove(pos);
@@ -248,7 +309,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
                               },
                             ),
                           IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _registerCount[meterpos]) {
                                   _registerCount[meterpos]++;
@@ -296,7 +357,24 @@ class _GasCloseJobState extends State<GasCloseJob> {
             ),
             SizedBox(
               height: 12.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -325,7 +403,10 @@ class _GasCloseJobState extends State<GasCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
                       width: 100.0,
@@ -334,7 +415,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
                         children: [
                           if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _converterCount[meterpos]) {
                                   _convertersmap[meterpos].remove(pos);
@@ -344,7 +425,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
                               },
                             ),
                           IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _converterCount[meterpos]) {
                                   _converterCount[meterpos]++;
@@ -393,7 +474,24 @@ class _GasCloseJobState extends State<GasCloseJob> {
             ),
             SizedBox(
               height: 8.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -422,17 +520,20 @@ class _GasCloseJobState extends State<GasCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       child: Row(
                         children: [
                           
                              if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white),
                               onPressed: () {
                                 if (pos == GasJobViewModel.instance.meterCount) {
                                   _metermap.remove(pos);
@@ -444,7 +545,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
                               },
                             ),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
                                 if (pos == GasJobViewModel.instance.meterCount) {
                                   GasJobViewModel.instance.meterCount++;
@@ -520,7 +621,24 @@ class _GasCloseJobState extends State<GasCloseJob> {
             ),
             SizedBox(
               height: 8.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -548,10 +666,13 @@ class _GasCloseJobState extends State<GasCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? IconButton(
-                        icon: Icon(Icons.add),
+                        icon: Icon(Icons.add, color: Colors.white,),
                         onPressed: () {
                           GasJobViewModel.instance.meterCount++;
                           setState(() {});
@@ -619,14 +740,21 @@ class _GasCloseJobState extends State<GasCloseJob> {
     _converterCount = {};
     
     _formKey = GlobalKey<FormState>();
-    GasJobViewModel.instance.initialize(widget.list[0]);
-    
+    try{
+    CheckTable checkTable = widget.list.firstWhere((element) => element.strFuel.toString() == "GAS");
+    GasJobViewModel.instance.initialize(checkTable);
+    }catch(e){
+     GasJobViewModel.instance.initialize(widget.list[0]);
+      
+    }
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: !widget.fromTab? AppBar(title: Text("Gas Close Job"),):
+     appBar: !widget.fromTab? AppBar(
+       backgroundColor: AppColors.green,
+       title: Text("Gas Close Job"),):
      PreferredSize(
          preferredSize: Size.zero ,
          child: SizedBox(height: 0.0, width: 0.0,)) ,

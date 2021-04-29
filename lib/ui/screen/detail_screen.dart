@@ -362,11 +362,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                 });
                                 print("---------------------");
                                 if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false,)));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)));
                                 else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,)));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )));
                                 else if(model.checkCloseJobModel.table.length ==2 )
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table)));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)));
                                 
                                 // SharedPreferences pref = await SharedPreferences.getInstance();
                                 // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
@@ -377,6 +377,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           SizedBox(
                             height: 10.0,
                           ),
+                          if(model.appointmentDetails.appointment.bCompleteForwardCall)
                           Padding(
                             padding: SizeConfig.sidepadding,
                             child: AppButton(
@@ -394,6 +395,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                 ,
                             ),
                           ),
+                          if(model.appointmentDetails.appointment.bCompleteForwardCall)
                           SizedBox(
                             height: 10.0,
                           ),
@@ -669,9 +671,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   SizeConfig.horizontalSpaceSmall(),
                   Text(
-                    (model.appointmentDetails.appointment
-                            .appointmentEventType ??
-                        ""),
+                     model.appointmentDetails.appointment.appointmentEventType =="InRoute"? "EnRoute" : model.appointmentDetails.appointment.appointmentEventType ?? "",
                     style: getTextStyle(
                         color: AppColors.statusColor(model.appointmentDetails
                             .appointment.appointmentEventType),

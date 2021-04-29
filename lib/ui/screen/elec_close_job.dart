@@ -2,7 +2,9 @@ import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart' ;
 import 'package:enstaller/core/model/response_model.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/service/api_service.dart';
+import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/elec_job_viewmodel.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,9 @@ import 'package:flutter/material.dart';
 class ElecCloseJob extends StatefulWidget {
   final List<CheckTable> list;
   final bool fromTab;
-  ElecCloseJob({@required this.list, @required this.fromTab});
+  final DetailsScreenViewModel dsmodel;
+  
+  ElecCloseJob({@required this.list, @required this.fromTab, @required this.dsmodel});
   @override
   _ElecCloseJobState createState() => _ElecCloseJobState();
 }
@@ -166,6 +170,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       setState(() {
       });
       if (response.statusCode == 1) {
+         if(!widget.fromTab){
+           widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+         }else{
+           GlobalVar.elecCloseJob++;
+         }
          AppConstants.showSuccessToast(context, response.response);
       } else {
         AppConstants.showFailToast(context, response.response);
@@ -183,6 +192,18 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
     } else {
       print("Not validate");
     }
+  }
+
+  showDateTimePicker(TextEditingController controller) async{
+    DateTime date = await showDatePicker(
+      context: context, 
+      initialDate: DateTime.now(), 
+      firstDate: DateTime(DateTime.now().year - 5), 
+      lastDate: DateTime(DateTime.now().year + 5)
+      );
+      setState(() {
+        controller.text = date.year.toString()+"/"+date.month.toString() + "/"+ date.day.toString();
+      });
   }
 
   List<Widget> _getParticularWidgets(String headername, {int pos, int meterpos}) {
@@ -227,7 +248,24 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             ),
             SizedBox(
               height: 8.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "header") {
@@ -236,7 +274,10 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
               ),
             ),
             
@@ -275,7 +316,24 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             ),
             SizedBox(
               height: 8.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -303,10 +361,13 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? IconButton(
-                        icon: Icon(Icons.add),
+                        icon: Icon(Icons.add, color: Colors.white,),
                         onPressed: () {
                           ElecJobViewModel.instance.meterCount++;
                           setState(() {});
@@ -412,7 +473,14 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
     _usernamemap = {};
         
     _formKey = GlobalKey<FormState>();
+    try{
+    CheckTable checkTable = widget.list.firstWhere((element) => element.strFuel.toString() == "ELECTRICITY");
+    ElecJobViewModel.instance.initialize(checkTable);
+    
+    }catch(e){
     ElecJobViewModel.instance.initialize(widget.list[0]);
+      
+    }
     super.initState();
   }
 
@@ -420,7 +488,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: !widget.fromTab? AppBar(
-        title: Text("Elec Close Job"),
+        backgroundColor: AppColors.green,
+        title: Text("Electricity Close Job"),
       ):
       PreferredSize(
          preferredSize: Size.zero ,
@@ -465,7 +534,24 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             ),
             SizedBox(
               height: 8.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -494,17 +580,21 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       child: Row(
                         children: [
                           
                              if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white),
+                          
                               onPressed: () {
                                 if (pos == ElecJobViewModel.instance.meterCount) {
                                   _metermap.remove(pos);
@@ -519,7 +609,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                               },
                             ),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white),
                               onPressed: () {
                                 if (pos == ElecJobViewModel.instance.meterCount) {
                                   ElecJobViewModel.instance.meterCount++;
@@ -583,7 +673,24 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             ),
             SizedBox(
               height: 12.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -612,16 +719,19 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       child: Row(
                         children: [
                           if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _registerCount[meterpos]) {
                                   _registermap[meterpos].remove(pos);
@@ -633,7 +743,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                               },
                             ),
                           IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _registerCount[meterpos]) {
                                   _registerCount[meterpos]++;
@@ -688,7 +798,24 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             ),
             SizedBox(
               height: 12.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -717,16 +844,19 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       child: Row(
                         children: [
                           if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
                                 if (pos == ElecJobViewModel.instance.outStationCount) {
                                   _outStationmap.remove(pos);
@@ -741,7 +871,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                               },
                             ),
                           IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
                                 if (pos == ElecJobViewModel.instance.outStationCount) {
                                   ElecJobViewModel.instance.outStationCount++;
@@ -760,7 +890,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       }
       _list.add(clmn);
       if (element.type == "header" &&
-          element.strQuestion == "Code Of Practise") {
+          element.strQuestion == "Code Of Practice") {
         _list.addAll(_getParticularWidgets("CodeOfPractiseOS", pos: pos));
       }
       if (element.type == "checkBox" && element.strQuestion == "Comms") {
@@ -776,7 +906,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         _list.addAll(_getParticularWidgets("Password", pos: pos));
       }
       if (element.type == "header" &&
-          element.strQuestion == "Username") {
+          element.strQuestion == "Usernames") {
         _list.addAll(_getParticularWidgets("Usernames", pos: pos));
       }
     });
@@ -806,7 +936,24 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             ),
             SizedBox(
               height: 12.0,
-            )
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            AppButton(
+              onTap: (){
+                showDateTimePicker(element.textController);
+                },
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 40,
+              radius: 10,
+              color: AppColors.red,
+              buttonText: "Pick Date", 
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0
+              ),                         
+            ),
+            if(element.strQuestion.toLowerCase().contains("date"))
+            SizedBox(height: 8.0,)
           ],
         );
       } else if (element.type == "checkBox") {
@@ -835,17 +982,20 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             Container(
               color: AppColors.green,
               child: ListTile(
-                title: Text("${element.strQuestion}"),
+                title: Text("${element.strQuestion}",
+                style: TextStyle(
+                  color: AppColors.whiteColor
+                ),),
                 trailing: element.isMandatory
                     ? Container(
-                      height: 30.0,
+                      height: 40.0,
                       width: 100.0,
                       child: Row(
                         children: [
 
                           if(pos != 0)
                              IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _commsCount[outStationpos]) {
                                   _commsmap[outStationpos].remove(pos);
@@ -855,7 +1005,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                               },
                             ),
                           IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
                                 if (pos == _commsCount[outStationpos]) {
                                   _commsCount[outStationpos]++;

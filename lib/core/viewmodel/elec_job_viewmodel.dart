@@ -397,7 +397,7 @@ class ElecJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strMeterMemoryLocationTypeR", 
-      strQuestion: "strMeterMemoryLocationTypeR", textController: TextEditingController(),
+      strQuestion: "Meter Memory Location Type", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
@@ -518,7 +518,7 @@ class ElecJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: null, 
-      strQuestion: "Code Of Practise", textController: null,
+      strQuestion: "Code Of Practice", textController: null,
       type: "header" , isMandatory: false
     ),
     CloseJobQuestionModel(
@@ -613,12 +613,12 @@ class ElecJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strBaudRateC", 
-      strQuestion: "BaudRate", textController: TextEditingController(),
+      strQuestion: "Baud Rate", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strDialInDialOutIndicatorC", 
-      strQuestion: "DialInDial Out Indicator", textController: TextEditingController(),
+      strQuestion: "Dial In Dial Out Indicator", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(

@@ -166,7 +166,7 @@ class ViewAppointmentListWidget extends StatelessWidget {
 
 
                                 Text(
-                                  tables[childrenIndex].appointmentEventType ?? "",
+                                  tables[childrenIndex].appointmentEventType =="InRoute"? "EnRoute" : tables[childrenIndex].appointmentEventType ?? "",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(color:AppColors.statusColor(tables[childrenIndex].appointmentEventType),fontSize: 12,fontWeight: FontWeight.w500),
                                 ),

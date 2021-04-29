@@ -63,6 +63,8 @@ dependencies:
   dropdown_below: ^0.0.6 
   flutter_image_compress:
   syncfusion_flutter_pdfviewer:
+  progress_dialog:
+  barcode_flutter: ^1.1.2
 
 
 

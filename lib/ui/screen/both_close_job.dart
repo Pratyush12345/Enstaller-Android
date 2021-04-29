@@ -1,11 +1,16 @@
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
+import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/elec_close_job.dart';
 import 'package:enstaller/ui/screen/gas_close_job.dart';
+import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 class BothCloseJob extends StatefulWidget {
   final List<CheckTable> list;
-  BothCloseJob({@required this.list});
+  final DetailsScreenViewModel dsmodel;
+  
+  BothCloseJob({@required this.list, @required this.dsmodel});
   
   @override
   _BothCloseJobState createState() => _BothCloseJobState();
@@ -17,7 +22,9 @@ class _BothCloseJobState extends State<BothCloseJob> {
     return DefaultTabController(
       length: 2,
           child: Scaffold(
-       appBar: AppBar(title: Text("Close Jobs"),),
+       appBar: AppBar(
+         backgroundColor: AppColors.green,
+         title: Text("Close Jobs"),),
        body: Column(
             children: [
               Container(
@@ -64,12 +71,29 @@ class _BothCloseJobState extends State<BothCloseJob> {
                   ElecCloseJob(
                     list: widget.list,
                     fromTab: true,
+                    dsmodel: widget.dsmodel,
                   ),
                   GasCloseJob(list: widget.list,
                    fromTab: true,
+                   dsmodel: widget.dsmodel,
                   ),
                 ]),
               ),
+              AppButton(
+        onTap: (){
+          if( GlobalVar.elecCloseJob >= 1 && GlobalVar.elecCloseJob >= 1 ){
+           widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+           GlobalVar.elecCloseJob = 0;
+           GlobalVar.gasCloseJob = 0;
+           
+          }
+          },
+        width: 200,
+        height: 40,
+        radius: 10,
+        color: AppColors.green,
+        buttonText: "Submit Close Job",                          
+      )
             ],
           ),
       ),

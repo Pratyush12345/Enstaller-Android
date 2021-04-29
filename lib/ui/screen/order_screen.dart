@@ -7,6 +7,7 @@ import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/order_screen_viewmodel.dart';
+import 'package:enstaller/ui/screen/bar_code_image.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
@@ -164,20 +165,20 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               ),
               SizeConfig.horizontalSpace(2),
-              // Expanded(
-              //   child: AppButton(
-              //     buttonText: AppStrings.DELETE,
-              //     color: AppColors.green,
-              //     textStyle: TextStyle(
-              //         color: AppColors.whiteColor, fontWeight: FontWeight.bold),
-              //     onTap: () {
+              Expanded(
+                child: AppButton(
+                  buttonText: AppStrings.barCode,
+                  color: AppColors.green,
+                  textStyle: TextStyle(
+                      color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                  onTap: () {
 
-              //       // Navigator.of(context).push(new MaterialPageRoute(
-              //       //     builder: (context) => StockRequestReplyScreen(intRequestId: orderModel.intId,)));
-              //       //
-              //     },
-              //   ),
-              // ),
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => BarCodeRender(number: orderModel?.strRefrence ?? "")));
+                    
+                  },
+                ),
+              ),
             ],
           )
         ),

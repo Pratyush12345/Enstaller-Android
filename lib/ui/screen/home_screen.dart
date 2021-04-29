@@ -17,6 +17,7 @@ import 'package:enstaller/ui/screen/widget/homescreen/homepage_expandsion_widget
 import 'package:enstaller/ui/screen/widget/homescreen/view_appointment_list_widget.dart';
 import 'package:enstaller/ui/screen/widget/homescreen/view_single_date_widget.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
+import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
             drawer: Drawer(
-              child:AppDrawerWidget(),
+              child:WareHouseDrawerWidget(),
             ),
             appBar: AppBar(
               backgroundColor: AppColors.green,

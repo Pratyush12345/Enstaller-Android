@@ -826,9 +826,9 @@ class SurveyScreenViewModel extends BaseModel {
   }
   
   
-  void onSubmit(int selected, String appointmentid, BuildContext context,
+  Future<String> onSubmit(int selected, String appointmentid, BuildContext context,
       DetailsScreenViewModel dsmodel, String sectionname) async {
-    setState(ViewState.Busy);
+    //setState(ViewState.Busy);
 
     print(selected.toString() + 'line 1130');
     
@@ -857,7 +857,7 @@ class SurveyScreenViewModel extends BaseModel {
           print(abortreasonmodel.response);
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
-            setState(ViewState.Idle);
+            //setState(ViewState.Idle);
             //await Future.delayed(Duration(seconds: 1));
             AppConstants.showSuccessToast(context, "Survey Aborted");
             GlobalVar.isloadAppointmentDetail = true;
@@ -902,23 +902,23 @@ class SurveyScreenViewModel extends BaseModel {
         if (status != "NONE") {
           ResponseModel responseModel =
               await _apiService.submitListSurveyAnswer(answerList);
-          dsmodel.onUpdateStatusOnCompleted(context, appointmentid);    
+          //dsmodel.onUpdateStatusOnCompleted(context, appointmentid);    
           SharedPreferences pref = await SharedPreferences.getInstance();
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
-            setState(ViewState.Idle);
+            //setState(ViewState.Idle);
              
             AppConstants.showSuccessToast(context, "Survey Submitted");
             //Navigator.of(context).pop("Sign Off");
 
-            if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: checkCloseJobModel.table , fromTab: false,)));
-            else if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "GAS")
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: checkCloseJobModel.table, fromTab: false,)));
-            else if(checkCloseJobModel.table.length ==2)
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: checkCloseJobModel.table)));
+            // if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: checkCloseJobModel.table , fromTab: false,)));
+            // else if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "GAS")
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: checkCloseJobModel.table, fromTab: false,)));
+            // else if(checkCloseJobModel.table.length ==2)
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: checkCloseJobModel.table)));
                                        
             //openJumboTab(dsmodel, appointmentid);
             
@@ -953,7 +953,14 @@ class SurveyScreenViewModel extends BaseModel {
       }
       selected = -1;
     }
-setState(ViewState.Idle);          
+  //setState(ViewState.Idle);   
+           
+    if(sectionname.trim() == "Sign Off"){
+      return "Sign Off";
+    }
+    else{
+      return "none";
+    }
   }
 
 

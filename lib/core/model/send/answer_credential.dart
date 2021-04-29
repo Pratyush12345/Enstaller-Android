@@ -82,5 +82,7 @@ class GlobalVar{
   static String abortReason = "";
   static bool isloadAppointmentDetail = false;
   static bool isloadDashboard = false;
+  static int gasCloseJob = 0;
+  static int elecCloseJob = 0;
   
 }
