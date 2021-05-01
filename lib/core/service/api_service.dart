@@ -3,7 +3,9 @@ import 'package:enstaller/core/constant/api_urls.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/model/abort_appointment_model.dart';
 import 'package:enstaller/core/model/activity_details_model.dart';
+import 'package:enstaller/core/model/after_login_model.dart';
 import 'package:enstaller/core/model/app_table.dart';
+import 'package:enstaller/core/model/checkAndAssignModel.dart';
 import 'package:enstaller/core/model/contract_order_model.dart';
 import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
@@ -33,6 +35,7 @@ import 'package:enstaller/core/model/send/appointmentStatusUpdateCredential.dart
 import 'package:enstaller/core/model/send/comment_credential.dart';
 import 'package:enstaller/core/model/stock_check_model.dart';
 import 'package:enstaller/core/model/stock_request_reply_model.dart';
+import 'package:enstaller/core/model/stock_update_model.dart';
 import 'package:enstaller/core/model/update_status_model.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/service/base_api.dart';
@@ -55,6 +58,12 @@ class ApiService extends BaseApi{
     },loginCredential.toJson());
   }
   Future <dynamic> getAppointmentList(String userID){
+    if(userID == null){
+      userID = "4";
+    }
+    print("------------------------");
+    print(userID);
+    print("-------------------------");
    return getRequestWithParam(ApiUrls.getappointmenttodaytomorrow,
            (response) {
      print(response.body);
@@ -106,6 +115,104 @@ class ApiService extends BaseApi{
           return AppointmentDetails.fromJson(json.decode(response.body));
 
         }, '/$appointmentID') ;
+  }
+   Future <dynamic> getStockLocation(String warehouseID){
+    return getRequestWithParam(ApiUrls.getStockLocation,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => StockLocationModel.fromJson(e)).toList();
+
+        }, 'intWarehouseUserId=$warehouseID') ;
+  }
+   Future <dynamic> getStockBatch(String warehouseID){
+    return getRequestWithParam(ApiUrls.getStockBatch,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => StockBatchModel.fromJson(e)).toList();
+
+        }, 'intWarehouseUserId=$warehouseID') ;
+  }
+   Future <dynamic> getStockStatus(){
+    return getRequestwithoutParam(ApiUrls.getStockStatus,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => StockStatusModel.fromJson(e)).toList();
+
+        },) ;
+  }
+  Future <dynamic> getPallet(String intBtachD){
+    return getRequestWithParam(ApiUrls.getPallets,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => StockPalletModel.fromJson(e)).toList();
+
+        }, 'intBatchId=$intBtachD') ;
+  }
+
+  Future <dynamic> getOrderAssigned(String strReference){
+    return getRequestWithParam(ApiUrls.getorderAssigned,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => IsOrderAssignedModel.fromJson(e)).toList();
+
+        }, 'strReference=$strReference') ;
+  }
+  Future <dynamic> checkSerialNo(String strSerialNo, String orderID){
+    return getRequestWithParam(ApiUrls.checkSerialNo,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => CheckSerialModel.fromJson(e)).toList();
+
+        }, 'strSerialNo=$strSerialNo&intOrderId=$orderID') ;
+  }
+
+  Future<dynamic> saveCheckOrder(SaveCheckOrderModel model){
+    return postRequestMap(ApiUrls.saveCheckandassignorder, (r) {
+      final response = json.decode(r.body);
+      if (response) {
+        return ResponseModel(
+          statusCode: 1,
+          response: 'Successfully Submited'
+        );
+      }else{
+        return ResponseModel(
+          statusCode: 0,
+          response: 'Please try again'
+        );
+      }
+    },model.toJson());
+  }
+  Future <dynamic> getOrderLineDetail(String orderId){
+    return getRequestWithParam(ApiUrls.getCheckStockOrderLineDetails,
+            (response) {
+          print(response.body);
+          return (json.decode(response.body) as List).map((e) => OrderLineDetail.fromJson(e)).toList();
+
+        }, 'intOrderId=$orderId') ;
+  }
+   Future <dynamic> getOrderByReference(String strReference){
+    return getRequestWithParam(ApiUrls.getorderByReference,
+            (response) {
+          print(response.body);
+          return OrderByRefernceModel.fromJson(json.decode(response.body));
+
+        }, 'strReference=$strReference') ;
+  }
+   Future <dynamic> getDownloadFormat(String key){
+    return getRequestWithParam(ApiUrls.getdownloadformat,
+            (response) {
+          print(response.body);
+          return DownLoadFormatModel.fromJson(json.decode(response.body));
+
+        }, 'strKey=$key') ;
+  }
+  Future <dynamic> getUserRole(String email){
+    return getRequest(ApiUrls.getUserRole,
+            (response) {
+          print(response.body);
+          return AfterLoginModel.fromJson(json.decode(response.body));
+
+        }, '?strEmail=$email') ;
   }
   Future <dynamic> getAppointmentCommentsByAppointment(String appointmentID){
     return getRequestWithParam(ApiUrls.getAppointmentCommentsByAppointmentUrl,

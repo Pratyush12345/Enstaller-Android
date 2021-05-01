@@ -331,17 +331,17 @@ class ElecJobViewModel {
     
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strCodeOfPracticeCodeM", 
-      strQuestion: "Code Of Practice Code", textController: TextEditingController(),
+      strQuestion: "Code", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strCodeOfPracticeDispensationM", 
-      strQuestion: "Code Of Practice Dispensation", textController: TextEditingController(),
+      strQuestion: "Dispensation", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strCodeOfPracticeIssueNumberM", 
-      strQuestion: "Code Of Practice Issue Number", textController: TextEditingController(),
+      strQuestion: "Issue Number", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
   ];
@@ -437,7 +437,7 @@ class ElecJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: false, jsonfield: "bitRegimes", 
-      strQuestion: "Regimes", textController: null,
+      strQuestion: "Time Pattern Regimes", textController: null,
       type: "checkBox" , isMandatory: false
     ),
   ];
@@ -473,17 +473,17 @@ class ElecJobViewModel {
   regimesList = [
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: null, 
-      strQuestion: "Regimes", textController: null,
+      strQuestion: "Time pattern Regimes", textController: null,
       type: "header", isMandatory: false 
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strTimePatternRegimeCode1R", 
-      strQuestion: "Time Pattern Regime Code1", textController: TextEditingController(),
+      strQuestion: "Code1", textController: TextEditingController(),
       type: "text" , isMandatory: true
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strTimePatternRegimeCode2R", 
-      strQuestion: "Time Pattern Regime Code2", textController: TextEditingController(),
+      strQuestion: "Code2", textController: TextEditingController(),
       type: "text" , isMandatory: true
     ),
     CloseJobQuestionModel(
@@ -717,22 +717,22 @@ class ElecJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSupplyCapacity", 
-      strQuestion: "Supply Capacity", textController: TextEditingController(),
+      strQuestion: "Capacity", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSupplyEnergisationStatus", 
-      strQuestion: "Supply Energisation Status", textController: TextEditingController(),
+      strQuestion: "Energisation Status", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSupplyPhases", 
-      strQuestion: "Supply Phases", textController: TextEditingController(),
+      strQuestion: "Phases", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSupplyVoltage", 
-      strQuestion: "strSupplyVoltage", textController: TextEditingController(),
+      strQuestion: "Voltage", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
   ];

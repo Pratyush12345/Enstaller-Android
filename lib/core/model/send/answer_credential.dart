@@ -80,9 +80,12 @@ class AbortAppointmentReasonModel {
 
 class GlobalVar{
   static String abortReason = "";
+  static String warehosueID = "40056";
+  static int roleId = 0;
   static bool isloadAppointmentDetail = false;
   static bool isloadDashboard = false;
   static int gasCloseJob = 0;
   static int elecCloseJob = 0;
+  static bool closejobsubmittedoffline = false;
   
 }

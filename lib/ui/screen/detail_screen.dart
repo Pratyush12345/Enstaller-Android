@@ -23,6 +23,7 @@ import 'package:enstaller/ui/screen/widget/update_status_dialog_widget.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/app_image_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
+import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:enstaller/ui/util/MessagingService/FirebaseMessaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +141,7 @@ class _DetailScreenState extends State<DetailScreen> {
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
             drawer: Drawer(
-              child: AppDrawerWidget(),
+              child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),
             appBar: AppBar(
               backgroundColor: AppColors.green,
@@ -342,42 +343,42 @@ class _DetailScreenState extends State<DetailScreen> {
                             textAlign: TextAlign.start,
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
+                          // SizedBox(
+                          //   height: 10.0,
+                          // ),
+                          // Padding(
+                          //   padding: SizeConfig.sidepadding,
+                          //   child: AppButton(
+                          //     height: 40,
+                          //     color: AppColors.darkBlue,
+                          //     buttonText: "Check Close Job",
+                          //     radius: 15,
+                          //     textStyle: TextStyle(color: AppColors.whiteColor),
+                          //     onTap: ()  {
+                          //       print("---------------------");
+                          //       print("length...........${model.checkCloseJobModel.table.length}");
+                                
+                          //       model.checkCloseJobModel.table.forEach((element) { 
+                          //         print(element.intId);
+                          //       });
+                          //       print("---------------------");
+                          //       if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)));
+                          //       else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
+                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )));
+                          //       else if(model.checkCloseJobModel.table.length ==2 )
+                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)));
+                                
+                          //       // SharedPreferences pref = await SharedPreferences.getInstance();
+                          //       // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
+                          //       // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
+                          //     },
+                          //   ),
+                          // ),
                           SizedBox(
                             height: 10.0,
                           ),
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: AppButton(
-                              height: 40,
-                              color: AppColors.darkBlue,
-                              buttonText: "Check Close Job",
-                              radius: 15,
-                              textStyle: TextStyle(color: AppColors.whiteColor),
-                              onTap: ()  async{
-                                print("---------------------");
-                                print("length...........${model.checkCloseJobModel.table.length}");
-                                
-                                model.checkCloseJobModel.table.forEach((element) { 
-                                  print(element.intId);
-                                });
-                                print("---------------------");
-                                if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)));
-                                else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )));
-                                else if(model.checkCloseJobModel.table.length ==2 )
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)));
-                                
-                                // SharedPreferences pref = await SharedPreferences.getInstance();
-                                // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
-                                // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          if(model.appointmentDetails.appointment.bCompleteForwardCall)
+                          if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
                           Padding(
                             padding: SizeConfig.sidepadding,
                             child: AppButton(
@@ -395,17 +396,17 @@ class _DetailScreenState extends State<DetailScreen> {
                                 ,
                             ),
                           ),
-                          if(model.appointmentDetails.appointment.bCompleteForwardCall)
+                          if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
                           SizedBox(
                             height: 10.0,
                           ),
-                          if(model.appointmentDetails.appointment.bCompleteForwardCall)
+                          if(model.appointmentDetails.appointment.bCompleteForwardCall && model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
                           Padding(
                             padding: SizeConfig.sidepadding,
                             child: AppButton(
                               height: 40,
                               color: AppColors.darkBlue,
-                              buttonText: AppStrings.EnRoute,
+                              buttonText: "En Route",
                               radius: 15,
                               textStyle: TextStyle(color: AppColors.whiteColor),
                               onTap: ()  async{
@@ -726,6 +727,8 @@ class _DetailScreenState extends State<DetailScreen> {
               secondChild: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  if(model.appointmentDetails.appointment?.strJobType != "Full Day Hire" &&
+                   model.appointmentDetails.appointment?.strJobType!= "Half Day Hire")
                   AppButton(
                     color: AppColors.green,
                     height: 30,
@@ -741,9 +744,10 @@ class _DetailScreenState extends State<DetailScreen> {
                                   : false;
                       String _status = model.appointmentDetails.appointment.appointmentEventType??"";            
                       print(_status);
+                      if(_status != "Scheduled"){
                       if(!_isedit && _status!="OnSite")
                       model.onUpdateStatusOnSite(context, widget.arguments.appointmentID);
-                    
+                      
                       Navigator.of(context).pushNamed(SurveyScreen.routeName,
                           arguments: SurveyArguments(
                              customerID: widget.arguments.customerID,
@@ -762,8 +766,52 @@ class _DetailScreenState extends State<DetailScreen> {
                                     widget.arguments.appointmentID, widget.arguments.customerID);
                                     GlobalVar.isloadAppointmentDetail = false;
                                     }
-                                  });                
+                                  });   
+                      }             
                     },
+                  ),
+
+                  if(model.appointmentDetails.appointment?.strJobType == "Full Day Hire" ||
+                   model.appointmentDetails.appointment?.strJobType == "Half Day Hire")
+                  AppButton(
+                    color: AppColors.green,
+                    height: 30,
+                    width: SizeConfig.screenWidth * .23,
+                    buttonText: "Close Job",
+                    textStyle: TextStyle(color: AppColors.whiteColor),
+                    radius: 15,
+                    onTap: () {
+                                if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)))
+                                .then((value){
+                                    if(GlobalVar.isloadAppointmentDetail)
+                                    {model.initializeData(
+                                    widget.arguments.appointmentID, widget.arguments.customerID);
+                                    GlobalVar.isloadAppointmentDetail = false;
+                                    }
+                                  });
+                                else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )))
+                                .then((value){
+                                    if(GlobalVar.isloadAppointmentDetail)
+                                    {model.initializeData(
+                                    widget.arguments.appointmentID, widget.arguments.customerID);
+                                    GlobalVar.isloadAppointmentDetail = false;
+                                    }
+                                  });
+                                else if(model.checkCloseJobModel.table.length ==2 )
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)))
+                                .then((value){
+                                    if(GlobalVar.isloadAppointmentDetail)
+                                    {model.initializeData(
+                                    widget.arguments.appointmentID, widget.arguments.customerID);
+                                    GlobalVar.isloadAppointmentDetail = false;
+                                    }
+                                  });
+                                
+                                
+                                
+                                },
                   ),
                 ],
               ),

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart' ;
@@ -8,6 +11,7 @@ import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
 import 'package:enstaller/core/viewmodel/elec_job_viewmodel.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ElecCloseJob extends StatefulWidget {
   final List<CheckTable> list;
@@ -36,6 +40,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
   Map<int, List<CloseJobQuestionModel>> _passwordmap;
   Map<int, List<CloseJobQuestionModel>> _usernamemap;
   bool _showIndicator = false;
+  final Connectivity _connectivity = Connectivity();
   
   _callAPI() async {
 
@@ -164,22 +169,70 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
        json["outStationsList"].add(outStationjson);   
       });
     }
+
+    ConnectivityResult result = await _connectivity.checkConnectivity();
+        String status = _updateConnectionStatus(result);
+        if (status != "NONE") {
+          ResponseModel response  = await ApiService().saveElecJob( ElecCloseJobModel.fromJson(json));
+          _showIndicator = false;
+          setState(() {
+          });
+          if (response.statusCode == 1) {
+            if(!widget.fromTab){
+              widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+            }else{
+              GlobalVar.elecCloseJob++;
+            }
+            AppConstants.showSuccessToast(context, response.response);
+          } else {
+            AppConstants.showFailToast(context, response.response);
+          }
+        } else {
+          print("********online*****");
+          Set<String> _setofUnSubmittedjob = {};
+          print(widget.list[0].intId);
+          print("*******************");
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString(widget.list[0].intId.toString()+"ElecJob", jsonEncode(ElecCloseJobModel.fromJson(json)));
+          GlobalVar.closejobsubmittedoffline = true;
+          _showIndicator = false;
+          setState(() {
+          });
+          
+          if (preferences.getStringList("listOfUnSubmittedJob") != null) {
+            _setofUnSubmittedjob =
+                preferences.getStringList("listOfUnSubmittedJob").toSet();
+          }
+          _setofUnSubmittedjob.add(widget.list[0].intId.toString());
+
+          preferences.setStringList(
+              "listOfUnSubmittedJob", _setofUnSubmittedjob.toList());
+            if(widget.fromTab)
+            AppConstants.showSuccessToast(context, "Saved");
+            else
+            AppConstants.showSuccessToast(context, "Submitted Offline");
+        }
     
-    ResponseModel response  = await ApiService().saveElecJob( ElecCloseJobModel.fromJson(json));
-      _showIndicator = false;
-      setState(() {
-      });
-      if (response.statusCode == 1) {
-         if(!widget.fromTab){
-           widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
-         }else{
-           GlobalVar.elecCloseJob++;
-         }
-         AppConstants.showSuccessToast(context, response.response);
-      } else {
-        AppConstants.showFailToast(context, response.response);
-      }
+    
   }
+
+  String _updateConnectionStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  }
+
 
 
   void validate() {
@@ -202,10 +255,20 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       lastDate: DateTime(DateTime.now().year + 5)
       );
       setState(() {
-        controller.text = date.year.toString()+"/"+date.month.toString() + "/"+ date.day.toString();
+        controller.text =date.day.toString() +"/"+date.month.toString() + "/"+ date.year.toString();
       });
   }
+  showTimePicker2(TextEditingController controller) async{
+    TimeOfDay time = await showTimePicker(
 
+      context: context,
+      initialTime: TimeOfDay.now(),
+      );
+      setState(() {
+        controller.text = time.format(context);
+      });
+  }
+ 
   List<Widget> _getParticularWidgets(String headername, {int pos, int meterpos}) {
     List<Widget> _list = [];
     List<CloseJobQuestionModel> _closejobQuestionlist;
@@ -229,62 +292,74 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
 
     _closejobQuestionlist.forEach((element) {
-      Column clmn;
+      Widget clmn;
       if (element.type == "text") {
-        clmn = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("${element.strQuestion}"),
-            TextFormField(
-              validator: (val) {
-                if (val.isEmpty && element.isMandatory)
-                  return "${element.strQuestion} required";
-                else
-                  return null;
-              },
-              onFieldSubmitted: (val) {},
-              controller: element.textController,
-              decoration: InputDecoration(hintText: "Write here"),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            AppButton(
-              onTap: (){
-                showDateTimePicker(element.textController);
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${element.strQuestion}"),
+              TextFormField(
+                enabled: !element.strQuestion.toLowerCase().contains("date") &&
+                 !element.strQuestion.toLowerCase().contains("time") ,
+                
+                validator: (val) {
+                  if (val.isEmpty && element.isMandatory)
+                    return "${element.strQuestion} required";
+                  else
+                    return null;
                 },
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 40,
-              radius: 10,
-              color: AppColors.red,
-              buttonText: "Pick Date", 
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0
-              ),                         
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            SizedBox(height: 8.0,)
-          ],
+                onFieldSubmitted: (val) {},
+                controller: element.textController,
+                decoration: InputDecoration(hintText: "Write here"),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              if(element.strQuestion.toLowerCase().contains("date") ||
+               element.strQuestion.toLowerCase().contains("time"))
+              AppButton(
+                onTap: (){
+                  if(element.strQuestion.toLowerCase().contains("date"))
+                  showDateTimePicker(element.textController);
+                  else
+                  showTimePicker2(element.textController);
+                  },
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                radius: 10,
+                color: Colors.orange,
+                buttonText: element.strQuestion.toLowerCase().contains("date")? "Pick Date" : "Pick Time", 
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0
+                ),                         
+              ),
+              if(element.strQuestion.toLowerCase().contains("date")||
+              element.strQuestion.toLowerCase().contains("time"))
+              SizedBox(height: 8.0,)
+            ],
+          ),
         );
       } else if (element.type == "header") {
         clmn = Column(
-          children: [
-            Container(
-              color: AppColors.green,
-              child: ListTile(
-                title: Text("${element.strQuestion}",
-                style: TextStyle(
-                  color: AppColors.whiteColor
-                ),),
+            children: [
+              Container(
+                color: AppColors.green,
+                child: ListTile(
+        title: Text("${element.strQuestion}",
+        style: TextStyle(
+          color: AppColors.whiteColor
+        ),),
+                ),
               ),
-            ),
-            
-            SizedBox(height: 12.0,)
-          ],
-        );
+              
+              SizedBox(height: 12.0,)
+            ],
+          );
       }
+       
       _list.add(clmn);
     });
     return _list;
@@ -299,68 +374,84 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       Widget clmn;
 
       if (element.type == "text") {
-        clmn = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("${element.strQuestion}"),
-            TextFormField(
-              validator: (val) {
-                if (val.isEmpty && element.isMandatory)
-                  return "${element.strQuestion} required";
-                else
-                  return null;
-              },
-              onFieldSubmitted: (val) {},
-              controller: element.textController,
-              decoration: InputDecoration(hintText: "Write here"),
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${element.strQuestion}"),
+              TextFormField(
+                enabled: !element.strQuestion.toLowerCase().contains("date") &&
+                 !element.strQuestion.toLowerCase().contains("time") ,
+                
+                validator: (val) {
+                  if (val.isEmpty && element.isMandatory)
+                    return "${element.strQuestion} required";
+                  else
+                    return null;
+                },
+                onFieldSubmitted: (val) {},
+                controller: element.textController,
+                decoration: InputDecoration(hintText: "Write here"),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+               if(element.strQuestion.toLowerCase().contains("date") ||
+               element.strQuestion.toLowerCase().contains("time"))
+              AppButton(
+                onTap: (){
+                  if(element.strQuestion.toLowerCase().contains("date"))
+                  showDateTimePicker(element.textController);
+                  else
+                  showTimePicker2(element.textController);
+                  },
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                radius: 10,
+                color: Colors.orange,
+                buttonText: element.strQuestion.toLowerCase().contains("date")? "Pick Date" : "Pick Time", 
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0
+                ),                         
+              ),
+              if(element.strQuestion.toLowerCase().contains("date")||
+              element.strQuestion.toLowerCase().contains("time"))
+              SizedBox(height: 8.0,)
+            ],
+          ),
+        );
+      } else if (element.type == "checkBox") {
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${element.strQuestion}"),
+                Checkbox(
+                    value: element.checkBoxVal ?? false,
+                    onChanged: (val) {
+                      setState(() {
+                        element.checkBoxVal = val;
+                      });
+                    }),
+              ],
             ),
             SizedBox(
               height: 8.0,
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            AppButton(
-              onTap: (){
-                showDateTimePicker(element.textController);
-                },
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 40,
-              radius: 10,
-              color: AppColors.red,
-              buttonText: "Pick Date", 
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0
-              ),                         
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            SizedBox(height: 8.0,)
-          ],
+            )
+          ]),
         );
-      } else if (element.type == "checkBox") {
-        clmn = Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${element.strQuestion}"),
-              Checkbox(
-                  value: element.checkBoxVal ?? false,
-                  onChanged: (val) {
-                    setState(() {
-                      element.checkBoxVal = val;
-                    });
-                  }),
-            ],
-          ),
-          SizedBox(
-            height: 8.0,
-          )
-        ]);
       } else {
         clmn = Column(
+   
           children: [
             Container(
               color: AppColors.green,
               child: ListTile(
+            
                 title: Text("${element.strQuestion}",
                 style: TextStyle(
                   color: AppColors.whiteColor
@@ -392,7 +483,18 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             _readingmap[i] = {};
             _regimesmap[i] = {};
           }
-          _list.addAll(_getMeterWidget(i, _metermap[i]));
+          Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getMeterWidget(i, _metermap[i]) ,
+              ),
+          ));
+          _list.add(ctn);
         }
         }
         else{
@@ -417,7 +519,18 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             _usernamemap[i] = ElecJobViewModel.usernameList().usernameList;
             _passwordmap[i] = ElecJobViewModel.passwordList().passwordList;
           }
-          _list.addAll(_getOutStationWidget(i, _outStationmap[i]));
+          Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getOutStationWidget(i, _outStationmap[i]) ,
+              ),
+          ));
+          _list.add(ctn);
         }
         }
         else{
@@ -432,10 +545,32 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         }
       }
       if (element.strQuestion == "Site Visit" && element.checkBoxVal) {
-        _list.addAll(_getParticularWidgets("Site Visit"));
+        Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getParticularWidgets("Site Visit") ,
+              ),
+          ));
+          _list.add(ctn);
       }
       if (element.strQuestion == "Supply" && element.checkBoxVal) {
-        _list.addAll(_getParticularWidgets("Supply"));
+        Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getParticularWidgets("Supply") ,
+              ),
+          ));
+          _list.add(ctn);
       }
     });
 
@@ -448,7 +583,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         height: 40,
         radius: 10,
         color: AppColors.green,
-        buttonText: "Save",                          
+        buttonText: widget.fromTab? "Save" : "Submit Job",                          
       )     
     );
     return _list;
@@ -489,7 +624,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
     return Scaffold(
       appBar: !widget.fromTab? AppBar(
         backgroundColor: AppColors.green,
-        title: Text("Electricity Close Job"),
+        title: Text("Electricity Close Job",
+        style: TextStyle(color: Colors.white)),
       ):
       PreferredSize(
          preferredSize: Size.zero ,
@@ -499,12 +635,9 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Padding(
-             padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
-                      child: Column(
+          child: Column(
               children: _getListViewWidget(),
             ),
-          ),
         ),
       ),
     );
@@ -514,66 +647,80 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
   List<Widget> _getMeterWidget(int pos, List<CloseJobQuestionModel> _meterList) {
     List<Widget> _list = [];
     _meterList.forEach((element) {
-      Column clmn;
+      Widget clmn;
       if (element.type == "text") {
-        clmn = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          
-          children: [
-            Text("${element.strQuestion}"),
-            TextFormField(
-              validator: (val) {
-                if (val.isEmpty && element.isMandatory)
-                  return "${element.strQuestion} required";
-                else
-                  return null;
-              },
-              onFieldSubmitted: (val) {},
-              controller: element.textController,
-              decoration: InputDecoration(hintText: "Write here"),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            AppButton(
-              onTap: (){
-                showDateTimePicker(element.textController);
-                },
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 40,
-              radius: 10,
-              color: AppColors.red,
-              buttonText: "Pick Date", 
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0
-              ),                         
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            SizedBox(height: 8.0,)
-          ],
-        );
-      } else if (element.type == "checkBox") {
-        clmn = Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        clmn = Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            
             children: [
               Text("${element.strQuestion}"),
-              Checkbox(
-                  value: element.checkBoxVal ?? false,
-                  onChanged: (val) {
-                    if (!element.isMandatory)
-                      setState(() {
-                        element.checkBoxVal = val;
-                      });
-                  }),
+              TextFormField(
+                enabled: !element.strQuestion.toLowerCase().contains("date") &&
+                 !element.strQuestion.toLowerCase().contains("time") ,
+                
+                validator: (val) {
+                  if (val.isEmpty && element.isMandatory)
+                    return "${element.strQuestion} required";
+                  else
+                    return null;
+                },
+                onFieldSubmitted: (val) {},
+                controller: element.textController,
+                decoration: InputDecoration(hintText: "Write here"),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+               if(element.strQuestion.toLowerCase().contains("date") ||
+               element.strQuestion.toLowerCase().contains("time"))
+              AppButton(
+                onTap: (){
+                  if(element.strQuestion.toLowerCase().contains("date"))
+                  showDateTimePicker(element.textController);
+                  else
+                  showTimePicker2(element.textController);
+                  },
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                radius: 10,
+                color: Colors.orange,
+                buttonText: element.strQuestion.toLowerCase().contains("date")? "Pick Date" : "Pick Time", 
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0
+                ),                         
+              ),
+              if(element.strQuestion.toLowerCase().contains("date")||
+              element.strQuestion.toLowerCase().contains("time"))
+              SizedBox(height: 8.0,)
             ],
           ),
-          SizedBox(
-            height: 12.0,
-          )
-        ]);
+        );
+      } else if (element.type == "checkBox") {
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${element.strQuestion}"),
+                Checkbox(
+                    value: element.checkBoxVal ?? false,
+                    onChanged: (val) {
+                      if (!element.isMandatory)
+                        setState(() {
+                          element.checkBoxVal = val;
+                        });
+                    }),
+              ],
+            ),
+            SizedBox(
+              height: 12.0,
+            )
+          ]),
+        );
       } else {
         clmn = Column(
           children: [
@@ -589,6 +736,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                       width: 100.0,
                       height: 40.0,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        
                         children: [
                           
                              if(pos != 0)
@@ -631,7 +780,19 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       _list.add(clmn);
       if (element.type == "header" &&
           element.strQuestion == "Code Of Practice") {
-        _list.addAll(_getParticularWidgets("CodeOfPractiseM", pos: pos));
+            Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getParticularWidgets("CodeOfPractiseM", pos: pos) ,
+              ),
+          ));
+          _list.add(ctn);
+
       }
       if (element.type == "checkBox" && element.strQuestion == "Register") {
         for (int i = 0; i <= _registerCount[pos]; i++){
@@ -639,8 +800,18 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             _registermap[pos][i] = ElecJobViewModel.registerList().registerList;
             _readingmap[pos][i] = ElecJobViewModel.readingList().readingList;
             _regimesmap[pos][i] = ElecJobViewModel.regimesList().regimesList;
-          }
-          _list.addAll(_getRegisterWidgets(pos ,i, _registermap[pos][i]));
+          }Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getRegisterWidgets(pos ,i, _registermap[pos][i]) ,
+              ),
+          ));
+          _list.add(ctn);
         }
       }
     });
@@ -653,66 +824,80 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
     List<Widget> _list = [];
     
     _registerList.forEach((element) {
-      Column clmn;
+      Widget clmn;
       if (element.type == "text") {
-        clmn = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          
-          children: [
-            Text("${element.strQuestion}"),
-            TextFormField(
-              validator: (val) {
-                if (val.isEmpty && element.isMandatory)
-                  return "${element.strQuestion} required";
-                else
-                  return null;
-              },
-              onFieldSubmitted: (val) {},
-              controller: element.textController,
-              decoration: InputDecoration(hintText: "Write here"),
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            
+            children: [
+              Text("${element.strQuestion}"),
+              TextFormField(
+                enabled: !element.strQuestion.toLowerCase().contains("date") &&
+                 !element.strQuestion.toLowerCase().contains("time") ,
+                
+                validator: (val) {
+                  if (val.isEmpty && element.isMandatory)
+                    return "${element.strQuestion} required";
+                  else
+                    return null;
+                },
+                onFieldSubmitted: (val) {},
+                controller: element.textController,
+                decoration: InputDecoration(hintText: "Write here"),
+              ),
+              SizedBox(
+                height: 12.0,
+              ),
+               if(element.strQuestion.toLowerCase().contains("date") ||
+               element.strQuestion.toLowerCase().contains("time"))
+              AppButton(
+                onTap: (){
+                  if(element.strQuestion.toLowerCase().contains("date"))
+                  showDateTimePicker(element.textController);
+                  else
+                  showTimePicker2(element.textController);
+                  },
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                radius: 10,
+                color: Colors.orange,
+                buttonText: element.strQuestion.toLowerCase().contains("date")? "Pick Date" : "Pick Time", 
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0
+                ),                         
+              ),
+              if(element.strQuestion.toLowerCase().contains("date")||
+              element.strQuestion.toLowerCase().contains("time"))
+              SizedBox(height: 8.0,)
+            ],
+          ),
+        );
+      } else if (element.type == "checkBox") {
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${element.strQuestion}"),
+                Checkbox(
+                    value: element.checkBoxVal ?? false,
+                    onChanged: (val) {
+                      if (!element.isMandatory)
+                        setState(() {
+                          element.checkBoxVal = val;
+                        });
+                    }),
+              ],
             ),
             SizedBox(
               height: 12.0,
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            AppButton(
-              onTap: (){
-                showDateTimePicker(element.textController);
-                },
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 40,
-              radius: 10,
-              color: AppColors.red,
-              buttonText: "Pick Date", 
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0
-              ),                         
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            SizedBox(height: 8.0,)
-          ],
+            )
+          ]),
         );
-      } else if (element.type == "checkBox") {
-        clmn = Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${element.strQuestion}"),
-              Checkbox(
-                  value: element.checkBoxVal ?? false,
-                  onChanged: (val) {
-                    if (!element.isMandatory)
-                      setState(() {
-                        element.checkBoxVal = val;
-                      });
-                  }),
-            ],
-          ),
-          SizedBox(
-            height: 12.0,
-          )
-        ]);
       } else {
         clmn = Column(
           children: [
@@ -728,6 +913,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                       width: 100.0,
                       height: 40.0,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        
                         children: [
                           if(pos != 0)
                              IconButton(
@@ -766,10 +953,32 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       _list.add(clmn);
 
       if (element.strQuestion == "Reading" && element.checkBoxVal) {
-        _list.addAll(_getParticularWidgets("Reading", pos: pos, meterpos: meterpos));
+        Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getParticularWidgets("Reading", pos: pos, meterpos: meterpos) ,
+              ),
+          ));
+          _list.add(ctn);
       }
-      if (element.strQuestion == "Regimes" && element.checkBoxVal) {
-        _list.addAll(_getParticularWidgets("Regimes", pos: pos, meterpos: meterpos));
+      if (element.strQuestion == "Time Pattern Regimes" && element.checkBoxVal) {
+        Widget ctn = Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Column(
+                children: _getParticularWidgets("Regimes", pos: pos, meterpos: meterpos) ,
+              ),
+          ));
+          _list.add(ctn);
       }
     });
     return _list;
@@ -778,66 +987,80 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
   List<Widget> _getOutStationWidget(int pos, List<CloseJobQuestionModel> _outStationList) {
     List<Widget> _list = [];
     _outStationList.forEach((element) {
-      Column clmn;
+      Widget clmn;
       if (element.type == "text") {
-        clmn = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          
-          children: [
-            Text("${element.strQuestion}"),
-            TextFormField(
-              validator: (val) {
-                if (val.isEmpty && element.isMandatory)
-                  return "${element.strQuestion} required";
-                else
-                  return null;
-              },
-              onFieldSubmitted: (val) {},
-              controller: element.textController,
-              decoration: InputDecoration(hintText: "Write here"),
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            
+            children: [
+              Text("${element.strQuestion}"),
+              TextFormField(
+                enabled: !element.strQuestion.toLowerCase().contains("date") &&
+                 !element.strQuestion.toLowerCase().contains("time") ,
+                
+                validator: (val) {
+                  if (val.isEmpty && element.isMandatory)
+                    return "${element.strQuestion} required";
+                  else
+                    return null;
+                },
+                onFieldSubmitted: (val) {},
+                controller: element.textController,
+                decoration: InputDecoration(hintText: "Write here"),
+              ),
+              SizedBox(
+                height: 12.0,
+              ),
+               if(element.strQuestion.toLowerCase().contains("date") ||
+               element.strQuestion.toLowerCase().contains("time"))
+              AppButton(
+                onTap: (){
+                  if(element.strQuestion.toLowerCase().contains("date"))
+                  showDateTimePicker(element.textController);
+                  else
+                  showTimePicker2(element.textController);
+                  },
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                radius: 10,
+                color: Colors.orange,
+                buttonText: element.strQuestion.toLowerCase().contains("date")? "Pick Date" : "Pick Time", 
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0
+                ),                         
+              ),
+              if(element.strQuestion.toLowerCase().contains("date")||
+              element.strQuestion.toLowerCase().contains("time"))
+              SizedBox(height: 8.0,)
+            ],
+          ),
+        );
+      } else if (element.type == "checkBox") {
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${element.strQuestion}"),
+                Checkbox(
+                    value: element.checkBoxVal ?? false,
+                    onChanged: (val) {
+                      if (!element.isMandatory)
+                        setState(() {
+                          element.checkBoxVal = val;
+                        });
+                    }),
+              ],
             ),
             SizedBox(
               height: 12.0,
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            AppButton(
-              onTap: (){
-                showDateTimePicker(element.textController);
-                },
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 40,
-              radius: 10,
-              color: AppColors.red,
-              buttonText: "Pick Date", 
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0
-              ),                         
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            SizedBox(height: 8.0,)
-          ],
+            )
+          ]),
         );
-      } else if (element.type == "checkBox") {
-        clmn = Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${element.strQuestion}"),
-              Checkbox(
-                  value: element.checkBoxVal ?? false,
-                  onChanged: (val) {
-                    if (!element.isMandatory)
-                      setState(() {
-                        element.checkBoxVal = val;
-                      });
-                  }),
-            ],
-          ),
-          SizedBox(
-            height: 12.0,
-          )
-        ]);
       } else {
         clmn = Column(
           children: [
@@ -853,6 +1076,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                       width: 100.0,
                       height: 40.0,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        
                         children: [
                           if(pos != 0)
                              IconButton(
@@ -884,7 +1109,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                     )
                     : SizedBox(),
               ),
-            )
+            ),
+            SizedBox(height: 12.0,)
           ],
         );
       }
@@ -916,66 +1142,80 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
   List<Widget> _getCommsWidgets(int outStationpos, int pos, List<CloseJobQuestionModel> _commsList ) {
     List<Widget> _list = [];
     _commsList.forEach((element) {
-      Column clmn;
+      Widget clmn;
       if (element.type == "text") {
-        clmn = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          
-          children: [
-            Text("${element.strQuestion}"),
-            TextFormField(
-              validator: (val) {
-                if (val.isEmpty && element.isMandatory)
-                  return "${element.strQuestion} required";
-                else
-                  return null;
-              },
-              onFieldSubmitted: (val) {},
-              controller: element.textController,
-              decoration: InputDecoration(hintText: "Write here"),
+        clmn = Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            
+            children: [
+              Text("${element.strQuestion}"),
+              TextFormField(
+                enabled: !element.strQuestion.toLowerCase().contains("date") &&
+                 !element.strQuestion.toLowerCase().contains("time") ,
+                
+                validator: (val) {
+                  if (val.isEmpty && element.isMandatory)
+                    return "${element.strQuestion} required";
+                  else
+                    return null;
+                },
+                onFieldSubmitted: (val) {},
+                controller: element.textController,
+                decoration: InputDecoration(hintText: "Write here"),
+              ),
+              SizedBox(
+                height: 12.0,
+              ),
+               if(element.strQuestion.toLowerCase().contains("date") ||
+               element.strQuestion.toLowerCase().contains("time"))
+              AppButton(
+                onTap: (){
+                  if(element.strQuestion.toLowerCase().contains("date"))
+                  showDateTimePicker(element.textController);
+                  else
+                  showTimePicker2(element.textController);
+                  },
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                radius: 10,
+                color: Colors.orange,
+                buttonText: element.strQuestion.toLowerCase().contains("date")? "Pick Date" : "Pick Time", 
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0
+                ),                         
+              ),
+              if(element.strQuestion.toLowerCase().contains("date")||
+              element.strQuestion.toLowerCase().contains("time"))
+              SizedBox(height: 8.0,)
+            ],
+          ),
+        );
+      } else if (element.type == "checkBox") {
+        clmn = Padding(
+           padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0,4.0 ),
+                  child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${element.strQuestion}"),
+                Checkbox(
+                    value: element.checkBoxVal ?? false,
+                    onChanged: (val) {
+                      if (!element.isMandatory)
+                        setState(() {
+                          element.checkBoxVal = val;
+                        });
+                    }),
+              ],
             ),
             SizedBox(
               height: 12.0,
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            AppButton(
-              onTap: (){
-                showDateTimePicker(element.textController);
-                },
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 40,
-              radius: 10,
-              color: AppColors.red,
-              buttonText: "Pick Date", 
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0
-              ),                         
-            ),
-            if(element.strQuestion.toLowerCase().contains("date"))
-            SizedBox(height: 8.0,)
-          ],
+            )
+          ]),
         );
-      } else if (element.type == "checkBox") {
-        clmn = Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${element.strQuestion}"),
-              Checkbox(
-                  value: element.checkBoxVal ?? false,
-                  onChanged: (val) {
-                    if (!element.isMandatory)
-                      setState(() {
-                        element.checkBoxVal = val;
-                      });
-                  }),
-            ],
-          ),
-          SizedBox(
-            height: 12.0,
-          )
-        ]);
       } else {
         clmn = Column(
           children: [
@@ -991,6 +1231,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                       height: 40.0,
                       width: 100.0,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
 
                           if(pos != 0)

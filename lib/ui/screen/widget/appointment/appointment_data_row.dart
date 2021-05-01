@@ -46,3 +46,49 @@ class AppointmentDataRow extends StatelessWidget {
     );
   }
 }
+
+
+class CheckAndAssignDataRow extends StatelessWidget {
+  final String firstText;
+  final String secondText;
+  final Widget secondChild;
+  CheckAndAssignDataRow({this.firstText,this.secondText,this.secondChild});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: firstText == "Items" ? AppColors.green : Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.lightGrayDotColor
+          )
+        )
+      ),
+      child:  Padding(
+        padding: SizeConfig.padding,
+        child: Row(
+          children: [
+            Expanded(
+                flex: 2,
+                child: Text(
+                  firstText,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: firstText == "Items"? Colors.black54 : AppColors.darkGrayColor,
+                    fontWeight: firstText == "Items"? FontWeight.bold: FontWeight.normal),
+                )),
+            SizeConfig.horizontalSpaceMedium(),
+            Expanded(
+                flex: 3,
+                child: secondChild!=null?secondChild:Text(
+                  secondText,
+                  style: TextStyle(color: secondText == "Qty"? Colors.black54 : AppColors.darkGrayColor,
+                  fontWeight: secondText == "Qty"? FontWeight.bold: FontWeight.normal),
+                  textAlign: TextAlign.start,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+}

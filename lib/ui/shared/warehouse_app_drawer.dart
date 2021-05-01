@@ -5,6 +5,7 @@ import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/constant/text_style.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/provider/base_view.dart';
+import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:enstaller/ui/screen/profile_screen.dart';
@@ -88,7 +89,7 @@ class WareHouseDrawerWidget extends StatelessWidget {
         ),),
         Expanded(
           child: ListView(
-            children: [
+            children: [ 
               DrawerRowWidget(
                 title: 'Check Order And\nAssign Stock', 
                 assetPath: ImageFile.stock_check_request,
@@ -103,6 +104,14 @@ class WareHouseDrawerWidget extends StatelessWidget {
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => StockUpdateStatus()));
+                },
+              ),
+              DrawerRowWidget(
+                title: 'Logout',
+                assetPath: ImageFile.logout,
+                onTap: ()async{
+                  await Prefs.logOut();
+                  Navigator.of(context).pushNamedAndRemoveUntil("/login",(Route<dynamic> route) => false);
                 },
               ),
           ],

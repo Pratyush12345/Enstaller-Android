@@ -25,6 +25,12 @@ abstract class BaseApi {
     return _processResponse(await client.get(_ENDPOINT+'$path'+param,
         ), success);
   }
+   @protected
+  Future<dynamic> getRequestwithoutParam(String path, Function(Response) success) async {
+
+    return _processResponse(await client.get('https://enstallapi.enpaas.com/api/Stock/BindStockStatus',
+        ), success);
+  }
   @protected
   Future<dynamic> getRequestWithParam(String path, Function(Response) success,var param) async {
     return _processResponse(await http.get(_ENDPOINT+path+'?'+param,

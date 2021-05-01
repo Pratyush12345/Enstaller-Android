@@ -30,6 +30,7 @@ class HomeScreenViewModel extends BaseModel{
 
   Future getAppointmentList()async{
     UserModel userModel = await Prefs.getUser();
+    
     setState(ViewState.Busy);
     appointMentList = await _apiService.getAppointmentList(userModel.intEngineerId.toString());
     setState(ViewState.Idle);

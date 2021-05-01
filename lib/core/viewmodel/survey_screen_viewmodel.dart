@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
+import 'package:enstaller/core/model/gas_job_model.dart';
 import 'package:enstaller/core/model/send/appointmentStatusUpdateCredential.dart';
 import 'package:enstaller/ui/screen/both_close_job.dart';
 import 'package:enstaller/ui/screen/elec_close_job.dart';
@@ -48,7 +49,7 @@ class SurveyScreenViewModel extends BaseModel {
   final Connectivity _connectivity = Connectivity();
   List<AnswerCredential> answerList = [];
   CheckCloseJobModel checkCloseJobModel;
-  
+  bool issubmitted;
   
   void onChangeSelected(int value) {
     setState(ViewState.Busy);
@@ -81,6 +82,7 @@ class SurveyScreenViewModel extends BaseModel {
   void initializeData(String appointmentID, bool edit, BuildContext context, CheckCloseJobModel closeJobModel) async {
     setState(ViewState.Busy);
     user = await Prefs.getUser();
+    issubmitted = false;
     checkCloseJobModel = closeJobModel;
     if (!edit) {
       
@@ -842,6 +844,7 @@ class SurveyScreenViewModel extends BaseModel {
         ConnectivityResult result = await _connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
+          issubmitted = true;
           ResponseModel responseModel =
               await _apiService.submitListSurveyAnswer(answerList);
           ResponseModel abortreasonmodel = await _apiService.abortappointmentbyreason(
@@ -859,12 +862,14 @@ class SurveyScreenViewModel extends BaseModel {
           if (responseModel.statusCode == 1) {
             //setState(ViewState.Idle);
             //await Future.delayed(Duration(seconds: 1));
+            issubmitted = true;
             AppConstants.showSuccessToast(context, "Survey Aborted");
             GlobalVar.isloadAppointmentDetail = true;
             GlobalVar.isloadDashboard = true;
             
           }
           else{
+            issubmitted = false;
             AppConstants.showFailToast(context, "Error Occured while saving");
             
           }
@@ -900,6 +905,7 @@ class SurveyScreenViewModel extends BaseModel {
         ConnectivityResult result = await _connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
+          issubmitted = true;
           ResponseModel responseModel =
               await _apiService.submitListSurveyAnswer(answerList);
           //dsmodel.onUpdateStatusOnCompleted(context, appointmentid);    
@@ -909,21 +915,13 @@ class SurveyScreenViewModel extends BaseModel {
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
             //setState(ViewState.Idle);
-             
+             issubmitted = true;
+          
             AppConstants.showSuccessToast(context, "Survey Submitted");
-            //Navigator.of(context).pop("Sign Off");
-
-            // if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: checkCloseJobModel.table , fromTab: false,)));
-            // else if(checkCloseJobModel.table.length ==1 && checkCloseJobModel.table[0].strFuel == "GAS")
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: checkCloseJobModel.table, fromTab: false,)));
-            // else if(checkCloseJobModel.table.length ==2)
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: checkCloseJobModel.table)));
-                                       
-            //openJumboTab(dsmodel, appointmentid);
             
           }
           else{
+            issubmitted = false;
             AppConstants.showFailToast(context, "Error Occured while saving");
             
           }
@@ -1045,8 +1043,106 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
+  void eleccloseJobSubmitOffline(String appointmentid, ElecCloseJobModel elecCloseJobModel ) async{
 
+     ConnectivityResult result = await _connectivity.checkConnectivity();
+        String status = _updateConnectionStatus(result);
+        if (status != "NONE") {
+          ResponseModel response  = await ApiService().saveElecJob( elecCloseJobModel);
+           if (response.statusCode == 1) {
+                  try{
+                  ResponseModel response = await _apiService.updateAppointmentStatus(
+                    AppointmentStatusUpdateCredentials(
+                        strStatus: "Completed",
+                        intBookedBy: user==null? "4" : user.intEngineerId.toString(),
+                        intEngineerId:user==null? "4" : user.intEngineerId.toString(),
+                        strEmailActionby: "Send by Engineer",
+                        intId: appointmentid) );
+                        if (response.statusCode == 1) {
+                          GlobalVar.isloadAppointmentDetail = true;
+                          GlobalVar.isloadDashboard = true;
+                        }
+                 }catch(e){
+                         GlobalVar.isloadAppointmentDetail = true;
+                          GlobalVar.isloadDashboard = true;
+                   
+                 }
+           }
+        } else {
+          print("********online*****");
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString("$appointmentid"+"ElecJob", jsonEncode(elecCloseJobModel.toJson()));
+        }
+  }
 
+  void gascloseJobSubmitOffline(String appointmentid, GasCloseJobModel gasCloseJobModel ) async{
+
+     ConnectivityResult result = await _connectivity.checkConnectivity();
+        String status = _updateConnectionStatus(result);
+        if (status != "NONE") {
+          ResponseModel response  = await ApiService().saveGasJob(gasCloseJobModel);
+          
+           if (response.statusCode == 1) {
+                  try{
+                  ResponseModel response = await _apiService.updateAppointmentStatus(
+                    AppointmentStatusUpdateCredentials(
+                        strStatus: "Completed",
+                        intBookedBy: user==null? "4" : user.intEngineerId.toString(),
+                        intEngineerId:user==null? "4" : user.intEngineerId.toString(),
+                        strEmailActionby: "Send by Engineer",
+                        intId: appointmentid) );
+                        if (response.statusCode == 1) {
+                          GlobalVar.isloadAppointmentDetail = true;
+                          GlobalVar.isloadDashboard = true;
+                        }
+                 }catch(e){
+                         GlobalVar.isloadAppointmentDetail = true;
+                          GlobalVar.isloadDashboard = true;
+                   
+                 }
+           }
+        } else {
+          print("********online*****");
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString("$appointmentid"+"GasJob", jsonEncode(gasCloseJobModel.toJson()));
+        }
+  }
+  void bothcloseJobSubmitOffline(String appointmentid, GasCloseJobModel gasCloseJobModel,
+  ElecCloseJobModel elecCloseJobModel ) async{
+
+     ConnectivityResult result = await _connectivity.checkConnectivity();
+        String status = _updateConnectionStatus(result);
+        if (status != "NONE") {
+          ResponseModel response  = await ApiService().saveGasJob(gasCloseJobModel);
+          ResponseModel response1  = await ApiService().saveElecJob( elecCloseJobModel);
+           
+           if (response.statusCode == 1) {
+                 try{
+                  ResponseModel response = await _apiService.updateAppointmentStatus(
+                    AppointmentStatusUpdateCredentials(
+                        strStatus: "Completed",
+                        intBookedBy: user==null? "4" : user.intEngineerId.toString(),
+                        intEngineerId:user==null? "4" : user.intEngineerId.toString(),
+                        strEmailActionby: "Send by Engineer",
+                        intId: appointmentid) );
+                        if (response.statusCode == 1) {
+                          GlobalVar.isloadAppointmentDetail = true;
+                          GlobalVar.isloadDashboard = true;
+                        }
+                 }catch(e){
+                         GlobalVar.isloadAppointmentDetail = true;
+                          GlobalVar.isloadDashboard = true;
+                   
+                 }     
+           }
+        } else {
+          print("********online*****");
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString("$appointmentid"+"GasJob", jsonEncode(gasCloseJobModel.toJson()));
+          preferences.setString("$appointmentid"+"ElecJob", jsonEncode(elecCloseJobModel.toJson()));
+        }
+  }
+  
   void onSubmitOffline(String appointmentid,
       List<AnswerCredential> _listofanswer, String sectionName) async {
     print("**********offline********");
@@ -1074,17 +1170,17 @@ class SurveyScreenViewModel extends BaseModel {
           print(abortreasonmodel.response);
             }
             else{
-               ResponseModel response = await _apiService.updateAppointmentStatus(
-          AppointmentStatusUpdateCredentials(
-              strStatus: "Completed",
-              intBookedBy: user.intEngineerId.toString(),
-              intEngineerId: user.intEngineerId.toString(),
-              strEmailActionby: "Send by Engineer",
-              intId: appointmentid) );
-              if (response.statusCode == 1) {
-                      GlobalVar.isloadAppointmentDetail = true;
-                      GlobalVar.isloadDashboard = true;
-              }
+          //      ResponseModel response = await _apiService.updateAppointmentStatus(
+          // AppointmentStatusUpdateCredentials(
+          //     strStatus: "Completed",
+          //     intBookedBy: user.intEngineerId.toString(),
+          //     intEngineerId: user.intEngineerId.toString(),
+          //     strEmailActionby: "Send by Engineer",
+          //     intId: appointmentid) );
+          //     if (response.statusCode == 1) {
+          //             GlobalVar.isloadAppointmentDetail = true;
+          //             GlobalVar.isloadDashboard = true;
+          //     }
             }
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");

@@ -1,4 +1,5 @@
 import 'package:enstaller/core/constant/app_colors.dart';
+import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
@@ -17,15 +18,20 @@ class BothCloseJob extends StatefulWidget {
 }
 
 class _BothCloseJobState extends State<BothCloseJob> {
+  bool _showIndicator = false;
+  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
           child: Scaffold(
-       appBar: AppBar(
+            resizeToAvoidBottomInset: false,
+        appBar: AppBar(
          backgroundColor: AppColors.green,
-         title: Text("Close Jobs"),),
-       body: Column(
+         title: Text("Close Jobs",
+         style: TextStyle(color: Colors.white)),),
+       body: _showIndicator? 
+        AppConstants.circulerProgressIndicator(): Column(
             children: [
               Container(
                 color: AppColors.green,
@@ -80,12 +86,21 @@ class _BothCloseJobState extends State<BothCloseJob> {
                 ]),
               ),
               AppButton(
-        onTap: (){
-          if( GlobalVar.elecCloseJob >= 1 && GlobalVar.elecCloseJob >= 1 ){
-           widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+        onTap: () async{
+          if( GlobalVar.elecCloseJob >= 1 && GlobalVar.gasCloseJob >= 1 ){
+           setState(() {
+           _showIndicator = true;   
+           });
+           await widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
            GlobalVar.elecCloseJob = 0;
            GlobalVar.gasCloseJob = 0;
+           setState(() {
+           _showIndicator = false;  
+           });
            
+          }
+          else if(GlobalVar.closejobsubmittedoffline){
+            AppConstants.showSuccessToast(context, "Submitted Offline");
           }
           },
         width: 200,

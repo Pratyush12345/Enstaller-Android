@@ -11,7 +11,7 @@ class AppStrings {
   static const completed = 'Completed';
   static const booked = 'Booked';
   static const inRoute = 'EnRoute';
-  static const EnRoute = 'En Route';
+  static const EnRoute = 'InRoute';
   static const onSite = 'OnSite';
   static const started = 'Started';
   static const aborted = 'Aborted';
@@ -158,6 +158,7 @@ class AppStrings {
   static const ORDER_DETAILS = 'ORDER DETAILS';
   static const DELETE = 'Delete';
   static const ITEMS = 'ITEMS';
+  static const ITEMs = 'Items';
   static const CONTRACT_NAME = 'Contract Name';
   static const REGION = 'Region';
   static const THIRD_PARTY = 'Third Party';
@@ -188,6 +189,7 @@ class AppStrings {
   static const EDIT_ORDER = 'EDIT ORDER';
   static const SERIAL_NUMBER = 'Serial Number';
   static const ITEM_NAME = 'Item Name';
+  static const QTY = 'Qty';
 
   //SMS Notification
   static const bookingRefNo = "Booking Ref. No";

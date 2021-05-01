@@ -65,12 +65,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     "GICOM": "79",
     "EICOM": "1"
   };
-  bool _isSubmitted ;
-  @override
-  void initState() {
-    _isSubmitted = false;
-    super.initState();
-  }
+  
   @override
   Widget build(BuildContext context) {
       progressDialog = ProgressDialog(context,
@@ -302,6 +297,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 : AppStrings.submit,
                             
                             onTap: () async {
+                              if(!model.issubmitted){
                               if (!widget.arguments.edit) {
                                 print(model.selected.toString() + 'line 314');
                                 int validateconter = 0;
@@ -385,16 +381,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 if(questions[0].strSectionName != "Sign Off" && questions[0].strSectionName != "Abort" )
                                   scrollup();
                                  else{
-                                   if(!_isSubmitted)
-                                   progressDialog.show();
                                   
+                                   progressDialog.show();
                                  } 
                                  print("iiiiiiiiiiiiiiiiiiiiiiiiii");
-                                 print(_isSubmitted);
+                                 print(model.issubmitted);
                                  print("iiiiiiiiiiiiiiiiiiiiiiiiii");
                                  String response;
-                                 if(!_isSubmitted){
-                                     _isSubmitted = true;
                                      response = await model.onSubmit(
                                       model.selected,
                                       widget.arguments.appointmentID,
@@ -402,7 +395,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                       widget.arguments.dsmodel,
                                       questions[0].strSectionName
                                       );
-                                 }
+                                 
                                 if(response == "Sign Off"){
                                     progressDialog.hide();
                                     if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
@@ -427,8 +420,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 print(questions[0].intSectionId);
                                 model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, questions[0].intSectionId);
                               }
+                            }
                             },
                           ),
+                          
                       ],
                     ),
                   );
@@ -484,7 +479,26 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, 1);
                                 },
                               )
-                            : Container(),
+                            : widget.arguments.edit && widget.arguments.dsmodel.appointmentDetails.appointment.appointmentEventType=="OnSite"?
+                          AppButton(
+                            width: 100,
+                            height: 40,
+                            radius: 10,
+                            color: AppColors.green,
+                            buttonText: "Close Job",
+                            onTap: (){
+                                  if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false,
+                                    dsmodel: widget.arguments.dsmodel,)));
+                                    else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,
+                                     dsmodel: widget.arguments.dsmodel)));
+                                    else if(model.checkCloseJobModel.table.length ==2)
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table,
+                                    dsmodel: widget.arguments.dsmodel)));
+                                  
+                            },
+                          ): Container()
                       ],
                     ),
                   );

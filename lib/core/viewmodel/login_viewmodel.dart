@@ -1,7 +1,9 @@
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
+import 'package:enstaller/core/model/after_login_model.dart';
 import 'package:enstaller/core/model/login_credentials.dart';
 import 'package:enstaller/core/model/login_responsemodel.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
@@ -30,6 +32,9 @@ class LogInViewModel extends BaseModel{
       password: passwordController.text,
       groupType: 'password'
     ));
+    AfterLoginModel afterLoginModel = await _apiService.getUserRole(userNameController.text.trim());
+    GlobalVar.roleId = afterLoginModel.intRoleId;
+    GlobalVar.warehosueID = afterLoginModel.intId.toString();
     if(response.errorMessage!=null){
       setState(ViewState.Idle);
       AppConstants.showFailToast(context,response.errorMessage);
@@ -50,7 +55,8 @@ class LogInViewModel extends BaseModel{
 
 
 
-      Prefs.setUserProfile(response.userDetails);
+      Prefs.setUserProfile(response.userDetails,roleId: GlobalVar.roleId, wareHouseId: GlobalVar.warehosueID);
+
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('ups', passwordController.text);
        print("replaceeeeeeeeeeeeeeeeeee");

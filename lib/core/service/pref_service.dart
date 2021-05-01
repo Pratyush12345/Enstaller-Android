@@ -1,4 +1,5 @@
 
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Prefs{
@@ -17,7 +18,8 @@ class Prefs{
     String issued=preferences.getString('.issued');
     String expires=preferences.getString('.expires');
     bool rememberMe=preferences.getBool('remember');
-
+    GlobalVar.roleId = preferences.getInt("roleId");
+    GlobalVar.warehosueID = preferences.getString("wareHouseId");
 
 
 
@@ -48,7 +50,7 @@ class Prefs{
     return currentIndex;
   }
 
-  static void setUserProfile(UserModel userModel) async {
+  static void setUserProfile(UserModel userModel, {int roleId, String wareHouseId}) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("access_token", userModel.accessToken.toString());
     preferences.setString("token_type", userModel.tokenType);
@@ -63,8 +65,11 @@ class Prefs{
     preferences.setString('.issued', userModel.issued);
     preferences.setString('.expires', userModel.expires);
     preferences.setBool('remember', userModel.rememberMe);
+    preferences.setInt('roleId', roleId);
+    preferences.setString('wareHouseId', wareHouseId);
     preferences.commit();
   }
+  
 
 
   static void logOut() async {
@@ -81,6 +86,9 @@ class Prefs{
     preferences.setString('strEngineerName', null);
     preferences.setString('.issued', null);
     preferences.setString('.expires', null);
+    preferences.setInt('roleId', null);
+    preferences.setString('wareHouseId', null);
+    
     preferences.commit();
   }
   static void setFirstTime()async{

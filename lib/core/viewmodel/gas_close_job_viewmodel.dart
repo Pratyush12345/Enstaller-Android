@@ -289,9 +289,14 @@ class GasJobViewModel {
       type: "text" , isMandatory: false
     ),CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strLocationNotesC", 
-      strQuestion: "strLocationNotesC", textController: TextEditingController(),
+      strQuestion: "Location Notes", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),CloseJobQuestionModel(
+      checkBoxVal: null, jsonfield: "strManufacturerC", 
+      strQuestion: "rManufacturer", textController: TextEditingController(),
+      type: "text" , isMandatory: false
+    )
+    ,CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strModelC", 
       strQuestion: "Model", textController: TextEditingController(),
       type: "text" , isMandatory: false
@@ -332,7 +337,7 @@ class GasJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSiteVisitEndTime", 
-      strQuestion: "strSiteVisitEndTime", textController: TextEditingController(),
+      strQuestion: "Site Visit End Time", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
   ];
