@@ -133,7 +133,10 @@ class _GasCloseJobState extends State<GasCloseJob> {
             }else{
               GlobalVar.gasCloseJob++;
             }
+            if(!widget.fromTab)
             AppConstants.showSuccessToast(context, response.response);
+            else
+            AppConstants.showSuccessToast(context, "Saved");
           } else {
             AppConstants.showFailToast(context, response.response);
           }

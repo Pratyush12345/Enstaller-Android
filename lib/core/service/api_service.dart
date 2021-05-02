@@ -182,6 +182,22 @@ class ApiService extends BaseApi{
       }
     },model.toJson());
   }
+  Future<dynamic> saveStatusUpdate( StockStatusSaveModel model){
+    return postRequestMap(ApiUrls.updateStatusBatchWise, (r) {
+      final response = json.decode(r.body);
+      if (response) {
+        return ResponseModel(
+          statusCode: 1,
+          response: 'Successfully Submited'
+        );
+      }else{
+        return ResponseModel(
+          statusCode: 0,
+          response: 'Please try again'
+        );
+      }
+    },model.toJson());
+  }
   Future <dynamic> getOrderLineDetail(String orderId){
     return getRequestWithParam(ApiUrls.getCheckStockOrderLineDetails,
             (response) {
@@ -246,7 +262,7 @@ class ApiService extends BaseApi{
       if (response) {
         return ResponseModel(
             statusCode: 1,
-            response: 'Successfully Saved'
+            response: 'Job Closed Successfully'
         );
       }else{
         return ResponseModel(
@@ -264,7 +280,7 @@ class ApiService extends BaseApi{
       if (response) {
         return ResponseModel(
             statusCode: 1,
-            response: 'Successfully Saved'
+            response: 'Job Closed Successfully'
         );
       }else{
         return ResponseModel(

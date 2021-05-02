@@ -183,7 +183,10 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             }else{
               GlobalVar.elecCloseJob++;
             }
+            if(!widget.fromTab)
             AppConstants.showSuccessToast(context, response.response);
+            else
+            AppConstants.showSuccessToast(context, "Saved");
           } else {
             AppConstants.showFailToast(context, response.response);
           }

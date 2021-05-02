@@ -18,6 +18,7 @@ class CheckAndAssignOrderVM extends BaseModel {
   List<OrderLineDetail> orderLineDetailList;
   List<CheckSerialModel> checkSerialModelList;
   List<CheckSerialModel> showListView = [];
+  List<StockList> stockList = [];
  
   Future<bool> checkValidity(BuildContext context, String reference) async{
     orderLineDetailList = [];
@@ -75,7 +76,7 @@ class CheckAndAssignOrderVM extends BaseModel {
   
   }
 
-  save( BuildContext context) async {
+  save( BuildContext context, int orderid) async {
     bool flag = true;
     for(int i = 0; i< orderLineDetailList.length; i++){ 
       OrderLineDetail element = orderLineDetailList[i];
@@ -92,10 +93,20 @@ class CheckAndAssignOrderVM extends BaseModel {
       }
     }
     if(flag){
+      showListView.forEach((element) { 
+        stockList.add(StockList(
+          decQty: element.decQty.toInt(),
+          intContainerId: element.intContainerId,
+          intItemId: element.intItemId,
+          intOrderLineItemId: element.intOrderLineItemId,
+          intStockId: element.intStockId,
+          intOrderId: orderid
+        ));
+      });
     try{
         ResponseModel responseModel = await _apiService.saveCheckOrder(SaveCheckOrderModel(
           intCreatedBy: int.parse(GlobalVar.warehosueID),
-          stockList: []
+          stockList: stockList
         ));
         if(responseModel.statusCode == 1){
           AppConstants.showSuccessToast(context, responseModel.response);

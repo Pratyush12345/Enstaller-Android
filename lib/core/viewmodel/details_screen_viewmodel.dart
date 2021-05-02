@@ -220,7 +220,7 @@ class DetailsScreenViewModel extends BaseModel {
               strEmailActionby: "Send by Engineer",
               intId: appointmentID) );
       if (response.statusCode == 1) {
-              AppConstants.showSuccessToast(context, "Status Updated");
+              //AppConstants.showSuccessToast(context, "Status Updated");
               GlobalVar.isloadAppointmentDetail = true;
               GlobalVar.isloadDashboard = true;
       } else {

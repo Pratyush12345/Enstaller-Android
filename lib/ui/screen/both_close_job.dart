@@ -91,7 +91,9 @@ class _BothCloseJobState extends State<BothCloseJob> {
            setState(() {
            _showIndicator = true;   
            });
+           AppConstants.showSuccessToast(context, "Job Saved Successfully");
            await widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+           
            GlobalVar.elecCloseJob = 0;
            GlobalVar.gasCloseJob = 0;
            setState(() {

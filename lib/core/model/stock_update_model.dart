@@ -102,3 +102,68 @@ class StockPalletModel {
   }
 }
 
+
+class StockStatusSaveModel {
+  String strType;
+  int intWarehouseUserId;
+  int intLocationId;
+  int intStatusId;
+  String strComments;
+  int intCreatedBy;
+  List<SerialList> serialList;
+
+  StockStatusSaveModel(
+      {this.strType,
+      this.intWarehouseUserId,
+      this.intLocationId,
+      this.intStatusId,
+      this.strComments,
+      this.intCreatedBy,
+      this.serialList});
+
+  StockStatusSaveModel.fromJson(Map<String, dynamic> json) {
+    strType = json['strType'];
+    intWarehouseUserId = json['intWarehouseUserId'];
+    intLocationId = json['intLocationId'];
+    intStatusId = json['intStatusId'];
+    strComments = json['strComments'];
+    intCreatedBy = json['intCreatedBy'];
+    if (json['serialList'] != null) {
+      serialList = new List<SerialList>();
+      json['serialList'].forEach((v) {
+        serialList.add(new SerialList.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['strType'] = this.strType;
+    data['intWarehouseUserId'] = this.intWarehouseUserId;
+    data['intLocationId'] = this.intLocationId;
+    data['intStatusId'] = this.intStatusId;
+    data['strComments'] = this.strComments;
+    data['intCreatedBy'] = this.intCreatedBy;
+    if (this.serialList != null) {
+      data['serialList'] = this.serialList.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SerialList {
+  String serialNo;
+
+  SerialList({this.serialNo});
+
+  SerialList.fromJson(Map<String, dynamic> json) {
+    serialNo = json['SerialNo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['SerialNo'] = this.serialNo;
+    return data;
+  }
+}
+

@@ -65,7 +65,7 @@ dependencies:
   syncfusion_flutter_pdfviewer:
   progress_dialog:
   barcode_flutter: ^1.1.2
-  # file_picker:
+  file_picker: ^1.4.3+2
 
 
 dev_dependencies:

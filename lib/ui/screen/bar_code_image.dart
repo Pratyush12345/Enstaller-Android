@@ -18,7 +18,8 @@ class _BarCodeRenderState extends State<BarCodeRender> {
       appBar: AppBar(
         backgroundColor: AppColors.green,
               
-        title: Text("Bar Code Image"),),
+        title: Text("Bar Code Image",
+        style: TextStyle(color: Colors.white),),),
       body: Container(
         child: Padding(
           padding: EdgeInsets.all(12.0),

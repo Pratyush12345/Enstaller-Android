@@ -19,6 +19,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
   bool _showOrderErrorMsg;
   bool _showSerialErrorMsg;
   bool _showbelowColumn;
+  bool _isIncorrectOrderNo;
   
   _getOrderLineDetail(){
     _listOrderLinedetail = [];
@@ -137,6 +138,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
     _showOrderErrorMsg  = false;
     _showSerialErrorMsg = false;
     _showbelowColumn = false;
+    _isIncorrectOrderNo = false;
     CheckAndAssignOrderVM.instance.orderByRefernceModel = null;
     CheckAndAssignOrderVM.instance.orderLineDetailList = null;
     CheckAndAssignOrderVM.instance.showListView = [];
@@ -168,11 +170,22 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                           print(result.rawContent);
                           
                              ordercontroller.text = result.rawContent.toString();
+                             if(ordercontroller.text.contains("-")){
+
                              _showOrderErrorMsg = await CheckAndAssignOrderVM.instance.checkValidity(context, ordercontroller.text);
                              _showbelowColumn = true;
+                             _isIncorrectOrderNo = false;
                           setState(() {
                             
                           });
+                             }
+                             else{
+                               _showOrderErrorMsg = true;
+                               _isIncorrectOrderNo = true;
+                               setState(() {
+                                 
+                               });
+                             }
                         } on PlatformException {
                           barcodeScanRes = 'Failed to get platform version.';
                         }
@@ -182,8 +195,13 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                 ),
               ),
               SizedBox(height: 8.0,),
-              if(_showOrderErrorMsg)
+              if(_showOrderErrorMsg && !_isIncorrectOrderNo)
               Text("Order No. Already Assigned",
+              style: TextStyle(
+                color: Colors.red
+              ),),
+              if(_isIncorrectOrderNo)
+              Text("Invalid Bar code",
               style: TextStyle(
                 color: Colors.red
               ),),
@@ -233,7 +251,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
               Center(
                 child: AppButton(
                   onTap: (){
-                   CheckAndAssignOrderVM.instance.save(context);
+                   CheckAndAssignOrderVM.instance.save(context, CheckAndAssignOrderVM.instance.orderByRefernceModel.intId);
                   },
                   width: 100,
                   height: 40,
