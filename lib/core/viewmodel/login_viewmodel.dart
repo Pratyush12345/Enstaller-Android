@@ -7,6 +7,8 @@ import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
+import 'package:enstaller/ui/screen/warehouse_screens/check_order_assign_stcok.dart';
+import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -59,7 +61,9 @@ class LogInViewModel extends BaseModel{
 
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('ups', passwordController.text);
-       print("replaceeeeeeeeeeeeeeeeeee");
+      if(GlobalVar.roleId == 5)
+      Navigator.of(context).pushReplacementNamed("/checkAssignOrder");
+      else
       Navigator.of(context).pushReplacementNamed("/home");
     }
   }

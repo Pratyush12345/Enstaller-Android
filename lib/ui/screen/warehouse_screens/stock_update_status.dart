@@ -116,11 +116,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
   List<List<dynamic>> list =  await loadingCsvData(path)??[];
   print("-----------------------");
   print(list);
-  if(list.length !=1){
-    print("1");
-    AppConstants.showFailToast(context, "Incorrect File Format");
-  }
-  else{
+  if(list.length ==1){
   List<String> splitList = list[0][0].toString().split("\n");  
   print(list[0][0].toString().split("\n"));
     if(splitList[0].trim() != "Serial"){ 
@@ -135,6 +131,23 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
       AppConstants.showSuccessToast(context, "File Data Saved");
     }
   
+  }
+  else if(list.length >1){
+   if(list[0][0].toString().trim()!="Serial" && list[0].length !=1){
+    
+      AppConstants.showFailToast(context, "Incorrect File Format");
+   } else{
+   list.forEach((element) { 
+        if(element[0].toString().trim() != "Serial" && element.length ==1){
+           _serialList.add(SerialList(serialNo: element[0].toString().trim()));
+        }
+      });
+      
+      AppConstants.showSuccessToast(context, "File Data Saved");
+   }
+  }else{
+    
+      AppConstants.showFailToast(context, "Incorrect File Format");
   }
   }
    Future<List<List<dynamic>>> loadingCsvData(String path) async {
@@ -160,7 +173,10 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
               height: 40,
               radius: 10,
               color: AppColors.green,
-              buttonText: "Choose CSV file",                          
+              buttonText: "Choose CSV file",   
+              textStyle: TextStyle(
+                color: Colors.white
+              ),                       
             ),
       SizedBox(height: 30.0,)      
      ],
@@ -317,7 +333,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                               onChanged: (val){
                                 setState(() {
                                   selectedradio = val;
-                                  model.strType = "Item";
+                                  model.strType = "Serial";
                                 });
                              }),
                        ],
@@ -363,7 +379,10 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                     height: 40,
                     radius: 10,
                     color: AppColors.green,
-                    buttonText: "Save",                          
+                    buttonText: "Save",  
+                    textStyle: TextStyle(
+                      color: Colors.white
+                    ),                        
                   )
               ],
             ),

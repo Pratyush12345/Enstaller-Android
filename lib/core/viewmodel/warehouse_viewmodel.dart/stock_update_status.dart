@@ -30,6 +30,7 @@ class StockUpdateStatusViewModel extends BaseModel {
   String bValue;
   String comment;
   String strType;
+  int count = 1;
   
   ApiService _apiService = ApiService();
   
@@ -78,10 +79,19 @@ class StockUpdateStatusViewModel extends BaseModel {
 
       storagePermission = await Permission.storage.status;
       if(storagePermission.isGranted){
+    
+        
         final String dir = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
-        final String path = '$dir/demoStock.csv';
+        final String path = '$dir/${count}demoStock.csv';
+        count++;
         final File file = File(path);
         await file.writeAsBytesSync(bytes);
+        // final String dir = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOCUMENTS);
+        // path = '$dir/demoStock.csv';
+        // final File file = File(path);
+        // await file.writeAsBytesSync(bytes);
+        
+        
         AppConstants.showSuccessToast(context, AppStrings.SAVED_SUCCESSFULLY);
         FirebaseMessagingService.showNotification("File Downloaded", path);
       }else{

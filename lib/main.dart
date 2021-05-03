@@ -4,12 +4,14 @@ import 'package:enstaller/app_router.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/app_themes.dart';
 import 'package:enstaller/core/get_it.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/service/devhttpoverride.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/userprovider.dart';
 import 'package:enstaller/ui/login_screen.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
+import 'package:enstaller/ui/screen/warehouse_screens/check_order_assign_stcok.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
@@ -61,16 +63,19 @@ class MainMaterialApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: AppStrings.appTitle,
       theme: themeProvider.getTheme(),
-        initialRoute: loginUser.rememberMe ?"/home": "/login" ,
+        //initialRoute: loginUser.rememberMe ?GlobalVar.roleId == 5? "/checkAssignOrder" :"/home": "/login" ,
         routes: {
           '/login': (BuildContext context) => new LoginScreen(),
           '/home': (BuildContext context) => new HomeScreen(),
+          '/checkAssignOrder' : (BuildContext context) => new CheckAndAssignOrder()
         },
       onGenerateRoute: AppRouter.generateRoute,
-      home: loginUser.rememberMe? HomeScreen():LoginScreen()  ,
+      home: loginUser.rememberMe? (GlobalVar.roleId == 5? CheckAndAssignOrder() :HomeScreen()) :LoginScreen()  ,
 //    home: TestPage(),
     );
   }
 }
+
+
 
 

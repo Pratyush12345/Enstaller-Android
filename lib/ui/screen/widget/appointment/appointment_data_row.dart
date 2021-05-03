@@ -74,16 +74,16 @@ class CheckAndAssignDataRow extends StatelessWidget {
                   firstText,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    color: firstText == "Items"? Colors.black54 : AppColors.darkGrayColor,
-                    fontWeight: firstText == "Items"? FontWeight.bold: FontWeight.normal),
+                    color: firstText == "Items"? Colors.white : AppColors.darkGrayColor,
+                    fontWeight: FontWeight.bold),
                 )),
             SizeConfig.horizontalSpaceMedium(),
             Expanded(
                 flex: 3,
                 child: secondChild!=null?secondChild:Text(
                   secondText,
-                  style: TextStyle(color: secondText == "Qty"? Colors.black54 : AppColors.darkGrayColor,
-                  fontWeight: secondText == "Qty"? FontWeight.bold: FontWeight.normal),
+                  style: TextStyle(color: secondText == "Quantity"? Colors.white : AppColors.darkGrayColor,
+                  fontWeight: secondText == "Quantity"? FontWeight.bold: FontWeight.normal),
                   textAlign: TextAlign.start,
                 )),
           ],

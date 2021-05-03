@@ -1,9 +1,13 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
+import 'package:enstaller/core/constant/size_config.dart';
+import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/viewmodel/warehouse_viewmodel.dart/checkandassign_viewmodel.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
+import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
+import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; 
 class CheckAndAssignOrder extends StatefulWidget {
@@ -39,12 +43,11 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
        if(CheckAndAssignOrderVM.instance.orderByRefernceModel != null)
         Column(
       children: [
-        Text(""),
         ClipRRect(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(7), topRight: Radius.circular(7)),
           child: AppButton(
-            buttonText: 'Oder Details',
+            buttonText: 'Order Details',
             color: AppColors.green,
             textStyle: TextStyle(
                 color: AppColors.whiteColor, fontWeight: FontWeight.bold),
@@ -53,39 +56,39 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
             },
           ),
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Reference",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.strRefrence ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Status",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.strStatus ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "User",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.strUserName ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Warehouse",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.strWarehouseName ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Collection Date",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.dteCollectionDate ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Approved",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.isApproved ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Merged",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.isMerged ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Created",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.dteCreatedDate ?? "",
         ),
-        AppointmentDataRow(
+        CheckAndAssignDataRow(
           firstText: "Modified",
           secondText: CheckAndAssignOrderVM.instance.orderByRefernceModel.dteModifiedDate ?? "",
         ),
@@ -146,6 +149,8 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
   }
   @override
   Widget build(BuildContext context) {
+    
+    SizeConfig.sizeConfigInit(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.green,
@@ -153,13 +158,17 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
         style: TextStyle(
           color: Colors.white
         ),),),
+      drawer: Drawer(
+              //child: AppDrawerWidget(),
+              child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
+            ),  
       body: SingleChildScrollView(
         child: Padding(
             padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
             child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,  
             children: [
-              Text("Enter Order No."),
+              Text("Scan Order No."),
               SizedBox(height: 6.0,),
               TextField(
                 controller: ordercontroller ,
@@ -201,7 +210,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                 color: Colors.red
               ),),
               if(_isIncorrectOrderNo)
-              Text("Invalid Bar code",
+              Text("Invalid Order No.",
               style: TextStyle(
                 color: Colors.red
               ),),
@@ -216,7 +225,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Enetr Serial No."),
+                  Text("Scan Serial No."),
                   SizedBox(height: 6.0,),
               TextField(
                 controller: serialcontroller,
@@ -241,7 +250,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                 ),
               ),
               if(_showSerialErrorMsg)
-              Text("Invalid Bar Code Number",
+              Text("Invalid Serial No.",
               style: TextStyle(
                 color: Colors.red
               ),),
@@ -257,7 +266,10 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                   height: 40,
                   radius: 10,
                   color: AppColors.green,
-                  buttonText: "Save",                          
+                  buttonText: "Save",   
+                  textStyle: TextStyle(
+                    color: Colors.white
+                  ),                       
                 ),
               )
                 ],

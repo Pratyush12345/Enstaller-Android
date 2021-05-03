@@ -337,7 +337,7 @@ class GasJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSiteVisitEndTime", 
-      strQuestion: "Site Visit End Time", textController: TextEditingController(),
+      strQuestion: "End Time", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
   ];

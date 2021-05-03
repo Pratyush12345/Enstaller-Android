@@ -172,7 +172,7 @@ class ApiService extends BaseApi{
       if (response) {
         return ResponseModel(
           statusCode: 1,
-          response: 'Successfully Submited'
+          response: 'Order Assigned Successfully'
         );
       }else{
         return ResponseModel(
@@ -188,7 +188,7 @@ class ApiService extends BaseApi{
       if (response) {
         return ResponseModel(
           statusCode: 1,
-          response: 'Successfully Submited'
+          response: 'Status Updated Successfully'
         );
       }else{
         return ResponseModel(

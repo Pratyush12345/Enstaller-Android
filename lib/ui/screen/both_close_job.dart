@@ -109,8 +109,13 @@ class _BothCloseJobState extends State<BothCloseJob> {
         height: 40,
         radius: 10,
         color: AppColors.green,
-        buttonText: "Submit Close Job",                          
-      )
+        buttonText: "Submit Close Job", 
+        textStyle: TextStyle(
+          color: Colors.white
+        ),                         
+      ),
+      SizedBox(height: 30.0,)
+
             ],
           ),
       ),

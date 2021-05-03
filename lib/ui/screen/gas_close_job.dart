@@ -34,15 +34,25 @@ class _GasCloseJobState extends State<GasCloseJob> {
   Map<int, int> _converterCount;
   final Connectivity _connectivity = Connectivity();
   bool _showIndicator = false;
-  showDateTimePicker(TextEditingController controller) async{
+  DateTime startDate;
+  DateTime endDate;
+  showDateTimePicker(TextEditingController controller, String question) async{
+    
     DateTime date = await showDatePicker(
       context: context, 
       initialDate: DateTime.now(), 
-      firstDate: DateTime(DateTime.now().year - 5), 
+      firstDate:  DateTime(DateTime.now().year - 5), 
       lastDate: DateTime(DateTime.now().year + 5)
       );
       setState(() {
-        controller.text = date.year.toString()+"/"+date.month.toString() + "/"+ date.day.toString();
+        if(question == "Start Date"){
+          startDate = date;
+        }
+        if(question == "End Date"){
+          endDate = date;
+        }
+        if(date!=null)
+        controller.text = date.day.toString()+"/"+date.month.toString() + "/"+ date.year.toString() ;
       });
   }
 
@@ -223,14 +233,19 @@ String _updateConnectionStatus(ConnectivityResult result) {
             children: [
               Text("${element.strQuestion}"),
               TextFormField(
-                enabled: !element.strQuestion.toLowerCase().contains("date") &&
-                 !element.strQuestion.toLowerCase().contains("time") ,
-                
+                readOnly: element.strQuestion.toLowerCase().contains("date") ||
+                 element.strQuestion.toLowerCase().contains("time") ,
+                enabled: true,
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
-                    return "${element.strQuestion} required";
+                   return "${element.strQuestion} required";
+                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
+                   if(endDate.difference(startDate).inDays<0)
+                   return "End Date sould be greater than Start Date";
+                   return null;
+                  }
                   else
-                    return null;
+                   return null;
                 },
                 onFieldSubmitted: (val) {},
                 controller: element.textController,
@@ -244,7 +259,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
               AppButton(
                 onTap: (){
                   if(element.strQuestion.toLowerCase().contains("date"))
-                  showDateTimePicker(element.textController);
+                  showDateTimePicker(element.textController, element.strQuestion);
                   else
                   showTimePicker2(element.textController);
                   },
@@ -299,14 +314,19 @@ String _updateConnectionStatus(ConnectivityResult result) {
             children: [
               Text("${element.strQuestion}"),
               TextFormField(
-                enabled: !element.strQuestion.toLowerCase().contains("date") &&
-                 !element.strQuestion.toLowerCase().contains("time") ,
-                
+                readOnly: element.strQuestion.toLowerCase().contains("date") ||
+                 element.strQuestion.toLowerCase().contains("time") ,
+                enabled: true,
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
-                    return "${element.strQuestion} required";
+                   return "${element.strQuestion} required";
+                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
+                   if(endDate.difference(startDate).inDays<0)
+                   return "End Date sould be greater than Start Date";
+                   return null;
+                  }
                   else
-                    return null;
+                   return null;
                 },
                 onFieldSubmitted: (val) {},
                 controller: element.textController,
@@ -320,7 +340,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
               AppButton(
                 onTap: (){
                   if(element.strQuestion.toLowerCase().contains("date"))
-                  showDateTimePicker(element.textController);
+                  showDateTimePicker(element.textController, element.strQuestion);
                   else
                   showTimePicker2(element.textController);
                   },
@@ -431,14 +451,19 @@ String _updateConnectionStatus(ConnectivityResult result) {
             children: [
               Text("${element.strQuestion}"),
               TextFormField(
-                enabled: !element.strQuestion.toLowerCase().contains("date") &&
-                 !element.strQuestion.toLowerCase().contains("time") ,
-                
+                readOnly: element.strQuestion.toLowerCase().contains("date") ||
+                 element.strQuestion.toLowerCase().contains("time") ,
+                enabled: true,
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
-                    return "${element.strQuestion} required";
+                   return "${element.strQuestion} required";
+                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
+                   if(endDate.difference(startDate).inDays<0)
+                   return "End Date sould be greater than Start Date";
+                   return null;
+                  }
                   else
-                    return null;
+                   return null;
                 },
                 onFieldSubmitted: (val) {},
                 controller: element.textController,
@@ -452,7 +477,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
               AppButton(
                 onTap: (){
                   if(element.strQuestion.toLowerCase().contains("date"))
-                  showDateTimePicker(element.textController);
+                  showDateTimePicker(element.textController, element.strQuestion);
                   else
                   showTimePicker2(element.textController);
                   },
@@ -564,14 +589,19 @@ String _updateConnectionStatus(ConnectivityResult result) {
             children: [
               Text("${element.strQuestion}"),
               TextFormField(
-                enabled: !element.strQuestion.toLowerCase().contains("date") &&
-                 !element.strQuestion.toLowerCase().contains("time") ,
-                
+                readOnly: element.strQuestion.toLowerCase().contains("date") ||
+                 element.strQuestion.toLowerCase().contains("time") ,
+                enabled: true,
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
-                    return "${element.strQuestion} required";
+                   return "${element.strQuestion} required";
+                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
+                   if(endDate.difference(startDate).inDays<0)
+                   return "End Date sould be greater than Start Date";
+                   return null;
+                  }
                   else
-                    return null;
+                   return null;
                 },
                 onFieldSubmitted: (val) {},
                 controller: element.textController,
@@ -585,7 +615,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
               AppButton(
                 onTap: (){
                   if(element.strQuestion.toLowerCase().contains("date"))
-                  showDateTimePicker(element.textController);
+                  showDateTimePicker(element.textController, element.strQuestion);
                   else
                   showTimePicker2(element.textController);
                   },
@@ -749,14 +779,19 @@ String _updateConnectionStatus(ConnectivityResult result) {
             children: [
               Text("${element.strQuestion}"),
               TextFormField(
-                enabled: !element.strQuestion.toLowerCase().contains("date") &&
-                 !element.strQuestion.toLowerCase().contains("time") ,
-                
+                readOnly: element.strQuestion.toLowerCase().contains("date") ||
+                 element.strQuestion.toLowerCase().contains("time") ,
+                enabled: true,
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
-                    return "${element.strQuestion} required";
+                   return "${element.strQuestion} required";
+                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
+                   if(endDate.difference(startDate).inDays<0)
+                   return "End Date sould be greater than Start Date";
+                   return null;
+                  }
                   else
-                    return null;
+                   return null;
                 },
                 onFieldSubmitted: (val) {},
                 controller: element.textController,
@@ -770,7 +805,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
               AppButton(
                 onTap: (){
                   if(element.strQuestion.toLowerCase().contains("date"))
-                  showDateTimePicker(element.textController);
+                  showDateTimePicker(element.textController, element.strQuestion);
                   else
                   showTimePicker2(element.textController);
                   },
@@ -902,15 +937,23 @@ String _updateConnectionStatus(ConnectivityResult result) {
     });
 
     _list.add(
-      AppButton(
-        onTap: (){
-        validate();
-          },
-        width: 100,
-        height: 40,
-        radius: 10,
-        color: AppColors.green,
-        buttonText: widget.fromTab? "Save" : "Submit Job",                          
+      Column(
+        children: [
+          AppButton(
+            onTap: (){
+            validate();
+              },
+            width: 100,
+            height: 40,
+            radius: 10,
+            color: AppColors.green,
+            buttonText: widget.fromTab? "Save" : "Submit Job",     
+            textStyle: TextStyle(
+              color: Colors.white
+            ),                     
+          ),
+          SizedBox(height: 20.0,)
+        ],
       )     
     );
     return _list;
@@ -952,9 +995,18 @@ String _updateConnectionStatus(ConnectivityResult result) {
         Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(
-              children: _getListViewWidget(),
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+           child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
             ),
+            child: Column(
+                children: _getListViewWidget() ,
+              ),
+          ))
+          
         ),
       ),
     );

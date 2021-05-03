@@ -20,20 +20,23 @@ class _BarCodeRenderState extends State<BarCodeRender> {
               
         title: Text("Bar Code Image",
         style: TextStyle(color: Colors.white),),),
-      body: Container(
+      body: Center(
         child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Center(
+           padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+            
+                child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width*0.9,
             child: BarCodeImage(
-          
-                  params: Code39BarCodeParams(
+            
+                  params: Code128BarCodeParams(
                   widget.number,
                   lineWidth:
-                      2.0, // width for a single black/white bar (default: 2.0)
+                      1.7, // width for a single black/white bar (default: 2.0)
                   barHeight:
                       90.0, // height for the entire widget (default: 100.0)
                   withText:
-                      true, // Render with text label or not (default: false)
+                      false, // Render with text label or not (default: false)
                 ),
                 onError: (error) {
                   // Error handler

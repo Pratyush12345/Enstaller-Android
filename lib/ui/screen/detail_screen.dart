@@ -343,38 +343,38 @@ class _DetailScreenState extends State<DetailScreen> {
                             textAlign: TextAlign.start,
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
-                          // SizedBox(
-                          //   height: 10.0,
-                          // ),
-                          // Padding(
-                          //   padding: SizeConfig.sidepadding,
-                          //   child: AppButton(
-                          //     height: 40,
-                          //     color: AppColors.darkBlue,
-                          //     buttonText: "Check Close Job",
-                          //     radius: 15,
-                          //     textStyle: TextStyle(color: AppColors.whiteColor),
-                          //     onTap: ()  {
-                          //       print("---------------------");
-                          //       print("length...........${model.checkCloseJobModel.table.length}");
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: AppButton(
+                              height: 40,
+                              color: AppColors.darkBlue,
+                              buttonText: "Check Close Job",
+                              radius: 15,
+                              textStyle: TextStyle(color: AppColors.whiteColor),
+                              onTap: ()  {
+                                print("---------------------");
+                                print("length...........${model.checkCloseJobModel.table.length}");
                                 
-                          //       model.checkCloseJobModel.table.forEach((element) { 
-                          //         print(element.intId);
-                          //       });
-                          //       print("---------------------");
-                          //       if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
-                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)));
-                          //       else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
-                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )));
-                          //       else if(model.checkCloseJobModel.table.length ==2 )
-                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)));
+                                model.checkCloseJobModel.table.forEach((element) { 
+                                  print(element.intId);
+                                });
+                                print("---------------------");
+                                if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)));
+                                else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )));
+                                else if(model.checkCloseJobModel.table.length ==2 )
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)));
                                 
-                          //       // SharedPreferences pref = await SharedPreferences.getInstance();
-                          //       // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
-                          //       // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
-                          //     },
-                          //   ),
-                          // ),
+                                // SharedPreferences pref = await SharedPreferences.getInstance();
+                                // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
+                                // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
+                              },
+                            ),
+                          ),
                           SizedBox(
                             height: 10.0,
                           ),
@@ -1182,6 +1182,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ],
             );
           }
+          if(model.electricGasMeterList.length!=2)
           return Column(
             children: [
               AppointmentDataRow(
@@ -1202,6 +1203,9 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ],
           );
+          else{
+            return SizedBox();
+          }
         },
       ),
     );
@@ -1243,6 +1247,9 @@ class _DetailScreenState extends State<DetailScreen> {
               ],
             );
           }
+          
+          
+          if(model.electricGasMeterList.length!=2)
           return Column(
             children: [
               AppointmentDataRow(
@@ -1267,6 +1274,9 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ],
           );
+          else{
+            return SizedBox();
+          }
         },
       ),
     );

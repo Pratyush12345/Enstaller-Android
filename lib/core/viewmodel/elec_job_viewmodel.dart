@@ -686,22 +686,22 @@ class ElecJobViewModel {
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSiteVisitStartDate", 
-      strQuestion: "Site Visit Start Date", textController: TextEditingController(),
+      strQuestion: "Start Date", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSiteVisitStartTime", 
-      strQuestion: "Site Visit Start Time", textController: TextEditingController(),
+      strQuestion: "Start Time", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSiteVisitEndDate", 
-      strQuestion: "Site Visit End Date", textController: TextEditingController(),
+      strQuestion: "End Date", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
     CloseJobQuestionModel(
       checkBoxVal: null, jsonfield: "strSiteVisitEndTime", 
-      strQuestion: "Site Visit End Time", textController: TextEditingController(),
+      strQuestion: "End Time", textController: TextEditingController(),
       type: "text" , isMandatory: false
     ),
   ];

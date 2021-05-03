@@ -189,7 +189,7 @@ class AppStrings {
   static const EDIT_ORDER = 'EDIT ORDER';
   static const SERIAL_NUMBER = 'Serial Number';
   static const ITEM_NAME = 'Item Name';
-  static const QTY = 'Qty';
+  static const QTY = 'Quantity';
 
   //SMS Notification
   static const bookingRefNo = "Booking Ref. No";
