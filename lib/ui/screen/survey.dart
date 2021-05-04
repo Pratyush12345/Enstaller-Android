@@ -282,10 +282,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const SizedBox(
-                          width: 20,
-                        ),
+                        
                         AppButton(
                             width: 100,
                             height: 40,
@@ -421,6 +420,29 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, questions[0].intSectionId);
                               }
                             }
+                            },
+                          ),
+                          if(questions[0].strSectionName.trim() == "Abort")
+                          AppButton(
+                            width: 100,
+                            height: 40,
+                            radius: 10,
+                            color: AppColors.green,
+                            buttonText: "Cancel" ,
+                            
+                            onTap: () async {
+                              if(model.lastselected==-1){
+                                Navigator.of(context).pop();
+                              }
+                              else{
+                                SurveyResponseModel surveyResponseModel = model.sectionQuestions[questions[0].intSectionId].firstWhere((element) =>element.intQuestionNo== model.lastSelectedQuestion);
+                                int index =  model.sectionQuestions[questions[0].intSectionId].indexWhere((element) =>element.intQuestionNo== model.lastSelectedQuestion);
+                                model.sectionQuestions[questions[0].intSectionId][index] = surveyResponseModel;
+                                surveyResponseModel.yesNoPressedVal = null;
+                                surveyResponseModel.validate = null;
+
+                                model.goToSection(model.lastselected);
+                              }
                             },
                           ),
                           
@@ -614,6 +636,28 @@ class _SurveyScreenState extends State<SurveyScreen> {
       
     } 
   }
+    Future showErrorDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(title: Text('Are You Sure, want to abort the survey?'), actions: <Widget>[
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pop("Yes");
+              },
+              elevation: 5.0,
+              child: Text('YES'),
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pop("No");
+              },
+              elevation: 5.0,
+              child: Text('NO'),
+            )
+          ]);
+        });
+  }
 
   Widget _getTypeWidget(SurveyResponseModel surveyResponseModel,
       SurveyScreenViewModel model, bool showMessage) {
@@ -704,10 +748,23 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 // setState(() {
+                                if(surveyResponseModel.strAbandonJobOn == "No"){
+                                 showErrorDialog(context).then((onValue) {
+                                      if (onValue == "Yes") {
+                                model.lastSelectedQuestion = surveyResponseModel.intQuestionNo;      
                                 surveyResponseModel?.yesNoPressedVal = 0;
                                 surveyResponseModel?.validate = 'false';
                                 model.onChangeYesNo(surveyResponseModel);
                                 value.setState();
+                                      }
+                                    });
+                                }else{
+                                  
+                                surveyResponseModel?.yesNoPressedVal = 0;
+                                surveyResponseModel?.validate = 'false';
+                                model.onChangeYesNo(surveyResponseModel);
+                                value.setState();
+                                }
                                 // });
                               },
                               child: Container(

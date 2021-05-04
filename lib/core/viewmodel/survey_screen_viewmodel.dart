@@ -43,6 +43,8 @@ class SurveyScreenViewModel extends BaseModel {
   List<SectionDisableModel> _listSectionDisable = [];
   List<String> _listSectionDisableString = [];
   int selected = 0, currentSectionId = 0;
+  int lastselected = -1;
+  int lastSelectedQuestion;
   int enableIndex = 0;
   Set<String> _setofUnSubmittedForm = {};
   UserModel user;
@@ -531,12 +533,12 @@ class SurveyScreenViewModel extends BaseModel {
             }
           }
           if(element.strAbandonJobOn == "No" && surveyResponseModel.intQuestionNo == element.intQuestionNo){
+            lastselected = selected;
             setState(ViewState.Busy);
             if (selected < sectionQuestions.keys.length - 1) {
                 selected = sectionQuestions.keys.length - 1;
                 enableIndex = -1;
              }
-             answerList.removeWhere((element) => element.intsurveyid != (selected+1).toString());
              
             setState(ViewState.Idle);  
           }
@@ -827,6 +829,11 @@ class SurveyScreenViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
   
+  goToSection(int sectionindex){
+    setState(ViewState.Busy);
+    selected = sectionindex;
+    setState(ViewState.Idle);
+  }
   
   Future<String> onSubmit(int selected, String appointmentid, BuildContext context,
       DetailsScreenViewModel dsmodel, String sectionname) async {
@@ -840,6 +847,8 @@ class SurveyScreenViewModel extends BaseModel {
     } 
     
     if(sectionname.trim() == "Abort"){
+      
+      answerList.removeWhere((element) => int.parse(element.intsurveyid) != currentSectionId );
       try {
         ConnectivityResult result = await _connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
