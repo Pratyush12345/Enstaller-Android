@@ -730,7 +730,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   if(model.appointmentDetails.appointment?.strJobType != "Full Day Hire" &&
                    model.appointmentDetails.appointment?.strJobType!= "Half Day Hire")
                   AppButton(
-                    color: AppColors.green,
+                    color: model.appointmentDetails.appointment.appointmentEventType != "Scheduled"? AppColors.green : Colors.grey,
                     height: 30,
                     width: SizeConfig.screenWidth * .23,
                     buttonText: AppStrings.SURVEY,

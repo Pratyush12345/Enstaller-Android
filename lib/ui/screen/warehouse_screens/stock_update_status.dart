@@ -217,125 +217,47 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                         .whenComplete(() => model.initializeData()),
                                   child: SingleChildScrollView(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
-                        child: Form(
-                          key: form,
-                                                  child: Column(
+              padding: EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 6.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+                          child: Padding(
+                            
+                            padding: const EdgeInsets.all(6.0),
+                            child: Form(
+                              key: form,
+                                                      child: Column(
               children: [
-                  Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: DropdownButtonFormField<String>(
-                            onChanged: (value) {
-                             model.lValue = value;
-                             try{
-                             StockLocationModel stockLocationModel = model.stockLocationList
-                             .firstWhere((element) => element.locationName == value);
-                             model.lid = stockLocationModel.locationId;
-                             }
-                             catch(e){
-                               print(e);
-                             }
-                             },
-
-                            decoration: InputDecoration(
-                              hintText: 'Select',
-                              labelText: 'Location Selection',
-                            ),
-                            value: model.lValue,
-
-                            items:    
-                              model.stockLocationList.map((e) => 
-                              DropdownMenuItem<String>(
-                                      child: Text(e.locationName),
-                                      value: e.locationName.toString(),
-                                    )
-                              ).toList(),
-                            onSaved: (val) {
-                             // widget.saveOrderLine.intContractId = int.parse(val);
-                            },
-                            validator: (val) {
-                              print('value is $val');
-                              if (val == null) return 'Please choose an option.';
-                              return null;
-                            },
-                          )),
-                  SizedBox(height: 20.0,),      
-                  Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: DropdownButtonFormField<String>(
-                            onChanged: (value) {
-                             model.sValue = value;
-                             try{
-                             StockStatusModel stockStatusModel = model.stockStatusList
-                             .firstWhere((element) => element.strStatusName == value);
-                             model.sid = stockStatusModel.intStatusId;
-                             }
-                             catch(e){
-                               print(e);
-                             }
-                            },
-
-                            decoration: InputDecoration(
-                              hintText: 'Select',
-                              labelText: 'Status Selection',
-                            ),
-                            value: model.sValue,
-                            items:   
-                              model.stockStatusList.map((e) => 
-                              DropdownMenuItem<String>(
-                                      child: Text(e.strStatusName),
-                                      value: e.strStatusName.toString(),
-                                    )
-                              ).toList(),
-                            onSaved: (val) {
-                             // widget.saveOrderLine.intContractId = int.parse(val);
-                            },
-                            validator: (val) {
-                              print('value is $val');
-                              if (val == null) return 'Please choose an option.';
-                              return null;
-                            },
-                          )),
-                     SizedBox(height: 40.0,),
-                     Text("Comment"),
-                     SizedBox(height: 20.0,),
-                     TextField(
-                       controller: commentController,
-                       decoration: InputDecoration(
-                           border: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(4.0)
-                           )
-                       ),
-                       maxLines: 5,
-                     ),
-                     SizedBox(height: 20.0,),
-                     Text("Updated By"),
+                SizedBox(height: 20.0,),
+                  Text("Updated By"),
                      SizedBox(height: 20.0,),
                      
                      Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                           Text("By Batch"),
-                           Radio(value: 1, groupValue: selectedradio,
-                           onChanged: (val){
-                             setState(() {
-                               selectedradio = val;
-                               model.strType = "Batch";
-                             });
-                             }),
+                               Text("By Batch"),
+                               Radio(value: 1, groupValue: selectedradio,
+                               onChanged: (val){
+                                 setState(() {
+                                   selectedradio = val;
+                                   model.strType = "Batch";
+                                 });
+                                 }),
                        ],
                      ),
                      Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                           Text("By Item"),
-                           Radio(value: 2, groupValue: selectedradio,
-                              onChanged: (val){
-                                setState(() {
-                                  selectedradio = val;
-                                  model.strType = "Serial";
-                                });
-                             }),
+                               Text("By Item"),
+                               Radio(value: 2, groupValue: selectedradio,
+                                  onChanged: (val){
+                                    setState(() {
+                                      selectedradio = val;
+                                      model.strType = "Serial";
+                                    });
+                                 }),
                        ],
                      ), 
                     if(selectedradio  == 1)   
@@ -344,30 +266,118 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                     if(selectedradio  == 2)   
                     _getItemWidget(model),
                     SizedBox(height: 50.0,),
-                     
+                   
+                  Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: DropdownButtonFormField<String>(
+                                onChanged: (value) {
+                                 model.lValue = value;
+                                 try{
+                                 StockLocationModel stockLocationModel = model.stockLocationList
+                                 .firstWhere((element) => element.locationName == value);
+                                 model.lid = stockLocationModel.locationId;
+                                 }
+                                 catch(e){
+                                   print(e);
+                                 }
+                                 },
+
+                                decoration: InputDecoration(
+                                  hintText: 'Select',
+                                  labelText: 'Location Selection',
+                                ),
+                                value: model.lValue,
+
+                                items:    
+                                  model.stockLocationList.map((e) => 
+                                  DropdownMenuItem<String>(
+                                          child: Text(e.locationName),
+                                          value: e.locationName.toString(),
+                                        )
+                                  ).toList(),
+                                onSaved: (val) {
+                                 // widget.saveOrderLine.intContractId = int.parse(val);
+                                },
+                                validator: (val) {
+                                  print('value is $val');
+                                  if (val == null) return 'Please choose an option.';
+                                  return null;
+                                },
+                              )),
+                  SizedBox(height: 20.0,),      
+                  Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: DropdownButtonFormField<String>(
+                                onChanged: (value) {
+                                 model.sValue = value;
+                                 try{
+                                 StockStatusModel stockStatusModel = model.stockStatusList
+                                 .firstWhere((element) => element.strStatusName == value);
+                                 model.sid = stockStatusModel.intStatusId;
+                                 }
+                                 catch(e){
+                                   print(e);
+                                 }
+                                },
+
+                                decoration: InputDecoration(
+                                  hintText: 'Select',
+                                  labelText: 'Status Selection',
+                                ),
+                                value: model.sValue,
+                                items:   
+                                  model.stockStatusList.map((e) => 
+                                  DropdownMenuItem<String>(
+                                          child: Text(e.strStatusName),
+                                          value: e.strStatusName.toString(),
+                                        )
+                                  ).toList(),
+                                onSaved: (val) {
+                                 // widget.saveOrderLine.intContractId = int.parse(val);
+                                },
+                                validator: (val) {
+                                  print('value is $val');
+                                  if (val == null) return 'Please choose an option.';
+                                  return null;
+                                },
+                              )),
+                     SizedBox(height: 40.0,),
+                     Text("Comment"),
+                     SizedBox(height: 20.0,),
+                     TextField(
+                       controller: commentController,
+                       decoration: InputDecoration(
+                               border: OutlineInputBorder(
+                                 borderRadius: BorderRadius.circular(4.0)
+                               )
+                       ),
+                       maxLines: 5,
+                     ),
+                     SizedBox(height: 20.0,),
+                       
                     AppButton(
                     onTap: (){
                       if(form.currentState.validate()){
                       StockStatusSaveModel stockStatusSaveModel;
                       
                       if(model.strType == "Batch"){
-                         _serialList = [];
+                             _serialList = [];
                       
                       model.stockPalletList.forEach((element) {
-                          if(element.isSelected){
-                            _serialList.add(SerialList(serialNo: element.strPalletId));
-                          }
+                              if(element.isSelected){
+                                _serialList.add(SerialList(serialNo: element.strPalletId));
+                              }
                        });
                       }
 
                       stockStatusSaveModel= StockStatusSaveModel(
-                          intCreatedBy: int.parse(GlobalVar.warehosueID),
-                          intLocationId: model.lid,
-                          intStatusId: model.sid,
-                          strType: model.strType,
-                          intWarehouseUserId: int.parse(GlobalVar.warehosueID),
-                          strComments: commentController.text.trim(),
-                          serialList: _serialList
+                              intCreatedBy: int.parse(GlobalVar.warehosueID),
+                              intLocationId: model.lid,
+                              intStatusId: model.sid,
+                              strType: model.strType,
+                              intWarehouseUserId: int.parse(GlobalVar.warehosueID),
+                              strComments: commentController.text.trim(),
+                              serialList: _serialList
                       );
                       model.save(context, stockStatusSaveModel);
                       }
@@ -386,6 +396,8 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                   )
               ],
             ),
+                            ),
+                          ),
                         ),
           ),
         ),

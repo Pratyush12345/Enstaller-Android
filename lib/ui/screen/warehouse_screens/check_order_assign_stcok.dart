@@ -116,7 +116,8 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                  return Card(
                    color: AppColors.green ,
                   child: ListTile(
-                    title: Text(CheckAndAssignOrderVM.instance.showListView[index].strSerialNo,
+                    title: Text(CheckAndAssignOrderVM.instance.showListView[index].strSerialNo + " - "+
+                    CheckAndAssignOrderVM.instance.showListView[index].strItemName ,
                      style: TextStyle(color: Colors.white),
                      ) ,
                      trailing: IconButton(
