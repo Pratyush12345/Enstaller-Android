@@ -3,7 +3,7 @@ class AppStrings {
   static const String NO_DATA_FOUND = 'NO_DATA_FOUND';
   static const appTitle = 'enstallers';
   static const abort_text = "Abort Appointment";
-  static const forward_button = "Complete forward call button";
+  static const forward_button = "Forward Call Completed";
   static const abort_reason = "Select Abort Reason";
   static const logInTitle = 'Sign in to your account';
   static const userName = 'Username';
@@ -101,6 +101,7 @@ class AppStrings {
   static const changeColor = 'Change color';
   static const changeStrokeWidth = 'Change stroke width';
   static const survey = 'Survey';
+  static const surveyImage = 'Survey Image';
   static const confirmations = 'Confirmations';
   static const commissioning = 'Commissioning';
   static const electricityOldMeterDetails = 'Electricity Old Meter Details';

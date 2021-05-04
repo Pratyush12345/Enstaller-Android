@@ -866,6 +866,9 @@ class SurveyScreenViewModel extends BaseModel {
             AppConstants.showSuccessToast(context, "Survey Aborted");
             GlobalVar.isloadAppointmentDetail = true;
             GlobalVar.isloadDashboard = true;
+            if(abortreasonmodel.statusCode==1){
+              AppConstants.showSuccessToast(context,abortreasonmodel.response);
+            }
             
           }
           else{
