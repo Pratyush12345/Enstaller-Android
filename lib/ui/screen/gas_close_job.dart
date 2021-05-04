@@ -147,6 +147,9 @@ class _GasCloseJobState extends State<GasCloseJob> {
             AppConstants.showSuccessToast(context, response.response);
             else
             AppConstants.showSuccessToast(context, "Saved");
+
+            
+            Navigator.of(context).pop("submitted");
           } else {
             AppConstants.showFailToast(context, response.response);
           }
@@ -172,6 +175,9 @@ class _GasCloseJobState extends State<GasCloseJob> {
             AppConstants.showSuccessToast(context, "Saved");
             else
             AppConstants.showSuccessToast(context, "Submitted Offline");
+
+            
+            Navigator.of(context).pop("submitted");
          }
   }
 

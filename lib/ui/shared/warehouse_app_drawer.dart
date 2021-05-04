@@ -92,7 +92,7 @@ class WareHouseDrawerWidget extends StatelessWidget {
             children: [ 
               DrawerRowWidget(
                 title: 'Check Order And\nAssign Stock', 
-                assetPath: ImageFile.stock_check_request,
+                assetPath: ImageFile.order,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => CheckAndAssignOrder()));

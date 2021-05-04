@@ -189,6 +189,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             AppConstants.showSuccessToast(context, response.response);
             else
             AppConstants.showSuccessToast(context, "Saved");
+            
+            Navigator.of(context).pop("submitted");
           } else {
             AppConstants.showFailToast(context, response.response);
           }
@@ -216,6 +218,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             AppConstants.showSuccessToast(context, "Saved");
             else
             AppConstants.showSuccessToast(context, "Submitted Offline");
+
+            Navigator.of(context).pop("submitted");
         }
     
     

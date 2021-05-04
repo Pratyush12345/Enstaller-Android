@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:flutter/material.dart';
+import 'image_full_view.dart';
 
 class ShowBase64Image extends StatefulWidget {
   final String base64String;
@@ -34,12 +35,18 @@ class _ShowBase64ImageState extends State<ShowBase64Image> {
   }
   @override
   Widget build(BuildContext context) {
-    return bytesImage!=null?Container(
-      height: 100,
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        image: DecorationImage(image: MemoryImage(bytesImage),
-        fit: BoxFit.contain)
+    return bytesImage!=null?GestureDetector(
+        onTap: (){
+          print('Image tapped');
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ImageFullView(image: MemoryImage(bytesImage))));
+        },
+        child: Container(
+        height: 100,
+        width: SizeConfig.screenWidth,
+        decoration: BoxDecoration(
+          image: DecorationImage(image: MemoryImage(bytesImage),
+          fit: BoxFit.contain)
+        ),
       ),
     ):Container();
   }

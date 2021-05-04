@@ -100,9 +100,13 @@ class _BothCloseJobState extends State<BothCloseJob> {
            _showIndicator = false;  
            });
            
+            Navigator.of(context).pop("submitted");
+           
           }
           else if(GlobalVar.closejobsubmittedoffline){
             AppConstants.showSuccessToast(context, "Submitted Offline");
+            
+            Navigator.of(context).pop("submitted");
           }
           },
         width: 200,

@@ -155,7 +155,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.green,
-        title: Text("Check And Assign Order",
+        title: Text("Check Order And Assign Stock",
         style: TextStyle(
           color: Colors.white
         ),),),
@@ -163,122 +163,120 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
               //child: AppDrawerWidget(),
               child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),  
-      body: SingleChildScrollView(
-        child: Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,  
-            children: [
-              Text("Scan Order No."),
-              SizedBox(height: 6.0,),
-              TextField(
-                controller: ordercontroller ,
-                onTap:  () async {
-                        String barcodeScanRes;
-                        try {
-                          var result = await BarcodeScanner.scan();
-                          print(result.rawContent);
+      body: Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
+          child: ListView(
+          //rossAxisAlignment: CrossAxisAlignment.start,  
+          children: [
+            Text("Scan Order No."),
+            SizedBox(height: 6.0,),
+            TextField(
+              controller: ordercontroller ,
+              onTap:  () async {
+                      String barcodeScanRes;
+                      try {
+                        var result = await BarcodeScanner.scan();
+                        print(result.rawContent);
+                        
+                           ordercontroller.text = result.rawContent.toString();
+                           if(ordercontroller.text.contains("-")){
+
+                           _showOrderErrorMsg = await CheckAndAssignOrderVM.instance.checkValidity(context, ordercontroller.text);
+                           _showbelowColumn = true;
+                           _isIncorrectOrderNo = false;
+                        setState(() {
                           
-                             ordercontroller.text = result.rawContent.toString();
-                             if(ordercontroller.text.contains("-")){
-
-                             _showOrderErrorMsg = await CheckAndAssignOrderVM.instance.checkValidity(context, ordercontroller.text);
-                             _showbelowColumn = true;
-                             _isIncorrectOrderNo = false;
-                          setState(() {
-                            
-                          });
-                             }
-                             else{
-                               _showOrderErrorMsg = true;
-                               _isIncorrectOrderNo = true;
-                               setState(() {
-                                 
-                               });
-                             }
-                        } on PlatformException {
-                          barcodeScanRes = 'Failed to get platform version.';
-                        }
-                      },
-                decoration: InputDecoration(
-                  
-                ),
+                        });
+                           }
+                           else{
+                             _showOrderErrorMsg = true;
+                             _isIncorrectOrderNo = true;
+                             setState(() {
+                               
+                             });
+                           }
+                      } on PlatformException {
+                        barcodeScanRes = 'Failed to get platform version.';
+                      }
+                    },
+              decoration: InputDecoration(
+                
               ),
-              SizedBox(height: 8.0,),
-              if(_showOrderErrorMsg && !_isIncorrectOrderNo)
-              Text("Order No. Already Assigned",
-              style: TextStyle(
-                color: Colors.red
-              ),),
-              if(_isIncorrectOrderNo)
-              Text("Invalid Order No.",
-              style: TextStyle(
-                color: Colors.red
-              ),),
+            ),
+            SizedBox(height: 8.0,),
+            if(_showOrderErrorMsg && !_isIncorrectOrderNo)
+            Text("Order No. Already Assigned",
+            style: TextStyle(
+              color: Colors.red
+            ),),
+            if(_isIncorrectOrderNo)
+            Text("Invalid Order No.",
+            style: TextStyle(
+              color: Colors.red
+            ),),
 
-              SizedBox(height: 12.0,),
-              if(!_showOrderErrorMsg  )
-              _showOrderDetail(),
+            SizedBox(height: 12.0,),
+            if(!_showOrderErrorMsg  )
+            _showOrderDetail(),
 
-              SizedBox(height: 30.0,),
+            SizedBox(height: 30.0,),
 
-              if(!_showOrderErrorMsg && _showbelowColumn)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Scan Serial No."),
-                  SizedBox(height: 6.0,),
-              TextField(
-                controller: serialcontroller,
-                onTap:  () async {
-                        String barcodeScanRes;
-                        try {
-                          var result = await BarcodeScanner.scan();
-                          print(result.rawContent);
+            if(!_showOrderErrorMsg && _showbelowColumn)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Scan Serial No."),
+                SizedBox(height: 6.0,),
+            TextField(
+              controller: serialcontroller,
+              onTap:  () async {
+                      String barcodeScanRes;
+                      try {
+                        var result = await BarcodeScanner.scan();
+                        print(result.rawContent);
+                        
+                           serialcontroller.text = result.rawContent.toString();
+                           _showSerialErrorMsg = await CheckAndAssignOrderVM.instance.checkSerialValidty(context, serialcontroller.text, 
+                            CheckAndAssignOrderVM.instance.orderByRefernceModel.intId.toString());
+                        setState(() {
                           
-                             serialcontroller.text = result.rawContent.toString();
-                             _showSerialErrorMsg = await CheckAndAssignOrderVM.instance.checkSerialValidty(context, serialcontroller.text, 
-                              CheckAndAssignOrderVM.instance.orderByRefernceModel.intId.toString());
-                          setState(() {
-                            
-                          });
-                        } on PlatformException {
-                          barcodeScanRes = 'Failed to get platform version.';
-                        }
-                      },
-                decoration: InputDecoration(
-                  
-                ),
+                        });
+                      } on PlatformException {
+                        barcodeScanRes = 'Failed to get platform version.';
+                      }
+                    },
+              decoration: InputDecoration(
+                
               ),
-              if(_showSerialErrorMsg)
-              Text("Invalid Serial No.",
-              style: TextStyle(
-                color: Colors.red
-              ),),
+            ),
+            if(_showSerialErrorMsg)
+            Text("Invalid Serial No.",
+            style: TextStyle(
+              color: Colors.red
+            ),),
 
-              SizedBox(height: 12.0,),
-              _showListofSerial(),
-              Center(
-                child: AppButton(
-                  onTap: (){
-                   CheckAndAssignOrderVM.instance.save(context, CheckAndAssignOrderVM.instance.orderByRefernceModel.intId);
-                  },
-                  width: 100,
-                  height: 40,
-                  radius: 10,
-                  color: AppColors.green,
-                  buttonText: "Save",   
-                  textStyle: TextStyle(
-                    color: Colors.white
-                  ),                       
-                ),
-              )
-                ],
+            SizedBox(height: 12.0,),
+            _showListofSerial(),
+            Center(
+              child: AppButton(
+                onTap: (){
+                 CheckAndAssignOrderVM.instance.save(context, CheckAndAssignOrderVM.instance.orderByRefernceModel.intId);
+                },
+                width: 100,
+                height: 40,
+                radius: 10,
+                color: AppColors.green,
+                buttonText: "Save",   
+                textStyle: TextStyle(
+                  color: Colors.white
+                ),                       
               ),
-                  
-            ],
-          ),
-        )
+            )
+              ],
+            ),
+                
+          ],
+        ),
       )
     );
   }

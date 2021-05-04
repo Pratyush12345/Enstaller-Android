@@ -399,13 +399,22 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     progressDialog.hide();
                                     if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false,
-                                    dsmodel: widget.arguments.dsmodel,)));
+                                    dsmodel: widget.arguments.dsmodel,))).then((value){
+                                    if(value == "submitted")
+                                    Navigator.of(context).pop();
+                                    });
                                     else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,
-                                     dsmodel: widget.arguments.dsmodel)));
+                                     dsmodel: widget.arguments.dsmodel))).then((value){
+                                    if(value == "submitted")
+                                    Navigator.of(context).pop();
+                                    });
                                     else if(model.checkCloseJobModel.table.length ==2)
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table,
-                                     dsmodel: widget.arguments.dsmodel)));
+                                     dsmodel: widget.arguments.dsmodel))).then((value){
+                                    if(value == "submitted")
+                                    Navigator.of(context).pop();
+                                    });
                                   }else{
                                     progressDialog.hide();
                                   } 
@@ -511,13 +520,22 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             onTap: (){
                                   if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false,
-                                    dsmodel: widget.arguments.dsmodel,)));
+                                    dsmodel: widget.arguments.dsmodel,))).then((value){
+                                    if(value == "submitted")
+                                    Navigator.of(context).pop();
+                                    });
                                     else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,
-                                     dsmodel: widget.arguments.dsmodel)));
+                                     dsmodel: widget.arguments.dsmodel))).then((value){
+                                    if(value == "submitted")
+                                    Navigator.of(context).pop();
+                                    });
                                     else if(model.checkCloseJobModel.table.length ==2)
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table,
-                                    dsmodel: widget.arguments.dsmodel)));
+                                    dsmodel: widget.arguments.dsmodel))).then((value){
+                                    if(value == "submitted")
+                                    Navigator.of(context).pop();
+                                    });
                                   
                             },
                           ): Container()

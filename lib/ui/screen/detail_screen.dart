@@ -788,6 +788,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     {model.initializeData(
                                     widget.arguments.appointmentID, widget.arguments.customerID);
                                     GlobalVar.isloadAppointmentDetail = false;
+                                  
                                     }
                                   });
                                 else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
