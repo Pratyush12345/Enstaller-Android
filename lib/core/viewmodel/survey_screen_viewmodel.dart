@@ -43,7 +43,7 @@ class SurveyScreenViewModel extends BaseModel {
   List<SectionDisableModel> _listSectionDisable = [];
   List<String> _listSectionDisableString = [];
   int selected = 0, currentSectionId = 0;
-  int lastselected = -1;
+  int lastselected = -1, lastSection = -1;
   int lastSelectedQuestion;
   int enableIndex = 0;
   Set<String> _setofUnSubmittedForm = {};
@@ -120,6 +120,21 @@ class SurveyScreenViewModel extends BaseModel {
             lastsection = element.intSectionId;
           }
       });
+        localSurveyQuestion.forEach((element) { 
+          answerList.add(AnswerCredential(
+                                            intsurveyquetionid:
+                                                element.intQuestionNo.toString(),
+                                            intappointmentid:
+                                                appointmentID,
+                                            intsurveyid:
+                                                element.intSectionId.toString(),
+                                            stranswer: element.validate,
+                                            intcreatedby: user.intEngineerId,
+                                            bisalive: element.bisAlive,
+                                            strfilename: "",
+                                            strRequireExplaination: element.requireExplainationstr
+                                            ))  ;  
+        });
       }
 
       _surveyQuestion.forEach((element) {
@@ -534,6 +549,9 @@ class SurveyScreenViewModel extends BaseModel {
           }
           if(element.strAbandonJobOn == "No" && surveyResponseModel.intQuestionNo == element.intQuestionNo){
             lastselected = selected;
+            lastSection = surveyResponseModel.intSectionId;
+            currentSectionId = sectionQuestions.keys.toList()[sectionQuestions.keys.toList().length-1];
+            
             setState(ViewState.Busy);
             if (selected < sectionQuestions.keys.length - 1) {
                 selected = sectionQuestions.keys.length - 1;
@@ -815,7 +833,6 @@ class SurveyScreenViewModel extends BaseModel {
   void incrementCounter(bool isedit, String appointmentId, int _currentSectionId) {
     setState(ViewState.Busy);
     if(isedit){
-      print("tttttttttttttt");
      if (selected < sectionQuestions.keys.length - 1) {
       selected++;
     }
@@ -826,6 +843,7 @@ class SurveyScreenViewModel extends BaseModel {
     currentSectionId = _currentSectionId;
     _saveDataLocally(appointmentId);
     }
+    
     setState(ViewState.Idle);
   }
   

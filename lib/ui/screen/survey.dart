@@ -326,7 +326,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                             intappointmentid:
                                                 widget.arguments.appointmentID,
                                             intsurveyid:
-                                                (model.selected + 1).toString(),
+                                                questions[i].intSectionId.toString(),
                                             stranswer: questions[i].validate,
                                             intcreatedby: model.user.intEngineerId,
                                             bisalive: questions[i].bisAlive,
@@ -444,11 +444,17 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 Navigator.of(context).pop();
                               }
                               else{
-                                SurveyResponseModel surveyResponseModel = model.sectionQuestions[questions[0].intSectionId].firstWhere((element) =>element.intQuestionNo== model.lastSelectedQuestion);
-                                int index =  model.sectionQuestions[questions[0].intSectionId].indexWhere((element) =>element.intQuestionNo== model.lastSelectedQuestion);
-                                model.sectionQuestions[questions[0].intSectionId][index] = surveyResponseModel;
+                                
+                                print("-------------------------------");
+                                print(model.lastSelectedQuestion);
+                                print(model.lastSection);
+                                print("-------------------------------");
+                                SurveyResponseModel surveyResponseModel = model.sectionQuestions[model.lastSection].firstWhere((element) =>element.intQuestionNo== model.lastSelectedQuestion);
+                                int index =  model.sectionQuestions[model.lastSection].indexWhere((element) =>element.intQuestionNo== model.lastSelectedQuestion);
                                 surveyResponseModel.yesNoPressedVal = null;
                                 surveyResponseModel.validate = null;
+                                model.sectionQuestions[model.lastSection][index] = surveyResponseModel;
+                                
 
                                 model.goToSection(model.lastselected);
                               }
