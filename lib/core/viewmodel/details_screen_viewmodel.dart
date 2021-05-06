@@ -178,7 +178,7 @@ class DetailsScreenViewModel extends BaseModel {
   }
 
   void onUpdateStatusOnSite(BuildContext context, String appointmentID) async {
-      
+      try{
       ResponseModel response = await _apiService.updateAppointmentStatus(
           AppointmentStatusUpdateCredentials(
               strStatus: "On Site",
@@ -192,10 +192,14 @@ class DetailsScreenViewModel extends BaseModel {
       } else {
         AppConstants.showFailToast(context, response.response);
       }
+      }catch(e){
+        
+        AppConstants.showFailToast(context, e.toString());      
+      }
     
   }
   void onUpdateStatusOnRoute(BuildContext context, String appointmentID) async {
-      
+     try{ 
       ResponseModel response = await _apiService.updateAppointmentStatus(
           AppointmentStatusUpdateCredentials(
               strStatus: "On Route",
@@ -208,10 +212,13 @@ class DetailsScreenViewModel extends BaseModel {
       } else {
         AppConstants.showFailToast(context, response.response);
       }
-    
+     }catch(e){
+       
+        AppConstants.showFailToast(context, e.toString());      
+     }
   }
   void onUpdateStatusOnCompleted(BuildContext context, String appointmentID) async {
-      
+      try{
       ResponseModel response = await _apiService.updateAppointmentStatus(
           AppointmentStatusUpdateCredentials(
               strStatus: "Completed",
@@ -226,7 +233,11 @@ class DetailsScreenViewModel extends BaseModel {
       } else {
         AppConstants.showFailToast(context, response.response);
       }
-     
+      }catch(e){
+        GlobalVar.isloadAppointmentDetail = true;
+              GlobalVar.isloadDashboard = true;
+        AppConstants.showFailToast(context, e.toString());      
+      }
   } 
 
   void onRaiseButtonPressed(String customerid, String processId) async {

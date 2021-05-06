@@ -614,7 +614,7 @@ class CheckTable {
   String strSSC;
   int intJumboResponseid;
   String electricityMSN;
-  Null gasMSN;
+  String gasMSN;
 
   CheckTable(
       {this.intId,

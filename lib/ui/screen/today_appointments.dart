@@ -90,11 +90,14 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                         .whenComplete(() => model.getAppoinmentList()),
                     
               child: ConstrainedBox(
+                
                   constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height),
                   child: (model.appointmentList.isNotEmpty == true) ? Padding(
                     padding:SizeConfig.padding,
                     child: ListView.builder(
+                      
+                      physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                       itemCount:model.appointmentList.length,
                       itemBuilder: (context, i) {
 

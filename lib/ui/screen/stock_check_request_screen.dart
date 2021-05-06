@@ -72,6 +72,8 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
                                 padding:
                                     SizeConfig.padding,
                                 child: ListView.builder(
+                                  physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      
                                   itemCount: model.stockCheckList.length,
                                   itemBuilder: (context, i) {
                                     return Padding(

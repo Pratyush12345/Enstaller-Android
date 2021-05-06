@@ -209,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         .whenComplete(() => model.getAppointmentList()),
                   
                               child: SingleChildScrollView(
+                                physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                     child: ViewSingleDateWidget(
                       day: (selectedDate.day < 9
                               ? int.parse("0${selectedDate.day}")
@@ -228,6 +229,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         .whenComplete(() => model.getAppointmentList()),
                   
                               child: ListView.builder(
+                    
+                                physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),            
                     controller: _scrollController,
                       itemCount: 2
                       //model.appointMentList.length

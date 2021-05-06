@@ -93,13 +93,18 @@ class SurveyScreenViewModel extends BaseModel {
       SharedPreferences _preferences = await SharedPreferences.getInstance();
       _listofLocalSurveyQuestion = _preferences.getStringList("saved+$appointmentID")??[];
       _listSectionDisableString =  _preferences.getStringList("disabled+$appointmentID")??[];
+      int lastSurveyID =  _preferences.getInt("LastSurveyId+$appointmentID");
+        selected = _preferences.getInt("LastSelectionId+$appointmentID") ?? 0;
 
       final dir = await path_provider.getTemporaryDirectory();
       
       if(_listofLocalSurveyQuestion.isNotEmpty){
       _listofLocalSurveyQuestion.forEach((element) { 
         SurveyResponseModel surveyResponseModel = SurveyResponseModel.fromLocalJson(jsonDecode(element), dir.absolute.path);
+        if(surveyResponseModel.intSectionId <= lastSurveyID ){
+        
         localSurveyQuestion.add(surveyResponseModel);
+        }
       });
 
       if(_listSectionDisableString.isNotEmpty)
@@ -107,20 +112,20 @@ class SurveyScreenViewModel extends BaseModel {
          _listSectionDisable.add(SectionDisableModel.fromJson(jsonDecode(element)));
       });
        
-       int lastsection = localSurveyQuestion[0].intSectionId;
-        selected =1; 
+      
       localSurveyQuestion.forEach((element) { 
          int index = _surveyQuestion.indexWhere((e) => e.intQuestionNo==element.intQuestionNo);
           if(index!=-1) 
           _surveyQuestion[index] = element;
-          
-          if(element.intSectionId!=lastsection){
-            selected++;
-            
-            lastsection = element.intSectionId;
-          }
+         
       });
+      
+      _listSectionDisable.forEach((element) { 
+        sectionDisableQuestions[element.intSectionId] = element.listQnDisable;
+      });
+
         localSurveyQuestion.forEach((element) { 
+          if(!sectionDisableQuestions[element.intSectionId].contains(element.intQuestionNo))
           answerList.add(AnswerCredential(
                                             intsurveyquetionid:
                                                 element.intQuestionNo.toString(),
@@ -242,9 +247,7 @@ class SurveyScreenViewModel extends BaseModel {
         
       });
 
-      _listSectionDisable.forEach((element) { 
-        sectionDisableQuestions[element.intSectionId] = element.listQnDisable;
-      });
+      
 
       sectionQuestions.forEach((key, value) { 
         _sectionQuestions[key] = value;
@@ -279,6 +282,7 @@ class SurveyScreenViewModel extends BaseModel {
 
       print('objectAnswerLength===${_answers.length}');
       _answers.forEach((answer) {
+        if(answer.strAnswer!=null && answer.strAnswer!="")
         sectionAnswers[answer.intSectionID].add(answer);
         
       });
@@ -826,7 +830,10 @@ class SurveyScreenViewModel extends BaseModel {
           });
 
           preferences.setStringList("saved+$appointmentid", _listofLocalSurveyQuestion);
-          preferences.setStringList("disabled+$appointmentid", _list);    
+          preferences.setStringList("disabled+$appointmentid", _list); 
+          preferences.setInt("LastSurveyId+$appointmentid", currentSectionId);   
+          preferences.setInt("LastSelectionId+$appointmentid", selected);   
+          
   }
   
   
@@ -841,6 +848,7 @@ class SurveyScreenViewModel extends BaseModel {
       selected++;
     }
     currentSectionId = _currentSectionId;
+
     _saveDataLocally(appointmentId);
     }
     
@@ -884,6 +892,8 @@ class SurveyScreenViewModel extends BaseModel {
           SharedPreferences pref = await SharedPreferences.getInstance();
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");
+          pref.remove("LastSurveyId+${appointmentid.trim()}");
+          pref.remove("LastSelectionId+${appointmentid.trim()}");
           print(abortreasonmodel.response);
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
@@ -925,8 +935,10 @@ class SurveyScreenViewModel extends BaseModel {
           
           AppConstants.showSuccessToast(context, "Submitted Offline");
         }
-      } on PlatformException catch (e) {
+      } catch (e) {
         print(e.toString());
+        
+        AppConstants.showFailToast(context, e.toString());      
       }
       selected = -1;
     }
@@ -942,6 +954,10 @@ class SurveyScreenViewModel extends BaseModel {
           SharedPreferences pref = await SharedPreferences.getInstance();
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");
+          
+          pref.remove("LastSurveyId+${appointmentid.trim()}");
+          
+          pref.remove("LastSelectionId+${appointmentid.trim()}");
           print(responseModel.response);
           if (responseModel.statusCode == 1) {
             //setState(ViewState.Idle);
@@ -976,8 +992,10 @@ class SurveyScreenViewModel extends BaseModel {
           
           AppConstants.showFailToast(context, "Submitted Offline");
         }
-      } on PlatformException catch (e) {
+      } catch (e) {
         print(e.toString());
+        
+        AppConstants.showFailToast(context, e.toString());      
       }
       selected = -1;
     }
@@ -1095,7 +1113,7 @@ class SurveyScreenViewModel extends BaseModel {
                  }catch(e){
                          GlobalVar.isloadAppointmentDetail = true;
                           GlobalVar.isloadDashboard = true;
-                   
+                             
                  }
            }
         } else {
@@ -1214,6 +1232,10 @@ class SurveyScreenViewModel extends BaseModel {
             }
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");
+          
+          pref.remove("LastSurveyId+${appointmentid.trim()}");
+          
+          pref.remove("LastSelectionId+${appointmentid.trim()}");
         print(responseModel.response);
         
       } else {

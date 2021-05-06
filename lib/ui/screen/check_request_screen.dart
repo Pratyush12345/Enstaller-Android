@@ -66,11 +66,13 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
                             maxHeight: MediaQuery.of(context).size.height),
                         child: (model.serialList.isNotEmpty == true)
                             ? Padding(
+                              
                                 padding:
                                     SizeConfig.padding.copyWith(bottom: 100),
                                 child: Padding(
                                   padding: SizeConfig.verticalC13Padding,
                                   child: Container( 
+                                    
                                     height: (MediaQuery.of(context).size.height /20) * model.list.length,
                                     decoration: BoxDecoration(
                                       

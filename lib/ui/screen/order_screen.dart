@@ -77,6 +77,8 @@ class _OrderScreenState extends State<OrderScreen> {
                     padding:
                     SizeConfig.padding,
                     child: ListView.builder(
+                      physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      
                       itemCount: model.list.length,
                       itemBuilder: (context, i) {
                         return Padding(

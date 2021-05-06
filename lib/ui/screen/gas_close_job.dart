@@ -139,17 +139,19 @@ class _GasCloseJobState extends State<GasCloseJob> {
           });
           if (response.statusCode == 1) {
             if(!widget.fromTab){
-              widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+             await  widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
             }else{
               GlobalVar.gasCloseJob++;
             }
-            if(!widget.fromTab)
+            if(!widget.fromTab){
             AppConstants.showSuccessToast(context, response.response);
+            
+            Navigator.of(context).pop("submitted");
+            }
             else
             AppConstants.showSuccessToast(context, "Saved");
 
             
-            Navigator.of(context).pop("submitted");
           } else {
             AppConstants.showFailToast(context, response.response);
           }
@@ -171,13 +173,15 @@ class _GasCloseJobState extends State<GasCloseJob> {
 
           preferences.setStringList(
               "listOfUnSubmittedJob", _setofUnSubmittedjob.toList());
-          if(widget.fromTab)
+          if(widget.fromTab){
             AppConstants.showSuccessToast(context, "Saved");
+          
+            Navigator.of(context).pop("submitted");
+          }
             else
             AppConstants.showSuccessToast(context, "Submitted Offline");
 
             
-            Navigator.of(context).pop("submitted");
          }
   }
 

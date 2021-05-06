@@ -181,16 +181,18 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
           });
           if (response.statusCode == 1) {
             if(!widget.fromTab){
-              widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
+             await widget.dsmodel.onUpdateStatusOnCompleted(context, widget.list[0].intId.toString());
             }else{
               GlobalVar.elecCloseJob++;
             }
-            if(!widget.fromTab)
+            if(!widget.fromTab){
             AppConstants.showSuccessToast(context, response.response);
+            
+            Navigator.of(context).pop("submitted");
+            }
             else
             AppConstants.showSuccessToast(context, "Saved");
             
-            Navigator.of(context).pop("submitted");
           } else {
             AppConstants.showFailToast(context, response.response);
           }
@@ -214,12 +216,14 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
           preferences.setStringList(
               "listOfUnSubmittedJob", _setofUnSubmittedjob.toList());
-            if(widget.fromTab)
+            if(widget.fromTab){
             AppConstants.showSuccessToast(context, "Saved");
+            
+            Navigator.of(context).pop("submitted");
+            }
             else
             AppConstants.showSuccessToast(context, "Submitted Offline");
 
-            Navigator.of(context).pop("submitted");
         }
     
     

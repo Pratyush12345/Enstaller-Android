@@ -294,6 +294,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     model.sectionQuestions.keys.length - 2
                                 ? AppStrings.next
                                 : AppStrings.submit,
+                            textStyle: TextStyle(color: Colors.white),    
                             
                             onTap: () async {
                               if(!model.issubmitted){
@@ -439,6 +440,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             color: AppColors.green,
                             buttonText: "Cancel" ,
                             
+                            textStyle: TextStyle(color: Colors.white),
+                            
                             onTap: () async {
                               if(model.lastselected==-1){
                                 Navigator.of(context).pop();
@@ -511,6 +514,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 radius: 10,
                                 color: AppColors.green,
                                 buttonText: AppStrings.next,
+                                
+                            textStyle: TextStyle(color: Colors.white),
                                 onTap: () {
                                   
                                   model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, 1);
@@ -523,6 +528,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             radius: 10,
                             color: AppColors.green,
                             buttonText: "Close Job",
+                            
+                            textStyle: TextStyle(color: Colors.white),
                             onTap: (){
                                   if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false,
@@ -645,6 +652,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   base64String: surveyResponseModel.validate
                   .replaceAll('data:image/png;base64,', ''));
       } 
+      print("11111111111111111111111111111111");
        return Image.file(
               surveyResponseModel?.image,
               height: 100,
@@ -664,7 +672,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(title: Text('Are You Sure, want to abort the survey?'), actions: <Widget>[
+          return AlertDialog(title: Text('Are you sure, you want to abort the survey?'), actions: <Widget>[
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).pop("Yes");
@@ -1199,7 +1207,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     widget.arguments.dsmodel.electricGasMeterList
                                     );
                   },
-                  child: (surveyResponseModel.imagePath == null)
+                  child: (surveyResponseModel.image == null)
                       ? Padding(
                           padding: const EdgeInsets.only(
                               top: 10.0, left: 10.0, right: 20),

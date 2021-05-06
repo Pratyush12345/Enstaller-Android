@@ -216,6 +216,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                   onRefresh: () => Future.delayed(Duration.zero)
                         .whenComplete(() => model.initializeData()),
                                   child: SingleChildScrollView(
+                                    physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           child: Padding(
               padding: EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 6.0),
                         child: Container(
