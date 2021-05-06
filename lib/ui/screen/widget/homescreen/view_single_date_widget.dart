@@ -17,9 +17,6 @@ class ViewSingleDateWidget extends StatelessWidget {
   ViewSingleDateWidget({this.dateString, this.day, this.appointmentList});
   @override
   Widget build(BuildContext context) {
-    print("&&&&&&&&&&&&&&&&&&&&98888888");
-      print(appointmentList.length);
-      print("&&&&&&&&&&&&&&&&&&&&7777777777");
       
     return HomePageExpansionWidget(
 

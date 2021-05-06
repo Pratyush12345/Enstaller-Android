@@ -117,6 +117,7 @@ class AppDrawerWidget extends StatelessWidget {
               ),
               DrawerRowWidget(
                 title: 'Appointments',
+                
                 assetPath: ImageFile.appointment,
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(

@@ -27,12 +27,14 @@ class DrawerRowWidget extends StatelessWidget {
               ),
               !assetPath.endsWith(".svg")? Image(
                   image: AssetImage(assetPath),
+                  
                   height: 40,
                   width: 40): Container(
                     height: 40,
                   width: 40,
-                    child: SvgPicture.asset(
+                    child: SvgPicture.asset( 
                                       assetPath,
+                                      color: AppColors.darkBlue,
                                       ),
                   ),
               SizedBox(

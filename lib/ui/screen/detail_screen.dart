@@ -345,50 +345,50 @@ class _DetailScreenState extends State<DetailScreen> {
                             textAlign: TextAlign.start,
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: AppButton(
-                              height: 40,
-                              color: AppColors.darkBlue,
-                              buttonText: "Check Close Job",
-                              radius: 15,
-                              textStyle: TextStyle(color: AppColors.whiteColor),
-                              onTap: ()  async{
+          //                 SizedBox(
+          //                   height: 10.0,
+          //                 ),
+          //                 Padding(
+          //                   padding: SizeConfig.sidepadding,
+          //                   child: AppButton(
+          //                     height: 40,
+          //                     color: AppColors.darkBlue,
+          //                     buttonText: "Check Close Job",
+          //                     radius: 15,
+          //                     textStyle: TextStyle(color: AppColors.whiteColor),
+          //                     onTap: ()  async{
                                 
-                                SharedPreferences pref = await SharedPreferences.getInstance();
-                                pref.remove("saved+${widget.arguments.appointmentID.trim()}");
-                                pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
+          //                       SharedPreferences pref = await SharedPreferences.getInstance();
+          //                       pref.remove("saved+${widget.arguments.appointmentID.trim()}");
+          //                       pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
                                 
-          pref.remove("LastSurveyId+${widget.arguments.appointmentID.trim()}");
+          // pref.remove("LastSurveyId+${widget.arguments.appointmentID.trim()}");
           
-          pref.remove("LastSelectionId+${widget.arguments.appointmentID.trim()}");
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: AppButton(
-                              height: 40,
-                              color: AppColors.darkBlue,
-                              buttonText: AppStrings.forward_button,
-                              radius: 15,
-                              textStyle: TextStyle(color: AppColors.whiteColor),
-                              onTap: ()  async{
-                                ResponseModel responseModel = await _apiService.updateCallForwardAppointment(widget.arguments.appointmentID.trim());
-                                print(responseModel.statusCode.toString()+"......line373");
-                               if(responseModel.statusCode ==1)
-                               model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
-                              }
-                                ,
-                            ),
-                          ),
+          // pref.remove("LastSelectionId+${widget.arguments.appointmentID.trim()}");
+          //                     },
+          //                   ),
+          //                 ),
+          //                 SizedBox(
+          //                   height: 10.0,
+          //                 ),
+          //                 if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
+          //                 Padding(
+          //                   padding: SizeConfig.sidepadding,
+          //                   child: AppButton(
+          //                     height: 40,
+          //                     color: AppColors.darkBlue,
+          //                     buttonText: AppStrings.forward_button,
+          //                     radius: 15,
+          //                     textStyle: TextStyle(color: AppColors.whiteColor),
+          //                     onTap: ()  async{
+          //                       ResponseModel responseModel = await _apiService.updateCallForwardAppointment(widget.arguments.appointmentID.trim());
+          //                       print(responseModel.statusCode.toString()+"......line373");
+          //                      if(responseModel.statusCode ==1)
+          //                      model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
+          //                     }
+          //                       ,
+          //                   ),
+          //                 ),
                           if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
                           SizedBox(
                             height: 10.0,
