@@ -931,7 +931,6 @@ class SurveyScreenViewModel extends BaseModel {
           preferences.setStringList(
               "key+$appointmentid", _list);
               
-          openJumboTab(dsmodel, appointmentid);
           
           AppConstants.showSuccessToast(context, "Submitted Offline");
         }
@@ -988,7 +987,6 @@ class SurveyScreenViewModel extends BaseModel {
               "listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
           preferences.setStringList(
               "key+$appointmentid", _list);
-          openJumboTab(dsmodel, appointmentid);
           
           AppConstants.showFailToast(context, "Submitted Offline");
         }

@@ -729,8 +729,8 @@ class _DetailScreenState extends State<DetailScreen> {
               secondChild: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if(model.appointmentDetails.appointment?.strJobType != "Full Day Hire" &&
-                   model.appointmentDetails.appointment?.strJobType!= "Half Day Hire")
+                  if(model.appointmentDetails.appointment.strJobType.trim() != "Full Day Hire" &&
+                   model.appointmentDetails.appointment.strJobType.trim()!= "Half Day Hire")
                   AppButton(
                     color: model.appointmentDetails.appointment.appointmentEventType != "Scheduled"? AppColors.appThemeColor : Colors.grey,
                     height: 30,
@@ -773,8 +773,8 @@ class _DetailScreenState extends State<DetailScreen> {
                     },
                   ),
 
-                  if(model.appointmentDetails.appointment?.strJobType == "Full Day Hire" ||
-                   model.appointmentDetails.appointment?.strJobType == "Half Day Hire")
+                  if(model.appointmentDetails.appointment.strJobType.trim() == "Full Day Hire" ||
+                   model.appointmentDetails.appointment.strJobType.trim() == "Half Day Hire")
                   AppButton(
                     color: AppColors.appThemeColor,
                     height: 30,
