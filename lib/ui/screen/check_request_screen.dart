@@ -32,7 +32,7 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -61,29 +61,32 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
                 : RefreshIndicator(
                     onRefresh: () => Future.delayed(Duration.zero)
                         .whenComplete(() => model.initializeData()),
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height),
-                        child: (model.serialList.isNotEmpty == true)
-                            ? Padding(
-                                padding:
-                                    SizeConfig.padding.copyWith(bottom: 100),
-                                child: Padding(
-                                  padding: SizeConfig.verticalC13Padding,
-                                  child: Container( 
-                                    height: (MediaQuery.of(context).size.height /20) * model.list.length,
-                                    decoration: BoxDecoration(
-                                      
-                                        color: AppColors
-                                            .appointmentBackGroundColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Column(
-                                      children: model.list,
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                          child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height),
+                          child: (model.serialList.isNotEmpty == true)
+                              ? Padding(
+                                  padding:
+                                      SizeConfig.padding.copyWith(bottom: 100),
+                                  child: Padding(
+                                    padding: SizeConfig.verticalC13Padding,
+                                    child: Container( 
+                                      height: (MediaQuery.of(context).size.height /20) * model.list.length,
+                                      decoration: BoxDecoration(
+                                        
+                                          color: AppColors
+                                              .appointmentBackGroundColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Column(
+                                        children: model.list,
+                                      ),
                                     ),
-                                  ),
-                                ))
-                            : Center(child: Text(AppStrings.noDataFound))),
+                                  ))
+                              : Center(child: Text(AppStrings.noDataFound))),
+                    ),
                   ));
       },
     );

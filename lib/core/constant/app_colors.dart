@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class AppColors{
   static const Color disablebuttonColor = Color(0xFFb3e6ff);
-  static const Color primaryColor = Color(0xFF27BB8B);
+  static const Color primaryColor = Color(0xFF10163C);
   static  Color yellow=Color(0xFFFC00).withOpacity(1);
   static  Color  backgroundColor = Color(0xFFEDEDEB);
   static const Color facebookButtonColor = Color(0xFF3b5998);
@@ -44,6 +44,8 @@ class AppColors{
   static const expandedColor=Color(0xFFFFFFFF);
   static const Color darkBlue=Color(0xFF10163C);
 
+  static const Color appThemeColor=Color(0xFF10163C);
+
   static const Color green=Color(0xFF3BBDA3);
   static final loginTopColor=Color(0x909CF2).withOpacity(1);
   static final errorContainerColor=Color(0xFFE8C8C6);
@@ -66,7 +68,7 @@ class AppColors{
     }else if(status==AppStrings.EnRoute){
       return Colors.blue;
     }else if(status==AppStrings.onSite){
-      return Color(0xFFCA8D56);
+      return Color(0xFFE67E22);
     }else if(status==AppStrings.started){
       return Colors.orangeAccent;
     }else if(status==AppStrings.completed){

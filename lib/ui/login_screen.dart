@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           textStyle: TextStyle(fontWeight: FontWeight.w400,color: AppColors.whiteColor,
                           fontSize: SizeConfig.screenHeight*.02),
                           height: MediaQuery.of(context).size.height*0.06,
-                          width: SizeConfig.screenWidth*.8,color: AppColors.loginButtonColor,
+                          width: SizeConfig.screenWidth*.8,color: AppColors.appThemeColor,
 
 
                           radius: 20,

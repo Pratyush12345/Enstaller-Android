@@ -41,7 +41,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                       topRight: Radius.circular(7),
                       topLeft: Radius.circular(7)
                     ),
-                    color: AppColors.green,),
+                    color: AppColors.appThemeColor,),
                   child: Padding(
                     padding: SizeConfig.padding,
                     child: Row(
@@ -95,7 +95,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                   child: AppButton(
                     height: SizeConfig.screenHeight*.05,
                     radius: 20,
-                    color: AppColors.green,
+                    color: AppColors.appThemeColor,
                     buttonText: AppStrings.submit,
                     textStyle: TextStyle(color: AppColors.whiteColor,fontWeight: FontWeight.bold),
                     onTap: (){

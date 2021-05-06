@@ -29,10 +29,18 @@ class DocumentScreen extends StatefulWidget {
 class _DocumentScreenState extends State<DocumentScreen> {
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+    FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
     return BaseView<DocumnetViewModel>(
       onModelReady: (model) => model.getDocumnetList(),
       builder: (context, model, child) {
@@ -43,7 +51,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -55,6 +63,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
               centerTitle: true,
               title: model.searchBool
                   ? TextField(
+                    controller: controller,
+                    cursorColor: Colors.white,
+                    style: TextStyle(color: Colors.white),
                       decoration:
                           InputDecoration(hintText: AppStrings.searchHere,
                           hintStyle: TextStyle(color: Colors.white ),
@@ -97,8 +108,11 @@ class _DocumentScreenState extends State<DocumentScreen> {
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
                 : RefreshIndicator(
-                    onRefresh: () => Future.delayed(Duration.zero)
-                        .whenComplete(() => model.getDocumnetList()),
+                    onRefresh: () { 
+                      controller.clear();
+                      return Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getDocumnetList());
+                        },
                     child: ConstrainedBox(
                         constraints: BoxConstraints(
                             maxHeight: MediaQuery.of(context).size.height),

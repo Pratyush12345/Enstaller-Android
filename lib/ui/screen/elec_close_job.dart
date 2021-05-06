@@ -368,7 +368,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         clmn = Column(
             children: [
               Container(
-                color: AppColors.green,
+                color: AppColors.appThemeColor,
                 child: ListTile(
         title: Text("${element.strQuestion}",
         style: TextStyle(
@@ -476,7 +476,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
    
           children: [
             Container(
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               child: ListTile(
             
                 title: Text("${element.strQuestion}",
@@ -611,7 +611,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             width: 100,
             height: 40,
             radius: 10,
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             buttonText: widget.fromTab? "Save" : "Submit Job",   
             textStyle: TextStyle(
               color: Colors.white
@@ -658,7 +658,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: !widget.fromTab? AppBar(
-        backgroundColor: AppColors.green,
+        backgroundColor: AppColors.appThemeColor,
         title: Text("Electricity Close Job",
         style: TextStyle(color: Colors.white)),
       ):
@@ -773,7 +773,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         clmn = Column(
           children: [
             Container(
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               child: ListTile(
                 title: Text("${element.strQuestion}",
                 style: TextStyle(
@@ -955,7 +955,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         clmn = Column(
           children: [
             Container(
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               child: ListTile(
                 title: Text("${element.strQuestion}",
                 style: TextStyle(
@@ -1123,7 +1123,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         clmn = Column(
           children: [
             Container(
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               child: ListTile(
                 title: Text("${element.strQuestion}",
                 style: TextStyle(
@@ -1283,7 +1283,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         clmn = Column(
           children: [
             Container(
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               child: ListTile(
                 title: Text("${element.strQuestion}",
                 style: TextStyle(

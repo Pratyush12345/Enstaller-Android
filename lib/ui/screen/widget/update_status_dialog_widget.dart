@@ -27,7 +27,7 @@ class _UpdateStatusDialogWidgetState extends State<UpdateStatusDialogWidget> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(7),
               topRight: Radius.circular(7)
@@ -132,7 +132,7 @@ class _UpdateStatusDialogWidgetState extends State<UpdateStatusDialogWidget> {
           child: AppButton(
             height: SizeConfig.screenHeight*.05,
             buttonText: AppStrings.UPDATE,
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             textStyle: TextStyle(
               fontWeight: FontWeight.bold,
               color: AppColors.whiteColor

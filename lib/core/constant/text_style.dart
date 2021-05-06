@@ -152,6 +152,6 @@ class AppStyles {
 
   //green
 
-  static TextStyle GreenStyle_Font=TextStyle(fontSize:SizeConfig.fontSizeLarge,color: AppColors.green);
+  static TextStyle GreenStyle_Font=TextStyle(fontSize:SizeConfig.fontSizeLarge,color: AppColors.appThemeColor);
 
 }

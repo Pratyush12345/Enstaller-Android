@@ -40,7 +40,7 @@ class _AbortAppoinmentWidgetState extends State<AbortAppoinmentWidget> {
                         topRight: Radius.circular(7),
                         topLeft: Radius.circular(7)
                       ),
-                      color: AppColors.green,),
+                      color: AppColors.appThemeColor,),
                     child: Padding(
                       padding: SizeConfig.padding,
                       child: Row(

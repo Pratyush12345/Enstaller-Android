@@ -78,15 +78,15 @@ class AppDrawerWidget extends StatelessWidget {
                     ),
                   ),
 
-                  InkWell(
-                    child: SizedBox(
-                      height: 20,
-                        child: Image.asset(ImageFile.downArrow,color: AppColors.whiteColor,)),
-                    onTap: (){
-                      Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (context) => HomeScreen()));
-                    },
-                  ),
+                  // InkWell(
+                  //   child: SizedBox(
+                  //     height: 20,
+                  //       child: Image.asset(ImageFile.downArrow,color: AppColors.whiteColor,)),
+                  //   onTap: (){
+                  //     Navigator.of(context).push(new MaterialPageRoute(
+                  //         builder: (context) => HomeScreen()));
+                  //   },
+                  // ),
 
 
                 ],
@@ -94,7 +94,7 @@ class AppDrawerWidget extends StatelessWidget {
             }
           },
         ),decoration: BoxDecoration(
-          color: AppColors.green
+          color: AppColors.appThemeColor
         ),),
         Expanded(
           child: ListView(

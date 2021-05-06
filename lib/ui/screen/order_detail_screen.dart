@@ -37,7 +37,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               child:AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(

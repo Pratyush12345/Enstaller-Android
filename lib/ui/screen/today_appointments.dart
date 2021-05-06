@@ -27,6 +27,14 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
 
   //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    controller.dispose();
+    super.dispose();
+  }
 
 
   @override
@@ -41,7 +49,7 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
               child:AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor:AppColors.green,
+              backgroundColor:AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -52,6 +60,9 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
               ),
               title: model.searchBool
                   ? TextField(
+                    controller: controller,
+                    cursorColor: Colors.white,
+                    style: TextStyle(color: Colors.white),
                       decoration:
                           InputDecoration( hintText: AppStrings.searchHere,
                           hintStyle: TextStyle(color: Colors.white ),
@@ -86,8 +97,11 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
             ),
             body: model.state==ViewState.Busy?AppConstants.circulerProgressIndicator():
             RefreshIndicator(
-              onRefresh: () => Future.delayed(Duration.zero)
-                        .whenComplete(() => model.getAppoinmentList()),
+              onRefresh: () { 
+                      controller.clear();
+                      return Future.delayed(Duration.zero)
+                        .whenComplete(() => model.getAppoinmentList());
+                        },
                     
               child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -209,7 +223,7 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
           ),
           child: AppButton(
             buttonText: AppStrings.view,
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             textStyle: TextStyle(color: AppColors.whiteColor,fontWeight: FontWeight.bold),
             onTap: (){
               Navigator.of(context).pushNamed(DetailScreen.routeName,arguments:DetailScreenArguments(

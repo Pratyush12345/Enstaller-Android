@@ -56,7 +56,7 @@ class MainMaterialApp extends StatelessWidget {
     final themeProvider=Provider.of<AppThemeViewModel>(context);
 
     if(loginUser.rememberMe){
-      FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+      FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
     }
 
     return MaterialApp(

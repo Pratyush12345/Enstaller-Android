@@ -27,7 +27,7 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+    FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
     return BaseView<SMSNotificationViewModel>(
       onModelReady: (model) => model.getSMSNotificationList(),
       builder: (context, model, child) {
@@ -38,7 +38,7 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(

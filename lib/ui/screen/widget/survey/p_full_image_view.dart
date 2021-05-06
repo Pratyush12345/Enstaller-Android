@@ -18,7 +18,7 @@ class PImageFullView extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-            backgroundColor: AppColors.green,
+            backgroundColor: AppColors.appThemeColor,
             title: Text(
               AppStrings.surveyImage,
               style: TextStyle(color: AppColors.whiteColor),

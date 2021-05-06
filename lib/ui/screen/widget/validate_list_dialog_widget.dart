@@ -29,7 +29,7 @@ class _ValidatedListWidget extends State<ValidatedListWidget> {
       children: [
         Container(
           decoration: BoxDecoration(
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(7),
                   topRight: Radius.circular(7))),

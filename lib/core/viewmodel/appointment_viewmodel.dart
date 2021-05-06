@@ -12,6 +12,8 @@ class AppointmentViewModel extends BaseModel{
 
   bool searchBool=false;
 
+
+
   void getAppointmentList()async{ 
     appointmentList = [];
     _appointmentList = [];

@@ -90,7 +90,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                       child: Container(
                       decoration: BoxDecoration(
                          borderRadius:  BorderRadius.circular(2.0),
-                         color:  model.stockPalletList[index].isSelected? AppColors.green: Colors.brown
+                         color:  model.stockPalletList[index].isSelected? AppColors.appThemeColor: Colors.brown
                       ),
                       child: Center(
                         child: Text(model.stockPalletList[index].strPalletId,
@@ -172,7 +172,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
               width: 200,
               height: 40,
               radius: 10,
-              color: AppColors.green,
+              color: AppColors.appThemeColor,
               buttonText: "Choose CSV file",   
               textStyle: TextStyle(
                 color: Colors.white
@@ -190,7 +190,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
       builder: (context, model, child) {
          return Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.green,
+          backgroundColor: AppColors.appThemeColor,
           title: Text("Stock Update Status",
           style: TextStyle(color: AppColors.whiteColor)),
           actions: [
@@ -388,7 +388,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
                     width: 100,
                     height: 40,
                     radius: 10,
-                    color: AppColors.green,
+                    color: AppColors.appThemeColor,
                     buttonText: "Save",  
                     textStyle: TextStyle(
                       color: Colors.white

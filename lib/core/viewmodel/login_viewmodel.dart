@@ -34,6 +34,11 @@ class LogInViewModel extends BaseModel{
       password: passwordController.text,
       groupType: 'password'
     ));
+    if(response.errorMessage!=null){
+      setState(ViewState.Idle);
+      AppConstants.showFailToast(context,response.errorMessage);
+    }
+    else{
     AfterLoginModel afterLoginModel = await _apiService.getUserRole(userNameController.text.trim());
     GlobalVar.roleId = afterLoginModel.intRoleId;
     GlobalVar.warehosueID = afterLoginModel.intId.toString();
@@ -65,6 +70,7 @@ class LogInViewModel extends BaseModel{
       Navigator.of(context).pushReplacementNamed("/checkAssignOrder");
       else
       Navigator.of(context).pushReplacementNamed("/home");
+    }
     }
   }
 }

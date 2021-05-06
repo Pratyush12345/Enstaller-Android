@@ -11,7 +11,7 @@ class AppointmentDataRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: firstText == "Serial Number" ? AppColors.green : Colors.white,
+        color: firstText == "Serial Number" ? AppColors.appThemeColor : Colors.white,
         border: Border(
           bottom: BorderSide(
             color: AppColors.lightGrayDotColor
@@ -28,15 +28,17 @@ class AppointmentDataRow extends StatelessWidget {
                   firstText,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    color: firstText == "Serial Number"? Colors.black54 : AppColors.darkGrayColor,
-                    fontWeight: firstText == "Serial Number"? FontWeight.bold: FontWeight.normal),
+                    color: firstText == "Serial Number"? Colors.white: AppColors.darkGrayColor,
+                    // fontWeight: firstText == "Serial Number"? FontWeight.bold: FontWeight.normal
+                    fontWeight: FontWeight.bold,
+                    ),
                 )),
             SizeConfig.horizontalSpaceMedium(),
             Expanded(
                 flex: 3,
                 child: secondChild!=null?secondChild:Text(
                   secondText,
-                  style: TextStyle(color: secondText == "Item Name"? Colors.black54 : AppColors.darkGrayColor,
+                  style: TextStyle(color: secondText == "Item Name"? Colors.white : AppColors.darkGrayColor,
                   fontWeight: secondText == "Item Name"? FontWeight.bold: FontWeight.normal),
                   textAlign: TextAlign.start,
                 )),

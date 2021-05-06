@@ -144,7 +144,7 @@ class _DetailScreenState extends State<DetailScreen> {
               child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -225,7 +225,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           //         child: AppButton(
                           //           height: 40,
                           //           radius: 15,
-                          //           color: AppColors.green,
+                                    // color: AppColors.appThemeColor,
                           //           textStyle:
                           //               TextStyle(color: AppColors.whiteColor),
                           //           buttonText: AppStrings.updateStatusC,
@@ -279,8 +279,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                           ),
                                         ),
                                       ),
-                                      headerBackgroundColorStart: AppColors.green,
-                                      headerBackgroundColorEnd: AppColors.green,
+                                      headerBackgroundColorStart: AppColors.appThemeColor,
+                                      headerBackgroundColorEnd: AppColors.appThemeColor,
                                       onExpansionChanged: (value) {
                                         if (value) {
                                           setState(() {
@@ -506,7 +506,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   ],
                                 ),
                                 decoration: BoxDecoration(
-                                    color: AppColors.green,
+                                    color: AppColors.appThemeColor,
                                     borderRadius: BorderRadius.circular(15)),
                               ),
                             ),
@@ -730,7 +730,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   if(model.appointmentDetails.appointment?.strJobType != "Full Day Hire" &&
                    model.appointmentDetails.appointment?.strJobType!= "Half Day Hire")
                   AppButton(
-                    color: model.appointmentDetails.appointment.appointmentEventType != "Scheduled"? AppColors.green : Colors.grey,
+                    color: model.appointmentDetails.appointment.appointmentEventType != "Scheduled"? AppColors.appThemeColor : Colors.grey,
                     height: 30,
                     width: SizeConfig.screenWidth * .23,
                     buttonText: AppStrings.SURVEY,
@@ -774,7 +774,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   if(model.appointmentDetails.appointment?.strJobType == "Full Day Hire" ||
                    model.appointmentDetails.appointment?.strJobType == "Half Day Hire")
                   AppButton(
-                    color: AppColors.green,
+                    color: AppColors.appThemeColor,
                     height: 30,
                     width: SizeConfig.screenWidth * .23,
                     buttonText: "Close Job",
@@ -978,7 +978,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 flex: 2,
                 child: Container(
                   height: 60,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
                     AppStrings.dateAndTime,
@@ -993,7 +993,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 flex: 2,
                 child: Container(
                   height: 60,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
                     AppStrings.user,
@@ -1008,7 +1008,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 flex: 3,
                 child: Container(
                   height: 60,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
                     AppStrings.comment,

@@ -16,7 +16,7 @@ class _BarCodeRenderState extends State<BarCodeRender> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.green,
+        backgroundColor: AppColors.appThemeColor,
               
         title: Text("Bar Code Image",
         style: TextStyle(color: Colors.white),),),

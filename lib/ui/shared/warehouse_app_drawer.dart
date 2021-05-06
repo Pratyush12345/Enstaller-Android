@@ -85,7 +85,7 @@ class WareHouseDrawerWidget extends StatelessWidget {
             }
           },
         ),decoration: BoxDecoration(
-          color: AppColors.green
+          color: AppColors.appThemeColor
         ),),
         Expanded(
           child: ListView(
