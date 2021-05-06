@@ -35,7 +35,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -137,7 +137,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
             buttonText: stockCheckModel?.strCurrentStatus == 'Request Pending'
                 ? AppStrings.GIVE_REPLY
                 : AppStrings.VIEW_REPLY ?? '',
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             textStyle: TextStyle(
                 color: AppColors.whiteColor, fontWeight: FontWeight.bold),
             onTap: () {

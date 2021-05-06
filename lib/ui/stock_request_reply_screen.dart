@@ -33,7 +33,7 @@ class _StockRequestReplyScreenState extends State<StockRequestReplyScreen> {
             key: _scaffoldKey,
 
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               title: Text(
                 "${AppStrings.REPLY_TO_REQUEST}",
                 style: TextStyle(color: AppColors.whiteColor),
@@ -109,7 +109,7 @@ class _StockRequestReplyScreenState extends State<StockRequestReplyScreen> {
                     child: AppButton(
                       height: SizeConfig.screenHeight*.05,
                       buttonText: AppStrings.SEND,
-                      color: AppColors.green,
+                      color: AppColors.appThemeColor,
                       textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.whiteColor

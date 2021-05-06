@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     
-    FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+    FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
 
     SizeConfig.sizeConfigInit(context);
     return SafeArea(
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -236,6 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       //model.appointMentList.length
                       ,
                       itemBuilder: (context, int index) {
+                        // print("herrrrrrrrrreeeeeeee");
                         return Padding(
                           padding: SizeConfig.verticalC8Padding,
                           child: InkWell(
@@ -257,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           " " +getNextDay(DateTime.now()).toString();
                                 return HomePageExpansionWidget(
                                   onTap: (){
-                  model.onSelectIndex(index); 
+                                model.onSelectIndex(index); 
 //                              pModel.getTable(date);
                                   },
                                   showSecondWidget:index==model.selectedIndex ,

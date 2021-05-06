@@ -34,7 +34,6 @@ class DrawerRowWidget extends StatelessWidget {
                   width: 40,
                     child: SvgPicture.asset( 
                                       assetPath,
-                                      color: AppColors.darkBlue,
                                       ),
                   ),
               SizedBox(

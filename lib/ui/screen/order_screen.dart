@@ -36,7 +36,7 @@ class _OrderScreenState extends State<OrderScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -140,7 +140,7 @@ class _OrderScreenState extends State<OrderScreen> {
               Expanded(
                 child: AppButton(
                   buttonText: AppStrings.DETAILS,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   textStyle: TextStyle(
                       color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                   onTap: () {
@@ -155,7 +155,7 @@ class _OrderScreenState extends State<OrderScreen> {
               Expanded(
                 child: AppButton(
                   buttonText: AppStrings.edit,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   textStyle: TextStyle(
                       color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                   onTap: () {
@@ -170,7 +170,7 @@ class _OrderScreenState extends State<OrderScreen> {
               Expanded(
                 child: AppButton(
                   buttonText: AppStrings.barCode,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   textStyle: TextStyle(
                       color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                   onTap: () {

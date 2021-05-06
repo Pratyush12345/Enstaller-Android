@@ -27,14 +27,14 @@ class _BothCloseJobState extends State<BothCloseJob> {
           child: Scaffold(
             resizeToAvoidBottomInset: false,
         appBar: AppBar(
-         backgroundColor: AppColors.green,
+         backgroundColor: AppColors.appThemeColor,
          title: Text("Close Jobs",
          style: TextStyle(color: Colors.white)),),
        body: _showIndicator? 
         AppConstants.circulerProgressIndicator(): Column(
             children: [
               Container(
-                color: AppColors.green,
+                color: AppColors.appThemeColor,
                 width: MediaQuery.of(context).size.width,
                 height: 50.0,
                 child: TabBar(
@@ -112,7 +112,7 @@ class _BothCloseJobState extends State<BothCloseJob> {
         width: 200,
         height: 40,
         radius: 10,
-        color: AppColors.green,
+        color: AppColors.appThemeColor,
         buttonText: "Submit Close Job", 
         textStyle: TextStyle(
           color: Colors.white

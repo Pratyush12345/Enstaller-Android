@@ -35,7 +35,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
             key: _scaffoldKey,
 
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               automaticallyImplyLeading: true,
               title: Text((widget.intOrderId != null)?"${AppStrings.EDIT_ORDER}":'${AppStrings.ADD_ORDER}',style: TextStyle(
                   color: AppColors.whiteColor
@@ -66,7 +66,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       child: AppButton(
                         height: 40,
                         radius: 15,
-                        color: AppColors.green,
+                        color: AppColors.appThemeColor,
                         textStyle: TextStyle(color: AppColors.whiteColor),
                         buttonText: AppStrings.ADD_LINE_ITEM,
                         onTap: (){
@@ -82,7 +82,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       child: AppButton(
                         height: 40,
                         radius: 15,
-                        color: AppColors.green,
+                        color: AppColors.appThemeColor,
                         textStyle: TextStyle(color: AppColors.whiteColor),
                         buttonText: AppStrings.save,
                         onTap: (){

@@ -19,7 +19,7 @@ class HomePageListWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.itemColor,
 //        borderRadius: BorderRadius.circular(10),
-          border: Border(left: BorderSide(color: AppColors.green,width: 10),),
+          border: Border(left: BorderSide(color: AppColors.appThemeColor,width: 10),),
           boxShadow: [
             BoxShadow(
                 color: Colors.black54,

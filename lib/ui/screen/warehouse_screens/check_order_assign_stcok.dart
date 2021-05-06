@@ -48,7 +48,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
               topLeft: Radius.circular(7), topRight: Radius.circular(7)),
           child: AppButton(
             buttonText: 'Order Details',
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             textStyle: TextStyle(
                 color: AppColors.whiteColor, fontWeight: FontWeight.bold),
             onTap: () {
@@ -114,7 +114,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                itemCount: CheckAndAssignOrderVM.instance.showListView.length,
                itemBuilder: (context, index){
                  return Card(
-                   color: AppColors.green ,
+                   color: AppColors.appThemeColor,
                   child: ListTile(
                     title: Text(CheckAndAssignOrderVM.instance.showListView[index].strSerialNo + " - "+
                     CheckAndAssignOrderVM.instance.showListView[index].strItemName ,
@@ -154,7 +154,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
     SizeConfig.sizeConfigInit(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.green,
+        backgroundColor: AppColors.appThemeColor,
         title: Text("Check Order And Assign Stock",
         style: TextStyle(
           color: Colors.white
@@ -265,7 +265,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
                 width: 100,
                 height: 40,
                 radius: 10,
-                color: AppColors.green,
+                color: AppColors.appThemeColor,
                 buttonText: "Save",   
                 textStyle: TextStyle(
                   color: Colors.white

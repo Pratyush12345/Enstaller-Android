@@ -29,7 +29,7 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+    FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
     return BaseView<EmailNotificationViewModel>(
       onModelReady: (model) => model.getEmailNotificationList(),
       builder: (context, model, child) {
@@ -40,7 +40,7 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -172,7 +172,7 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
               bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
           child: AppButton(
             buttonText: AppStrings.viewemail,
-            color: AppColors.green,
+            color: AppColors.appThemeColor,
             textStyle: TextStyle(
                 color: AppColors.whiteColor, fontWeight: FontWeight.bold),
             onTap: () {

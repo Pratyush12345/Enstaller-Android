@@ -32,6 +32,7 @@ class ViewAppointmentListWidget extends StatelessWidget {
   ViewAppointmentListWidget({this.tables, this.homeScreenViewModel});
   @override
   Widget build(BuildContext context) {
+    print('view apponintment list');
     return ListView.builder(
       physics:
       NeverScrollableScrollPhysics(),
@@ -48,7 +49,7 @@ class ViewAppointmentListWidget extends StatelessWidget {
                 strBookingReference:  tables[childrenIndex].strBookingReference,
                 customerID:  tables[childrenIndex].intCustomerId.toString()
             )).then((value) {
-              FlutterStatusbarcolor.setStatusBarColor(AppColors.green);
+              FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
               if(GlobalVar.isloadDashboard){
               homeScreenViewModel.getAppointmentList();
               GlobalVar.isloadDashboard = false;
@@ -134,11 +135,11 @@ class ViewAppointmentListWidget extends StatelessWidget {
                                 ),
                                 Text(
                                   "${AppStrings.time} : ",
-                                  style: TextStyle(color: AppColors.green, fontWeight: FontWeight.w500,fontSize: 12),
+                                  style: TextStyle(color: AppColors.appThemeColor, fontWeight: FontWeight.w500,fontSize: 12),
                                 ),
                                 Text(
                                   tables[childrenIndex].strBookedTime,
-                                  style: TextStyle(color:  AppColors.green, fontWeight: FontWeight.w500,fontSize: 12),
+                                  style: TextStyle(color:  AppColors.appThemeColor, fontWeight: FontWeight.w500,fontSize: 12),
                                 ),
                               ],
                             ),

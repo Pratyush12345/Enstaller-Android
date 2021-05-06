@@ -83,7 +83,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 //            child:AppDrawerWidget(),
 //          ),
           appBar: AppBar(
-            backgroundColor: AppColors.green,
+            backgroundColor: AppColors.appThemeColor,
 //            leading:Padding(
 //              padding: const EdgeInsets.all(18.0),
 //              child: InkWell(
@@ -137,7 +137,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   expanded: model.selected == index,
                                   firstChild: InkWell(
                                     child: Container(
-                                      color: AppColors.green,
+                                      color: AppColors.appThemeColor,
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             left: 20, top: 20, bottom: 10),
@@ -165,7 +165,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     children: [
                                       InkWell(
                                         child: Container(
-                                          color: AppColors.green,
+                                          color: AppColors.appThemeColor,
                                           child: Padding(
                                             padding: EdgeInsets.only(
                                                 left: 20, top: 20, bottom: 10),
@@ -286,15 +286,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       children: [
                         
                         AppButton(
+                            textStyle: TextStyle(color: Colors.white),
                             width: 100,
                             height: 40,
                             radius: 10,
-                            color: AppColors.green,
+                            color: AppColors.appThemeColor,
                             buttonText: model.selected <
                                     model.sectionQuestions.keys.length - 2
                                 ? AppStrings.next
                                 : AppStrings.submit,
-                            textStyle: TextStyle(color: Colors.white),    
                             
                             onTap: () async {
                               if(!model.issubmitted){
@@ -434,13 +434,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           ),
                           if(questions[0].strSectionName.trim() == "Abort")
                           AppButton(
+                            textStyle: TextStyle(color: Colors.white),
                             width: 100,
                             height: 40,
                             radius: 10,
-                            color: AppColors.green,
+                            color: AppColors.appThemeColor,
                             buttonText: "Cancel" ,
                             
-                            textStyle: TextStyle(color: Colors.white),
                             
                             onTap: () async {
                               if(model.lastselected==-1){
@@ -509,13 +509,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         ),
                         model.selected < model.sectionQuestions.keys.length - 1
                             ? AppButton(
+                              textStyle: TextStyle(color: Colors.white),
                                 width: 100,
                                 height: 40,
                                 radius: 10,
-                                color: AppColors.green,
+                                color: AppColors.appThemeColor,
                                 buttonText: AppStrings.next,
                                 
-                            textStyle: TextStyle(color: Colors.white),
                                 onTap: () {
                                   
                                   model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, 1);
@@ -523,13 +523,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               )
                             : widget.arguments.edit && widget.arguments.dsmodel.appointmentDetails.appointment.appointmentEventType=="OnSite"?
                           AppButton(
+                            
+                            
+                            textStyle: TextStyle(color: Colors.white),
                             width: 100,
                             height: 40,
                             radius: 10,
-                            color: AppColors.green,
+                            color: AppColors.appThemeColor,
                             buttonText: "Close Job",
                             
-                            textStyle: TextStyle(color: Colors.white),
                             onTap: (){
                                   if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false,

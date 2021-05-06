@@ -144,7 +144,7 @@ class _DetailScreenState extends State<DetailScreen> {
               child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),
             appBar: AppBar(
-              backgroundColor: AppColors.green,
+              backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: InkWell(
@@ -227,7 +227,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           //         child: AppButton(
                           //           height: 40,
                           //           radius: 15,
-                          //           color: AppColors.green,
+                                    // color: AppColors.appThemeColor,
                           //           textStyle:
                           //               TextStyle(color: AppColors.whiteColor),
                           //           buttonText: AppStrings.updateStatusC,
@@ -281,8 +281,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                           ),
                                         ),
                                       ),
-                                      headerBackgroundColorStart: AppColors.green,
-                                      headerBackgroundColorEnd: AppColors.green,
+                                      headerBackgroundColorStart: AppColors.appThemeColor,
+                                      headerBackgroundColorEnd: AppColors.appThemeColor,
                                       onExpansionChanged: (value) {
                                         if (value) {
                                           setState(() {
@@ -345,50 +345,59 @@ class _DetailScreenState extends State<DetailScreen> {
                             textAlign: TextAlign.start,
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
-          //                 SizedBox(
-          //                   height: 10.0,
-          //                 ),
-          //                 Padding(
-          //                   padding: SizeConfig.sidepadding,
-          //                   child: AppButton(
-          //                     height: 40,
-          //                     color: AppColors.darkBlue,
-          //                     buttonText: "Check Close Job",
-          //                     radius: 15,
-          //                     textStyle: TextStyle(color: AppColors.whiteColor),
-          //                     onTap: ()  async{
+                          // SizedBox(
+                          //   height: 10.0,
+                          // ),
+                          // Padding(
+                          //   padding: SizeConfig.sidepadding,
+                          //   child: AppButton(
+                          //     height: 40,
+                          //     color: AppColors.darkBlue,
+                          //     buttonText: "Check Close Job",
+                          //     radius: 15,
+                          //     textStyle: TextStyle(color: AppColors.whiteColor),
+                          //     onTap: ()  async{
+                          //      print("---------------------");
+                          //       print("length...........${model.checkCloseJobModel.table.length}");
                                 
-          //                       SharedPreferences pref = await SharedPreferences.getInstance();
-          //                       pref.remove("saved+${widget.arguments.appointmentID.trim()}");
-          //                       pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
+                          //       model.checkCloseJobModel.table.forEach((element) { 
+                          //         print(element.intId);
+                          //       });
+                          //       print("---------------------");
+                          //       if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
+                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)));
+                          //       else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
+                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )));
+                          //       else if(model.checkCloseJobModel.table.length ==2 )
+                          //       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)));
                                 
-          // pref.remove("LastSurveyId+${widget.arguments.appointmentID.trim()}");
-          
-          // pref.remove("LastSelectionId+${widget.arguments.appointmentID.trim()}");
-          //                     },
-          //                   ),
-          //                 ),
-          //                 SizedBox(
-          //                   height: 10.0,
-          //                 ),
-          //                 if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
-          //                 Padding(
-          //                   padding: SizeConfig.sidepadding,
-          //                   child: AppButton(
-          //                     height: 40,
-          //                     color: AppColors.darkBlue,
-          //                     buttonText: AppStrings.forward_button,
-          //                     radius: 15,
-          //                     textStyle: TextStyle(color: AppColors.whiteColor),
-          //                     onTap: ()  async{
-          //                       ResponseModel responseModel = await _apiService.updateCallForwardAppointment(widget.arguments.appointmentID.trim());
-          //                       print(responseModel.statusCode.toString()+"......line373");
-          //                      if(responseModel.statusCode ==1)
-          //                      model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
-          //                     }
-          //                       ,
-          //                   ),
-          //                 ),
+                          //       // SharedPreferences pref = await SharedPreferences.getInstance();
+                          //       // pref.remove("saved+${widget.arguments.appointmentID.trim()}");
+                          //       // pref.remove("disabled+${widget.arguments.appointmentID.trim()}");
+                          //     },
+                          //   ),
+                          // ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
+                          Padding(
+                            padding: SizeConfig.sidepadding,
+                            child: AppButton(
+                              height: 40,
+                              color: AppColors.darkBlue,
+                              buttonText: AppStrings.forward_button,
+                              radius: 15,
+                              textStyle: TextStyle(color: AppColors.whiteColor),
+                              onTap: ()  async{
+                                ResponseModel responseModel = await _apiService.updateCallForwardAppointment(widget.arguments.appointmentID.trim());
+                                print(responseModel.statusCode.toString()+"......line373");
+                               if(responseModel.statusCode ==1)
+                               model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
+                              }
+                                ,
+                            ),
+                          ),
                           if(model.appointmentDetails.appointment.appointmentEventType =="Scheduled")
                           SizedBox(
                             height: 10.0,
@@ -499,7 +508,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   ],
                                 ),
                                 decoration: BoxDecoration(
-                                    color: AppColors.green,
+                                    color: AppColors.appThemeColor,
                                     borderRadius: BorderRadius.circular(15)),
                               ),
                             ),
@@ -723,7 +732,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   if(model.appointmentDetails.appointment?.strJobType != "Full Day Hire" &&
                    model.appointmentDetails.appointment?.strJobType!= "Half Day Hire")
                   AppButton(
-                    color: model.appointmentDetails.appointment.appointmentEventType != "Scheduled"? AppColors.green : Colors.grey,
+                    color: model.appointmentDetails.appointment.appointmentEventType != "Scheduled"? AppColors.appThemeColor : Colors.grey,
                     height: 30,
                     width: SizeConfig.screenWidth * .23,
                     buttonText: AppStrings.SURVEY,
@@ -767,7 +776,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   if(model.appointmentDetails.appointment?.strJobType == "Full Day Hire" ||
                    model.appointmentDetails.appointment?.strJobType == "Half Day Hire")
                   AppButton(
-                    color: AppColors.green,
+                    color: AppColors.appThemeColor,
                     height: 30,
                     width: SizeConfig.screenWidth * .23,
                     buttonText: "Close Job",
@@ -971,7 +980,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 flex: 2,
                 child: Container(
                   height: 60,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
                     AppStrings.dateAndTime,
@@ -986,7 +995,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 flex: 2,
                 child: Container(
                   height: 60,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
                     AppStrings.user,
@@ -1001,7 +1010,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 flex: 3,
                 child: Container(
                   height: 60,
-                  color: AppColors.green,
+                  color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
                     AppStrings.comment,
