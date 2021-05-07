@@ -162,8 +162,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     
-    FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
-
+    // FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     SizeConfig.sizeConfigInit(context);
     return SafeArea(
       child: BaseView<HomeScreenViewModel>(

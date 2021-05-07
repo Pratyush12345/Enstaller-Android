@@ -16,26 +16,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GasCloseJob extends StatefulWidget {
   final List<CheckTable> list;
   final bool fromTab;
+  final String status;
   final DetailsScreenViewModel dsmodel;
   
-  GasCloseJob({@required this.list, @required this.fromTab, @required this.dsmodel});
+  GasCloseJob({@required this.list, @required this.fromTab, @required this.dsmodel, @required this.status});
   
   @override
   _GasCloseJobState createState() => _GasCloseJobState();
 }
 
 class _GasCloseJobState extends State<GasCloseJob> {
-  List<Widget> _list;
-  GlobalKey<FormState> _formKey;
-  Map<int, List<CloseJobQuestionModel>> _metermap;
-  Map<int, Map<int, List<CloseJobQuestionModel>>> _registermap;
-  Map<int, Map<int, List<CloseJobQuestionModel>>> _convertersmap;
-  Map<int, int> _registerCount;
-  Map<int, int> _converterCount;
-  final Connectivity _connectivity = Connectivity();
-  bool _showIndicator = false;
-  DateTime startDate;
-  DateTime endDate;
   showDateTimePicker(TextEditingController controller, String question) async{
     
     DateTime date = await showDatePicker(
@@ -46,10 +36,10 @@ class _GasCloseJobState extends State<GasCloseJob> {
       );
       setState(() {
         if(question == "Start Date"){
-          startDate = date;
+          GasJobViewModel.instance.startDate = date;
         }
         if(question == "End Date"){
-          endDate = date;
+          GasJobViewModel.instance.endDate = date;
         }
         if(date!=null)
         controller.text = date.day.toString()+"/"+date.month.toString() + "/"+ date.year.toString() ;
@@ -85,9 +75,9 @@ class _GasCloseJobState extends State<GasCloseJob> {
             json[element.jsonfield] = element.checkBoxVal;
     });
    
-   if(_metermap.isNotEmpty){
+   if(GasJobViewModel.instance.metermap.isNotEmpty){
        Map<String, dynamic> meterjson;
-      _metermap.forEach((meterkey, meterval) { 
+      GasJobViewModel.instance.metermap.forEach((meterkey, meterval) { 
         meterjson  = {
           "registerList" : [],
           "converterList" : []
@@ -101,7 +91,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
 
          Map<String, dynamic> registerjson;
 
-        _registermap[meterkey].forEach((registerkey, registerval) { 
+        GasJobViewModel.instance.registermap[meterkey].forEach((registerkey, registerval) { 
             registerjson = {};
             registerval.forEach((element) { 
                 if(element.type == "text")
@@ -112,10 +102,10 @@ class _GasCloseJobState extends State<GasCloseJob> {
             meterjson["registerList"].add(registerjson);
         });
 
-        if(_convertersmap.isNotEmpty){
+        if(GasJobViewModel.instance.convertersmap.isNotEmpty){
          Map<String, dynamic> convertersjson;
 
-        _convertersmap[meterkey].forEach((converterskey, convertersval) { 
+        GasJobViewModel.instance.convertersmap[meterkey].forEach((converterskey, convertersval) { 
             convertersjson = {};
             convertersval.forEach((element) { 
                 if(element.type == "text")
@@ -130,11 +120,11 @@ class _GasCloseJobState extends State<GasCloseJob> {
        json["meterList"].add(meterjson);   
       });
     } 
-        ConnectivityResult result = await _connectivity.checkConnectivity();
+        ConnectivityResult result = await GasJobViewModel.instance.connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
           ResponseModel response  = await ApiService().saveGasJob( GasCloseJobModel.fromJson(json));
-          _showIndicator = false;
+          GasJobViewModel.instance.showIndicator = false;
           setState(() {
           });
           if (response.statusCode == 1) {
@@ -161,7 +151,7 @@ class _GasCloseJobState extends State<GasCloseJob> {
           SharedPreferences preferences = await SharedPreferences.getInstance();
           preferences.setString(widget.list[0].intId.toString()+"GasJob", jsonEncode(GasCloseJobModel.fromJson(json)));
           GlobalVar.closejobsubmittedoffline = true;
-          _showIndicator = false;
+          GasJobViewModel.instance.showIndicator = false;
           setState(() {
           });
           
@@ -174,13 +164,12 @@ class _GasCloseJobState extends State<GasCloseJob> {
           preferences.setStringList(
               "listOfUnSubmittedJob", _setofUnSubmittedjob.toList());
           if(widget.fromTab){
-            AppConstants.showSuccessToast(context, "Saved");
+            AppConstants.showSuccessToast(context, "Saved Offline");
           
+          }else{
+            AppConstants.showSuccessToast(context, "Submitted Offline");
             Navigator.of(context).pop("submitted");
           }
-            else
-            AppConstants.showSuccessToast(context, "Submitted Offline");
-
             
          }
   }
@@ -214,11 +203,11 @@ String _updateConnectionStatus(ConnectivityResult result) {
  
   
   void validate() {
-    if (_formKey.currentState.validate()) {
+    if (GasJobViewModel.instance.formKey.currentState.validate()) {
       print("validate");
       _callAPI();
       setState(() {
-        _showIndicator = true;
+        GasJobViewModel.instance.showIndicator = true;
       });
     } else {
       print("Not validate");
@@ -249,8 +238,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && GasJobViewModel.instance.endDate!=null && GasJobViewModel.instance.startDate !=null){
+                   if(GasJobViewModel.instance.endDate.difference(GasJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -330,8 +319,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && GasJobViewModel.instance.endDate!=null && GasJobViewModel.instance.startDate !=null){
+                   if(GasJobViewModel.instance.endDate.difference(GasJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -415,9 +404,9 @@ String _updateConnectionStatus(ConnectivityResult result) {
                              IconButton(
                               icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _registerCount[meterpos]) {
-                                  _registermap[meterpos].remove(pos);
-                                  _registerCount[meterpos]--;
+                                if (pos == GasJobViewModel.instance.registerCount[meterpos]) {
+                                  GasJobViewModel.instance.registermap[meterpos].remove(pos);
+                                  GasJobViewModel.instance.registerCount[meterpos]--;
                                   setState(() {});
                                 }
                               },
@@ -425,8 +414,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                           IconButton(
                               icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _registerCount[meterpos]) {
-                                  _registerCount[meterpos]++;
+                                if (pos == GasJobViewModel.instance.registerCount[meterpos]) {
+                                  GasJobViewModel.instance.registerCount[meterpos]++;
                                   setState(() {});
                                 }
                               },
@@ -467,8 +456,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && GasJobViewModel.instance.endDate!=null && GasJobViewModel.instance.startDate !=null){
+                   if(GasJobViewModel.instance.endDate.difference(GasJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -552,9 +541,9 @@ String _updateConnectionStatus(ConnectivityResult result) {
                              IconButton(
                               icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _converterCount[meterpos]) {
-                                  _convertersmap[meterpos].remove(pos);
-                                  _converterCount[meterpos]--;
+                                if (pos == GasJobViewModel.instance.converterCount[meterpos]) {
+                                  GasJobViewModel.instance.convertersmap[meterpos].remove(pos);
+                                  GasJobViewModel.instance.converterCount[meterpos]--;
                                   setState(() {});
                                 }
                               },
@@ -562,8 +551,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                           IconButton(
                               icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _converterCount[meterpos]) {
-                                  _converterCount[meterpos]++;
+                                if (pos == GasJobViewModel.instance.converterCount[meterpos]) {
+                                  GasJobViewModel.instance.converterCount[meterpos]++;
                                   setState(() {});
                                 }
                               },
@@ -605,8 +594,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && GasJobViewModel.instance.endDate!=null && GasJobViewModel.instance.startDate !=null){
+                   if(GasJobViewModel.instance.endDate.difference(GasJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -692,9 +681,9 @@ String _updateConnectionStatus(ConnectivityResult result) {
                               icon: Icon(Icons.delete, color: Colors.white),
                               onPressed: () {
                                 if (pos == GasJobViewModel.instance.meterCount) {
-                                  _metermap.remove(pos);
-                                  _registerCount.remove(pos);
-                                  _registermap.remove(pos);
+                                  GasJobViewModel.instance.metermap.remove(pos);
+                                  GasJobViewModel.instance.registerCount.remove(pos);
+                                  GasJobViewModel.instance.registermap.remove(pos);
                                   GasJobViewModel.instance.meterCount--;
                                   setState(() {});
                                 }
@@ -723,9 +712,9 @@ String _updateConnectionStatus(ConnectivityResult result) {
       _list.add(clmn);
 
       if (element.type == "checkBox" && element.strQuestion == "Register") {
-        for (int i = 0; i <= _registerCount[pos]; i++){
-          if(!_registermap[pos].keys.contains(i)){
-            _registermap[pos][i] = GasJobViewModel.registerList().registerList;
+        for (int i = 0; i <= GasJobViewModel.instance.registerCount[pos]; i++){
+          if(!GasJobViewModel.instance.registermap[pos].keys.contains(i)){
+            GasJobViewModel.instance.registermap[pos][i] = GasJobViewModel.registerList().registerList;
             
           }
           Widget ctn = Padding(
@@ -736,7 +725,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
               borderRadius: BorderRadius.circular(6.0)
             ),
             child: Column(
-                children: _getRegisterWidgets(pos ,i, _registermap[pos][i]) ,
+                children: _getRegisterWidgets(pos ,i, GasJobViewModel.instance.registermap[pos][i]) ,
               ),
           ));
           _list.add(ctn);
@@ -744,16 +733,16 @@ String _updateConnectionStatus(ConnectivityResult result) {
       }
       if (element.type == "checkBox" && element.strQuestion == "Converters") {
         if(element.checkBoxVal){
-          if(_converterCount[pos] == null){
-            _converterCount[pos] = 0;
+          if(GasJobViewModel.instance.converterCount[pos] == null){
+            GasJobViewModel.instance.converterCount[pos] = 0;
           }
-          if(_convertersmap[pos] == null){
-            _convertersmap[pos] = {};
+          if(GasJobViewModel.instance.convertersmap[pos] == null){
+            GasJobViewModel.instance.convertersmap[pos] = {};
           }
 
-        for (int i = 0; i <= _converterCount[pos]; i++){
-          if(!_convertersmap[pos].keys.contains(i)){
-            _convertersmap[pos][i] = GasJobViewModel.converterList().convertersList; 
+        for (int i = 0; i <= GasJobViewModel.instance.converterCount[pos]; i++){
+          if(!GasJobViewModel.instance.convertersmap[pos].keys.contains(i)){
+            GasJobViewModel.instance.convertersmap[pos][i] = GasJobViewModel.converterList().convertersList; 
           }
           Widget ctn = Padding(
             padding: EdgeInsets.all(10.0),
@@ -763,14 +752,14 @@ String _updateConnectionStatus(ConnectivityResult result) {
               borderRadius: BorderRadius.circular(6.0)
             ),
             child: Column(
-                children:_getConvertersWidgets(pos ,i, _convertersmap[pos][i]) ,
+                children:_getConvertersWidgets(pos ,i, GasJobViewModel.instance.convertersmap[pos][i]) ,
               ),
           ));
           _list.add(ctn);
         }
         }else{
-          _converterCount = {};
-          _convertersmap = {};
+          GasJobViewModel.instance.converterCount = {};
+          GasJobViewModel.instance.convertersmap = {};
         }
       }
     });
@@ -778,7 +767,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
   }
 
   List<Widget> _getListViewWidget() {
-    _list = [];
+    GasJobViewModel.instance.list = [];
     GasJobViewModel.instance.addGasCloseJobList.forEach((element) {
       Widget clmn;
       if (element.type == "text") {
@@ -795,8 +784,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && GasJobViewModel.instance.endDate!=null && GasJobViewModel.instance.startDate !=null){
+                   if(GasJobViewModel.instance.endDate.difference(GasJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -882,14 +871,14 @@ String _updateConnectionStatus(ConnectivityResult result) {
           ],
         );
       }
-      _list.add(clmn);
+      GasJobViewModel.instance.list.add(clmn);
       if (element.strQuestion == "Meters" ) {
         if(element.checkBoxVal){
         for (int i = 0; i <= GasJobViewModel.instance.meterCount; i++){
-          if(!_metermap.keys.contains(i)){
-            _metermap[i] = GasJobViewModel.meterList().meterList;
-            _registerCount[i] = 0;
-            _registermap[i] = {};
+          if(!GasJobViewModel.instance.metermap.keys.contains(i)){
+            GasJobViewModel.instance.metermap[i] = GasJobViewModel.meterList().meterList;
+            GasJobViewModel.instance.registerCount[i] = 0;
+            GasJobViewModel.instance.registermap[i] = {};
             
           }
           Widget ctn = Padding(
@@ -900,18 +889,18 @@ String _updateConnectionStatus(ConnectivityResult result) {
               borderRadius: BorderRadius.circular(6.0)
             ),
             child: Column(
-                children: _getMeterWidget(i, _metermap[i]) ,
+                children: _getMeterWidget(i, GasJobViewModel.instance.metermap[i]) ,
               ),
           ));
-          _list.add(ctn);
+          GasJobViewModel.instance.list.add(ctn);
         }
         }
         else{
-          _metermap = {};
-          _registermap = {};
-          _registerCount = {};
-          _converterCount = {};
-          _convertersmap = {};
+          GasJobViewModel.instance.metermap = {};
+          GasJobViewModel.instance.registermap = {};
+          GasJobViewModel.instance.registerCount = {};
+          GasJobViewModel.instance.converterCount = {};
+          GasJobViewModel.instance.convertersmap = {};
           GasJobViewModel.instance.meterCount = 0;       
         }
       }
@@ -927,7 +916,7 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 children: _getParticularWidgets("Site Visit") ,
               ),
           ));
-          _list.add(ctn);
+          GasJobViewModel.instance.list.add(ctn);
       }
       if (element.strQuestion == "Transaction" && element.checkBoxVal) {
         Widget ctn = Padding(
@@ -941,12 +930,12 @@ String _updateConnectionStatus(ConnectivityResult result) {
                 children: _getParticularWidgets("Transaction") ,
               ),
           ));
-          _list.add(ctn);
+          GasJobViewModel.instance.list.add(ctn);
 
       }
     });
 
-    _list.add(
+    GasJobViewModel.instance.list.add(
       Column(
         children: [
           AppButton(
@@ -966,25 +955,14 @@ String _updateConnectionStatus(ConnectivityResult result) {
         ],
       )     
     );
-    return _list;
+    return GasJobViewModel.instance.list;
   }
 
   @override
   void initState() {
-    _list = [];
-    _metermap = {};
-    _registermap = {};
-    _convertersmap = {};
-    _registerCount = {};
-    _converterCount = {};
-    
-    _formKey = GlobalKey<FormState>();
-    try{
-    CheckTable checkTable = widget.list.firstWhere((element) => element.strFuel.toString() == "GAS");
-    GasJobViewModel.instance.initialize(checkTable);
-    }catch(e){
-     GasJobViewModel.instance.initialize(widget.list[0]);
-      
+    if(widget.status!="NONE")
+    {
+      GasJobViewModel.instance.initVariable(widget.list);
     }
     super.initState();
   }
@@ -1000,10 +978,10 @@ String _updateConnectionStatus(ConnectivityResult result) {
      PreferredSize(
          preferredSize: Size.zero ,
          child: SizedBox(height: 0.0, width: 0.0,)) ,
-     body: _showIndicator? 
+     body: GasJobViewModel.instance.showIndicator? 
         AppConstants.circulerProgressIndicator():
         Form(
-        key: _formKey,
+        key: GasJobViewModel.instance.formKey,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(10.0),

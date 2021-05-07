@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -53,9 +54,55 @@ class ElecJobViewModel {
   List<CloseJobQuestionModel> usernameList = [];
   List<CloseJobQuestionModel> siteVisitList = [];
   List<CloseJobQuestionModel> supplyList = [];
+  List<Widget> list;
+  GlobalKey<FormState> formKey;
+  Map<int, List<CloseJobQuestionModel>> metermap;
+  Map<int, List<CloseJobQuestionModel>> codeOfPractisemap;
+  Map<int, Map<int, List<CloseJobQuestionModel>>> registermap;
+  Map<int, int> registerCount;
+  Map<int, Map<int, List<CloseJobQuestionModel>>> readingmap;
+  Map<int, Map<int,List<CloseJobQuestionModel>>> regimesmap;
+
+  Map<int, List<CloseJobQuestionModel>> outStationmap;
+  Map<int, List<CloseJobQuestionModel>> codeOfPractiseOSmap;
+  Map<int, Map<int, List<CloseJobQuestionModel>>> commsmap;
+  Map<int, int> commsCount;
+  Map<int, List<CloseJobQuestionModel>> passwordmap;
+  Map<int, List<CloseJobQuestionModel>> usernamemap;
+  bool showIndicator = false;
+  final Connectivity connectivity = Connectivity();
+  DateTime startDate;
+  DateTime endDate;
   
  
+ initvariable(List<CheckTable> listw){
+  list = [];
 
+    metermap = {};
+    codeOfPractisemap = {};
+    registermap = {};
+    readingmap = {};
+    registermap = {};
+    regimesmap = {};
+    registerCount = {};
+    
+    outStationmap = {};
+    codeOfPractiseOSmap = {};
+    commsmap = {};
+    commsCount = {};
+    passwordmap = {};
+    usernamemap = {};
+        
+    formKey = GlobalKey<FormState>();
+    try{
+    CheckTable checkTable = listw.firstWhere((element) => element.strFuel.toString() == "ELECTRICITY");
+    initialize(checkTable);
+    
+    }catch(e){
+    initialize(listw[0]);
+      
+    }
+ }
   initialize(CheckTable checkTable ){
     initaddCLoseJob(checkTable);
     meterCount = 0;

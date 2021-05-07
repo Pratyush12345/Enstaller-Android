@@ -24,21 +24,21 @@ class ImageFile{
   static String document = "asserts/icon/status/Document.svg";
   static String email_notification = "asserts/icon/status/Email-Notification.svg";
   static String sms_notification = "asserts/icon/status/notification.svg";
-  static String order = "asserts/icon/status/oder.svg";
+  static String order = "asserts/icon/status/order.svg";
   static String stock_check_request = "asserts/icon/status/stock-check-request.svg";
   
   static String rightArrow='asserts/icon/right-arrow.png';
   static String downArrow='asserts/icon/down-arrow.png';
   static String time='asserts/icon/time.png';
   static String notification='asserts/icon/drawer/notification.png';
-  static String dashboard='asserts/icon/drawer/dashboard.png';
-  static String today='asserts/icon/drawer/today.png';
-  static String updateStatus='asserts/icon/drawer/status_update.png';
-  static String myProfile='asserts/icon/my_profile.png';
-  static String logout='asserts/icon/drawer/logout.png';
+  static String dashboard='asserts/icon/drawer/dashboard.svg';
+  static String today='asserts/icon/drawer/today.svg';
+  static String updateStatus='asserts/icon/drawer/stock-update-status.svg';
+  static String myProfile='asserts/icon/my_profile.svg';
+  static String logout='asserts/icon/drawer/logout.svg';
   static String loginUser='asserts/icon/login-user.png';
   static String loginPass='asserts/icon/login-pass.png';
-  static String appointment='asserts/icon/drawer/updatestatus.png';
+  static String appointment='asserts/icon/drawer/appointments.svg';
   static String direction='asserts/icon/direction.png';
 
 

@@ -16,33 +16,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ElecCloseJob extends StatefulWidget {
   final List<CheckTable> list;
   final bool fromTab;
+  final String status;
   final DetailsScreenViewModel dsmodel;
   
-  ElecCloseJob({@required this.list, @required this.fromTab, @required this.dsmodel});
+  ElecCloseJob({@required this.list, @required this.fromTab, @required this.dsmodel,@required this.status});
   @override
   _ElecCloseJobState createState() => _ElecCloseJobState();
 }
 
 class _ElecCloseJobState extends State<ElecCloseJob> {
-  List<Widget> _list;
-  GlobalKey<FormState> _formKey;
-  Map<int, List<CloseJobQuestionModel>> _metermap;
-  Map<int, List<CloseJobQuestionModel>> _codeOfPractisemap;
-  Map<int, Map<int, List<CloseJobQuestionModel>>> _registermap;
-  Map<int, int> _registerCount;
-  Map<int, Map<int, List<CloseJobQuestionModel>>> _readingmap;
-  Map<int, Map<int,List<CloseJobQuestionModel>>> _regimesmap;
-
-  Map<int, List<CloseJobQuestionModel>> _outStationmap;
-  Map<int, List<CloseJobQuestionModel>> _codeOfPractiseOSmap;
-  Map<int, Map<int, List<CloseJobQuestionModel>>> _commsmap;
-  Map<int, int> _commsCount;
-  Map<int, List<CloseJobQuestionModel>> _passwordmap;
-  Map<int, List<CloseJobQuestionModel>> _usernamemap;
-  bool _showIndicator = false;
-  final Connectivity _connectivity = Connectivity();
-  DateTime startDate;
-  DateTime endDate;
   
   _callAPI() async {
 
@@ -72,14 +54,14 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
             json[element.jsonfield] = element.checkBoxVal;
     });
 
-   if(_metermap.isNotEmpty){
+   if(ElecJobViewModel.instance.metermap.isNotEmpty){
        Map<String, dynamic> meterjson;
-      _metermap.forEach((meterkey, meterval) { 
+      ElecJobViewModel.instance.metermap.forEach((meterkey, meterval) { 
         meterjson  = {
           "bitCodeOfPracticeM" : true,
           "registerList" : []
         };
-        _codeOfPractisemap[meterkey].forEach((element) { 
+        ElecJobViewModel.instance.codeOfPractisemap[meterkey].forEach((element) { 
             if(element.type == "text")
             meterjson[element.jsonfield] = element.textController.text;
             else if(element.type == "checkBox" )
@@ -94,7 +76,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
          Map<String, dynamic> registerjson;
 
-        _registermap[meterkey].forEach((registerkey, registerval) { 
+        ElecJobViewModel.instance.registermap[meterkey].forEach((registerkey, registerval) { 
             registerjson = {};
             registerval.forEach((element) { 
                 if(element.type == "text")
@@ -102,13 +84,13 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 else if(element.type == "checkBox" )
                 registerjson[element.jsonfield] = element.checkBoxVal;
             });
-            _readingmap[meterkey][registerkey].forEach((element) { 
+            ElecJobViewModel.instance.readingmap[meterkey][registerkey].forEach((element) { 
                 if(element.type == "text")
                 registerjson[element.jsonfield] = element.textController.text;
                 else if(element.type == "checkBox" )
                 registerjson[element.jsonfield] = element.checkBoxVal;
             });
-            _regimesmap[meterkey][registerkey].forEach((element) { 
+            ElecJobViewModel.instance.regimesmap[meterkey][registerkey].forEach((element) { 
                 if(element.type == "text")
                 registerjson[element.jsonfield] = element.textController.text;
                 else if(element.type == "checkBox" )
@@ -120,28 +102,28 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
        json["meterList"].add(meterjson);   
       });
     } 
-    if(_outStationmap.isNotEmpty){
+    if(ElecJobViewModel.instance.outStationmap.isNotEmpty){
        Map<String, dynamic> outStationjson;
-      _outStationmap.forEach((outstationkey, outstationval) { 
+      ElecJobViewModel.instance.outStationmap.forEach((outstationkey, outstationval) { 
         outStationjson  = {
           "bitUsernamesOS": true,
           "bitPasswordsOS" : true,
           "bitCodeOfPracticeOS" : true,
           "commsList" : []
         };
-        _codeOfPractiseOSmap[outstationkey].forEach((element) { 
+        ElecJobViewModel.instance.codeOfPractiseOSmap[outstationkey].forEach((element) { 
             if(element.type == "text")
             outStationjson[element.jsonfield] = element.textController.text;
             else if(element.type == "checkBox" )
             outStationjson[element.jsonfield] = element.checkBoxVal;
         });
-        _passwordmap[outstationkey].forEach((element) { 
+        ElecJobViewModel.instance.passwordmap[outstationkey].forEach((element) { 
                 if(element.type == "text")
                 outStationjson[element.jsonfield] = element.textController.text;
                 else if(element.type == "checkBox" )
                 outStationjson[element.jsonfield] = element.checkBoxVal;
             });
-            _usernamemap[outstationkey].forEach((element) { 
+            ElecJobViewModel.instance.usernamemap[outstationkey].forEach((element) { 
                 if(element.type == "text")
                 outStationjson[element.jsonfield] = element.textController.text;
                 else if(element.type == "checkBox" )
@@ -156,7 +138,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
          Map<String, dynamic> commsjson;
 
-        _commsmap[outstationkey].forEach((commskey, commsval) { 
+        ElecJobViewModel.instance.commsmap[outstationkey].forEach((commskey, commsval) { 
             commsjson = {};
             commsval.forEach((element) { 
                 if(element.type == "text")
@@ -172,11 +154,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       });
     }
 
-    ConnectivityResult result = await _connectivity.checkConnectivity();
+    ConnectivityResult result = await ElecJobViewModel.instance.connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
           ResponseModel response  = await ApiService().saveElecJob( ElecCloseJobModel.fromJson(json));
-          _showIndicator = false;
+          ElecJobViewModel.instance.showIndicator = false;
           setState(() {
           });
           if (response.statusCode == 1) {
@@ -204,7 +186,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
           SharedPreferences preferences = await SharedPreferences.getInstance();
           preferences.setString(widget.list[0].intId.toString()+"ElecJob", jsonEncode(ElecCloseJobModel.fromJson(json)));
           GlobalVar.closejobsubmittedoffline = true;
-          _showIndicator = false;
+          ElecJobViewModel.instance.showIndicator = false;
           setState(() {
           });
           
@@ -217,13 +199,13 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
           preferences.setStringList(
               "listOfUnSubmittedJob", _setofUnSubmittedjob.toList());
             if(widget.fromTab){
-            AppConstants.showSuccessToast(context, "Saved");
+            AppConstants.showSuccessToast(context, "Saved offline");
             
+            }
+            else{
+            AppConstants.showSuccessToast(context, "Submitted Offline"); 
             Navigator.of(context).pop("submitted");
             }
-            else
-            AppConstants.showSuccessToast(context, "Submitted Offline");
-
         }
     
     
@@ -249,11 +231,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
 
   void validate() {
-    if (_formKey.currentState.validate()) {
+    if (ElecJobViewModel.instance.formKey.currentState.validate()) {
       print("validate");
       _callAPI();
       setState(() {
-        _showIndicator = true;
+        ElecJobViewModel.instance.showIndicator = true;
       });
     } else {
       print("Not validate");
@@ -269,10 +251,10 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       );
       setState(() {
         if(question == "Start Date"){
-          startDate = date;
+          ElecJobViewModel.instance.startDate = date;
         }
         if(question == "End Date"){
-          endDate = date;
+          ElecJobViewModel.instance.endDate = date;
         }
         if(date!=null)
         
@@ -294,21 +276,21 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
     List<Widget> _list = [];
     List<CloseJobQuestionModel> _closejobQuestionlist;
     if (headername == "CodeOfPractiseM") {
-      _closejobQuestionlist = _codeOfPractisemap[pos];
+      _closejobQuestionlist = ElecJobViewModel.instance.codeOfPractisemap[pos];
     } else if (headername == "Site Visit") {
       _closejobQuestionlist = ElecJobViewModel.instance.siteVisitList;
     } else if (headername == "Supply") {
       _closejobQuestionlist = ElecJobViewModel.instance.supplyList;
     }else if (headername == "Reading") {
-      _closejobQuestionlist = _readingmap[meterpos][pos];
+      _closejobQuestionlist = ElecJobViewModel.instance.readingmap[meterpos][pos];
     }else if (headername == "Regimes") {
-      _closejobQuestionlist = _regimesmap[meterpos][pos];
+      _closejobQuestionlist = ElecJobViewModel.instance.regimesmap[meterpos][pos];
     }else if (headername == "CodeOfPractiseOS") {
-      _closejobQuestionlist = _codeOfPractiseOSmap[pos];
+      _closejobQuestionlist = ElecJobViewModel.instance.codeOfPractiseOSmap[pos];
     }else if (headername == "Password") {
-      _closejobQuestionlist = _passwordmap[pos];
+      _closejobQuestionlist = ElecJobViewModel.instance.passwordmap[pos];
     }else if (headername == "Usernames") {
-      _closejobQuestionlist = _usernamemap[pos];
+      _closejobQuestionlist = ElecJobViewModel.instance.usernamemap[pos];
     }
 
 
@@ -328,8 +310,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && ElecJobViewModel.instance.endDate!=null && ElecJobViewModel.instance.startDate !=null){
+                   if(ElecJobViewModel.instance.endDate.difference(ElecJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -394,7 +376,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
   
   List<Widget> _getListViewWidget() {
-    _list = [];
+    ElecJobViewModel.instance.list = [];
 
     ElecJobViewModel.instance.addElecCloseJobList.forEach((element) {
       Widget clmn;
@@ -413,8 +395,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && ElecJobViewModel.instance.endDate!=null && ElecJobViewModel.instance.startDate !=null){
+                   if(ElecJobViewModel.instance.endDate.difference(ElecJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -502,17 +484,17 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
           ],
         );
       }
-      _list.add(clmn);
+      ElecJobViewModel.instance.list.add(clmn);
       if (element.strQuestion == "Meters" ) {
         if(element.checkBoxVal){
         for (int i = 0; i <= ElecJobViewModel.instance.meterCount; i++){
-          if(!_metermap.keys.contains(i)){
-            _metermap[i] = ElecJobViewModel.meterList().meterList;
-            _codeOfPractisemap[i] = ElecJobViewModel.codeOfPractiseMList().codePractiseList;
-            _registerCount[i] = 0;
-            _registermap[i] = {};
-            _readingmap[i] = {};
-            _regimesmap[i] = {};
+          if(!ElecJobViewModel.instance.metermap.keys.contains(i)){
+            ElecJobViewModel.instance.metermap[i] = ElecJobViewModel.meterList().meterList;
+            ElecJobViewModel.instance.codeOfPractisemap[i] = ElecJobViewModel.codeOfPractiseMList().codePractiseList;
+            ElecJobViewModel.instance.registerCount[i] = 0;
+            ElecJobViewModel.instance.registermap[i] = {};
+            ElecJobViewModel.instance.readingmap[i] = {};
+            ElecJobViewModel.instance.regimesmap[i] = {};
           }
           Widget ctn = Padding(
             padding: EdgeInsets.all(10.0),
@@ -522,33 +504,33 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
               borderRadius: BorderRadius.circular(6.0)
             ),
             child: Column(
-                children: _getMeterWidget(i, _metermap[i]) ,
+                children: _getMeterWidget(i, ElecJobViewModel.instance.metermap[i]) ,
               ),
           ));
-          _list.add(ctn);
+          ElecJobViewModel.instance.list.add(ctn);
         }
         }
         else{
-          _metermap = {};
-          _codeOfPractisemap = {};
-          _registermap = {};
-          _readingmap = {};
-          _registermap = {};
-          _regimesmap = {};
-          _registerCount = {};
+          ElecJobViewModel.instance.metermap = {};
+          ElecJobViewModel.instance.codeOfPractisemap = {};
+          ElecJobViewModel.instance.registermap = {};
+          ElecJobViewModel.instance.readingmap = {};
+          ElecJobViewModel.instance.registermap = {};
+          ElecJobViewModel.instance.regimesmap = {};
+          ElecJobViewModel.instance.registerCount = {};
           ElecJobViewModel.instance.meterCount = 0;       
         }
       }
       if(element.strQuestion == "Out Stations") {
         if(element.checkBoxVal){
         for (int i = 0; i <= ElecJobViewModel.instance.outStationCount; i++){
-          if(!_outStationmap.keys.contains(i)){
-            _outStationmap[i] = ElecJobViewModel.outStationList().outStationList;
-            _codeOfPractiseOSmap[i] = ElecJobViewModel.codeOfPractiseOSList().codeOfPractiseOSList;
-            _commsCount[i] = 0;
-            _commsmap[i] = {};
-            _usernamemap[i] = ElecJobViewModel.usernameList().usernameList;
-            _passwordmap[i] = ElecJobViewModel.passwordList().passwordList;
+          if(!ElecJobViewModel.instance.outStationmap.keys.contains(i)){
+            ElecJobViewModel.instance.outStationmap[i] = ElecJobViewModel.outStationList().outStationList;
+            ElecJobViewModel.instance.codeOfPractiseOSmap[i] = ElecJobViewModel.codeOfPractiseOSList().codeOfPractiseOSList;
+            ElecJobViewModel.instance.commsCount[i] = 0;
+            ElecJobViewModel.instance.commsmap[i] = {};
+            ElecJobViewModel.instance.usernamemap[i] = ElecJobViewModel.usernameList().usernameList;
+            ElecJobViewModel.instance.passwordmap[i] = ElecJobViewModel.passwordList().passwordList;
           }
           Widget ctn = Padding(
             padding: EdgeInsets.all(10.0),
@@ -558,19 +540,19 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
               borderRadius: BorderRadius.circular(6.0)
             ),
             child: Column(
-                children: _getOutStationWidget(i, _outStationmap[i]) ,
+                children: _getOutStationWidget(i, ElecJobViewModel.instance.outStationmap[i]) ,
               ),
           ));
-          _list.add(ctn);
+          ElecJobViewModel.instance.list.add(ctn);
         }
         }
         else{
-          _outStationmap = {};
-          _codeOfPractiseOSmap = {};
-          _commsmap = {};
-          _commsCount = {};
-          _passwordmap = {};
-          _usernamemap = {};
+          ElecJobViewModel.instance.outStationmap = {};
+          ElecJobViewModel.instance.codeOfPractiseOSmap = {};
+          ElecJobViewModel.instance.commsmap = {};
+          ElecJobViewModel.instance.commsCount = {};
+          ElecJobViewModel.instance.passwordmap = {};
+          ElecJobViewModel.instance.usernamemap = {};
     
           ElecJobViewModel.instance.outStationCount = 0;
         }
@@ -587,7 +569,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 children: _getParticularWidgets("Site Visit") ,
               ),
           ));
-          _list.add(ctn);
+          ElecJobViewModel.instance.list.add(ctn);
       }
       if (element.strQuestion == "Supply" && element.checkBoxVal) {
         Widget ctn = Padding(
@@ -601,11 +583,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 children: _getParticularWidgets("Supply") ,
               ),
           ));
-          _list.add(ctn);
+          ElecJobViewModel.instance.list.add(ctn);
       }
     });
 
-    _list.add(
+    ElecJobViewModel.instance.list.add(
       Column(
         children: [
           AppButton(
@@ -625,36 +607,15 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         ],
       )     
     );
-    return _list;
+    return ElecJobViewModel.instance.list;
   }
 
   @override
   void initState() {
-    _list = [];
-    _metermap = {};
-    _codeOfPractisemap = {};
-    _registermap = {};
-    _readingmap = {};
-    _registermap = {};
-    _regimesmap = {};
-    _registerCount = {};
-    
-    _outStationmap = {};
-    _codeOfPractiseOSmap = {};
-    _commsmap = {};
-    _commsCount = {};
-    _passwordmap = {};
-    _usernamemap = {};
-        
-    _formKey = GlobalKey<FormState>();
-    try{
-    CheckTable checkTable = widget.list.firstWhere((element) => element.strFuel.toString() == "ELECTRICITY");
-    ElecJobViewModel.instance.initialize(checkTable);
-    
-    }catch(e){
-    ElecJobViewModel.instance.initialize(widget.list[0]);
-      
-    }
+     if(widget.status!="NONE")
+    {
+      ElecJobViewModel.instance.initvariable(widget.list);
+    }     
     super.initState();
   }
 
@@ -669,10 +630,10 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
       PreferredSize(
          preferredSize: Size.zero ,
          child: SizedBox(height: 0.0, width: 0.0,)) ,
-      body: _showIndicator? 
+      body: ElecJobViewModel.instance.showIndicator? 
         AppConstants.circulerProgressIndicator():
         Form(
-        key: _formKey,
+        key: ElecJobViewModel.instance.formKey,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(10.0),
@@ -710,8 +671,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && ElecJobViewModel.instance.endDate!=null && ElecJobViewModel.instance.startDate !=null){
+                   if(ElecJobViewModel.instance.endDate.difference(ElecJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -798,12 +759,12 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                           
                               onPressed: () {
                                 if (pos == ElecJobViewModel.instance.meterCount) {
-                                  _metermap.remove(pos);
-                                  _codeOfPractisemap.remove(pos);
-                                  _registerCount.remove(pos);
-                                  _registermap.remove(pos);
-                                  _readingmap.remove(pos);
-                                  _regimesmap.remove(pos);
+                                  ElecJobViewModel.instance.metermap.remove(pos);
+                                  ElecJobViewModel.instance.codeOfPractisemap.remove(pos);
+                                  ElecJobViewModel.instance.registerCount.remove(pos);
+                                  ElecJobViewModel.instance.registermap.remove(pos);
+                                  ElecJobViewModel.instance.readingmap.remove(pos);
+                                  ElecJobViewModel.instance.regimesmap.remove(pos);
                                   ElecJobViewModel.instance.meterCount--;
                                   setState(() {});
                                 }
@@ -847,11 +808,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
       }
       if (element.type == "checkBox" && element.strQuestion == "Register") {
-        for (int i = 0; i <= _registerCount[pos]; i++){
-          if(!_registermap[pos].keys.contains(i)){
-            _registermap[pos][i] = ElecJobViewModel.registerList().registerList;
-            _readingmap[pos][i] = ElecJobViewModel.readingList().readingList;
-            _regimesmap[pos][i] = ElecJobViewModel.regimesList().regimesList;
+        for (int i = 0; i <= ElecJobViewModel.instance.registerCount[pos]; i++){
+          if(!ElecJobViewModel.instance.registermap[pos].keys.contains(i)){
+            ElecJobViewModel.instance.registermap[pos][i] = ElecJobViewModel.registerList().registerList;
+            ElecJobViewModel.instance.readingmap[pos][i] = ElecJobViewModel.readingList().readingList;
+            ElecJobViewModel.instance.regimesmap[pos][i] = ElecJobViewModel.regimesList().regimesList;
           }Widget ctn = Padding(
             padding: EdgeInsets.all(10.0),
            child: Container(
@@ -860,7 +821,7 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
               borderRadius: BorderRadius.circular(6.0)
             ),
             child: Column(
-                children: _getRegisterWidgets(pos ,i, _registermap[pos][i]) ,
+                children: _getRegisterWidgets(pos ,i, ElecJobViewModel.instance.registermap[pos][i]) ,
               ),
           ));
           _list.add(ctn);
@@ -892,8 +853,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && ElecJobViewModel.instance.endDate!=null && ElecJobViewModel.instance.startDate !=null){
+                   if(ElecJobViewModel.instance.endDate.difference(ElecJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -977,11 +938,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                              IconButton(
                               icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _registerCount[meterpos]) {
-                                  _registermap[meterpos].remove(pos);
-                                  _readingmap[meterpos].remove(pos);
-                                  _regimesmap[meterpos].remove(pos);
-                                  _registerCount[meterpos]--;
+                                if (pos == ElecJobViewModel.instance.registerCount[meterpos]) {
+                                  ElecJobViewModel.instance.registermap[meterpos].remove(pos);
+                                 ElecJobViewModel.instance.readingmap[meterpos].remove(pos);
+                                  ElecJobViewModel.instance.regimesmap[meterpos].remove(pos);
+                                  ElecJobViewModel.instance.registerCount[meterpos]--;
                                   setState(() {});
                                 }
                               },
@@ -989,8 +950,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                           IconButton(
                               icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _registerCount[meterpos]) {
-                                  _registerCount[meterpos]++;
+                                if (pos == ElecJobViewModel.instance.registerCount[meterpos]) {
+                                  ElecJobViewModel.instance.registerCount[meterpos]++;
                                   setState(() {});
                                 }
                               },
@@ -1060,8 +1021,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && ElecJobViewModel.instance.endDate!=null && ElecJobViewModel.instance.startDate !=null){
+                   if(ElecJobViewModel.instance.endDate.difference(ElecJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -1146,12 +1107,12 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                               icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
                                 if (pos == ElecJobViewModel.instance.outStationCount) {
-                                  _outStationmap.remove(pos);
-                                  _codeOfPractiseOSmap.remove(pos);
-                                  _commsCount.remove(pos);
-                                  _commsmap.remove(pos);
-                                  _usernamemap.remove(pos);
-                                  _passwordmap.remove(pos);
+                                  ElecJobViewModel.instance.outStationmap.remove(pos);
+                                  ElecJobViewModel.instance.codeOfPractiseOSmap.remove(pos);
+                                  ElecJobViewModel.instance.commsCount.remove(pos);
+                                  ElecJobViewModel.instance.commsmap.remove(pos);
+                                  ElecJobViewModel.instance.usernamemap.remove(pos);
+                                  ElecJobViewModel.instance.passwordmap.remove(pos);
                                   ElecJobViewModel.instance.outStationCount--;
                                   setState(() {});
                                 }
@@ -1182,11 +1143,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
         _list.addAll(_getParticularWidgets("CodeOfPractiseOS", pos: pos));
       }
       if (element.type == "checkBox" && element.strQuestion == "Comms") {
-        for (int i = 0; i <= _commsCount[pos]; i++){
-          if(!_commsmap[pos].keys.contains(i)){
-            _commsmap[pos][i] = ElecJobViewModel.commsList().commsList;
+        for (int i = 0; i <= ElecJobViewModel.instance.commsCount[pos]; i++){
+          if(!ElecJobViewModel.instance.commsmap[pos].keys.contains(i)){
+            ElecJobViewModel.instance.commsmap[pos][i] = ElecJobViewModel.commsList().commsList;
           }
-          _list.addAll(_getCommsWidgets(pos, i, _commsmap[pos][i]));
+          _list.addAll(_getCommsWidgets(pos, i, ElecJobViewModel.instance.commsmap[pos][i]));
         }
       }
       if (element.type == "header" &&
@@ -1220,8 +1181,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                 validator: (val) {
                   if (val.isEmpty && element.isMandatory)
                    return "${element.strQuestion} required";
-                  else if(element.strQuestion == "End Date" && endDate!=null && startDate !=null){
-                   if(endDate.difference(startDate).inDays<0)
+                  else if(element.strQuestion == "End Date" && ElecJobViewModel.instance.endDate!=null && ElecJobViewModel.instance.startDate !=null){
+                   if(ElecJobViewModel.instance.endDate.difference(ElecJobViewModel.instance.startDate).inDays<0)
                    return "End Date sould be greater than Start Date";
                    return null;
                   }
@@ -1305,9 +1266,9 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                              IconButton(
                               icon: Icon(Icons.delete, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _commsCount[outStationpos]) {
-                                  _commsmap[outStationpos].remove(pos);
-                                  _commsCount[outStationpos]--;
+                                if (pos == ElecJobViewModel.instance.commsCount[outStationpos]) {
+                                 ElecJobViewModel.instance.commsmap[outStationpos].remove(pos);
+                                  ElecJobViewModel.instance.commsCount[outStationpos]--;
                                   setState(() {});
                                 }
                               },
@@ -1315,8 +1276,8 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
                           IconButton(
                               icon: Icon(Icons.add, color: Colors.white,),
                               onPressed: () {
-                                if (pos == _commsCount[outStationpos]) {
-                                  _commsCount[outStationpos]++;
+                                if (pos == ElecJobViewModel.instance.commsCount[outStationpos]) {
+                                  ElecJobViewModel.instance.commsCount[outStationpos]++;
                                   setState(() {});
                                 }
                               },

@@ -10,6 +10,7 @@ import 'package:enstaller/ui/login_screen.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:enstaller/ui/screen/warehouse_screens/check_order_assign_stcok.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
 import 'core/constant/app_colors.dart';
@@ -19,6 +20,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   //HttpOverrides.global = new DevHttpOverrides();
   setupLocator();
+   
   Prefs.getUser().then((value){
     runApp(MyApp(logInUser: value,));
   });
@@ -31,7 +33,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AppThemeViewModel(AppThemes.light)),
@@ -54,6 +55,9 @@ class MainMaterialApp extends StatelessWidget {
 
     if(loginUser.rememberMe){
       FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+      
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     }
 
     return MaterialApp(

@@ -63,6 +63,8 @@ class StockRequestReplyViewModel extends BaseModel {
             ResponseModel responseModel = await _apiService.saveEngineerReply(stockRequestReplyModel);
             if (responseModel.statusCode == 1 &&
                 responseModel.response.toLowerCase() == 'true') {
+                  
+              AppConstants.showSuccessToast(context, "Saved Successfully");
               //saved successfully
             } else {
               AppConstants.showFailToast(context, responseModel.response);

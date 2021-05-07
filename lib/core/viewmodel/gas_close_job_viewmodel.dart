@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -21,9 +22,36 @@ class GasJobViewModel {
   List<CloseJobQuestionModel> convertersList = [];
   List<CloseJobQuestionModel> siteVisitList = [];
   List<CloseJobQuestionModel> transactionList = [];
-  
+  List<Widget> list;
+  GlobalKey<FormState> formKey;
+  Map<int, List<CloseJobQuestionModel>> metermap;
+  Map<int, Map<int, List<CloseJobQuestionModel>>>registermap;
+  Map<int, Map<int, List<CloseJobQuestionModel>>> convertersmap;
+  Map<int, int> registerCount;
+  Map<int, int> converterCount;
+  final Connectivity connectivity = Connectivity();
+  bool showIndicator = false;
+  DateTime startDate;
+  DateTime endDate; 
  
-
+ initVariable(List<CheckTable> listw){
+    list = [];
+    metermap = {};
+    registermap = {};
+    convertersmap = {};
+    registerCount = {};
+    converterCount = {};
+    
+    formKey = GlobalKey<FormState>();
+    try{
+    CheckTable checkTable = listw.firstWhere((element) => element.strFuel.toString() == "GAS");
+    GasJobViewModel.instance.initialize(checkTable);
+    }catch(e){
+     GasJobViewModel.instance.initialize(listw[0]);
+      
+    }
+  
+ }
   initialize(CheckTable checkTable ){
     initaddCLoseJob(checkTable);
     meterCount = 0;

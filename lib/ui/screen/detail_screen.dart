@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
@@ -28,6 +29,7 @@ import 'package:enstaller/ui/util/MessagingService/FirebaseMessaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/flutter_google_maps.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -52,6 +54,8 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  final Connectivity connectivity = Connectivity();
+  
   bool isToShowBottomBar = false;
   Map<String, String> _processid = {
     "EMREM": "6",
@@ -133,6 +137,8 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+  
     return BaseView<DetailsScreenViewModel>(
       onModelReady: (model) => model.initializeData(
           widget.arguments.appointmentID, widget.arguments.customerID),
@@ -700,6 +706,22 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
     );
   }
+  String _updateConnectionStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  }
 
   //survey info
   Widget _surveyInfo(DetailsScreenViewModel model) {
@@ -782,9 +804,15 @@ class _DetailScreenState extends State<DetailScreen> {
                     buttonText: "Close Job",
                     textStyle: TextStyle(color: AppColors.whiteColor),
                     radius: 15,
-                    onTap: () {
+                    onTap: () async {
+                                ConnectivityResult result = await connectivity.checkConnectivity();
+                                String status = _updateConnectionStatus(result);
+        
                                 if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "ELECTRICITY")
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ElecCloseJob(list: model.checkCloseJobModel.table , fromTab: false, dsmodel: model,)))
+                                
+                                {
+                                  
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ElecCloseJob(list: model.checkCloseJobModel.table ,status: status, fromTab: false, dsmodel: model,)))
                                 .then((value){
                                     if(GlobalVar.isloadAppointmentDetail)
                                     {model.initializeData(
@@ -793,8 +821,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                   
                                     }
                                   });
+                                }
                                 else if(model.checkCloseJobModel.table.length ==1 && model.checkCloseJobModel.table[0].strFuel == "GAS")
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, )))
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GasCloseJob(list: model.checkCloseJobModel.table, fromTab: false,dsmodel: model, status: status, )))
                                 .then((value){
                                     if(GlobalVar.isloadAppointmentDetail)
                                     {model.initializeData(
@@ -803,7 +832,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     }
                                   });
                                 else if(model.checkCloseJobModel.table.length ==2 )
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model,)))
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BothCloseJob(list: model.checkCloseJobModel.table, dsmodel: model, status:  status,)))
                                 .then((value){
                                     if(GlobalVar.isloadAppointmentDetail)
                                     {model.initializeData(

@@ -11,7 +11,9 @@ class BothCloseJob extends StatefulWidget {
   final List<CheckTable> list;
   final DetailsScreenViewModel dsmodel;
   
-  BothCloseJob({@required this.list, @required this.dsmodel});
+  final String status;
+  
+  BothCloseJob({@required this.list, @required this.dsmodel, @required this.status});
   
   @override
   _BothCloseJobState createState() => _BothCloseJobState();
@@ -78,9 +80,11 @@ class _BothCloseJobState extends State<BothCloseJob> {
                     list: widget.list,
                     fromTab: true,
                     dsmodel: widget.dsmodel,
+                    status: widget.status,
                   ),
                   GasCloseJob(list: widget.list,
                    fromTab: true,
+                   status: widget.status,
                    dsmodel: widget.dsmodel,
                   ),
                 ]),
