@@ -35,6 +35,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:enstaller/ui/screen/widget/survey/custom_drop_down.dart';
+import 'package:flutter/services.dart';
 
 class SurveyArguments {
   String customerID;
@@ -71,7 +72,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
       progressDialog = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     progressDialog.style(message: 'Please Wait');
-  
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
@@ -83,6 +84,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
 //            child:AppDrawerWidget(),
 //          ),
           appBar: AppBar(
+            
+              brightness: Brightness.dark,
             backgroundColor: AppColors.appThemeColor,
 //            leading:Padding(
 //              padding: const EdgeInsets.all(18.0),

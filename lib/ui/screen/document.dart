@@ -20,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class DocumentScreen extends StatefulWidget {
   @override
@@ -41,6 +42,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<DocumnetViewModel>(
       onModelReady: (model) => model.getDocumnetList(),
       builder: (context, model, child) {
@@ -51,6 +53,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

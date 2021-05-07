@@ -15,7 +15,9 @@ import 'package:enstaller/ui/util/text_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/flutter_google_maps.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class TodayAppointmentScreen extends StatefulWidget {
   @override
@@ -39,6 +41,8 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    // FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     return BaseView<TodayAppointmentViewModel>(
       onModelReady: (model)=>model.getAppoinmentList(),
       builder: (context,model,child){
@@ -49,6 +53,8 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
               child:AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor:AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

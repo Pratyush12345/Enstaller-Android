@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/size_config.dart';
+import 'package:flutter/services.dart';
 
 
 class ImageFullView extends StatelessWidget {
@@ -10,9 +11,12 @@ class ImageFullView extends StatelessWidget {
   ImageFullView({this.image});
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+         
+              brightness: Brightness.dark,
             backgroundColor: AppColors.appThemeColor,
             title: Text(
               AppStrings.surveyImage,

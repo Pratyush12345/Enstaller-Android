@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class AppointmentScreen extends StatefulWidget {
   @override
@@ -35,7 +36,10 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    // FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    // FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    
+    //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<AppointmentViewModel>(
       onModelReady: (model) => model.getAppointmentList(),
       builder: (context, model, child) {
@@ -46,6 +50,7 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

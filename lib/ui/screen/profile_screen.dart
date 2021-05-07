@@ -7,6 +7,7 @@ import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:flutter/services.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -32,13 +33,15 @@ class MapScreenState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-
+SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return new Scaffold(
       key: _scaffoldKey,
         drawer: Drawer(
           child:AppDrawerWidget(),
         ),
         appBar: AppBar(
+          
+              brightness: Brightness.dark,
           backgroundColor: AppColors.appThemeColor,
           leading: Padding(
                 padding: const EdgeInsets.all(18.0),

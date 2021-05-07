@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class SMSNotificationScreen extends StatefulWidget {
   @override
@@ -28,6 +29,7 @@ class _SMSNotificationScreenState extends State<SMSNotificationScreen> {
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<SMSNotificationViewModel>(
       onModelReady: (model) => model.getSMSNotificationList(),
       builder: (context, model, child) {

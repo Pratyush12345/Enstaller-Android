@@ -56,9 +56,11 @@ class MainMaterialApp extends StatelessWidget {
     if(loginUser.rememberMe){
       FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
       
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+      //FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     }
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

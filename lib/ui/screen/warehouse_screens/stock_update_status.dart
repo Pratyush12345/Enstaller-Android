@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 class StockUpdateStatus extends StatefulWidget {
   @override
   _StockUpdateStatusState createState() => _StockUpdateStatusState();
@@ -185,11 +186,14 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
  
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<StockUpdateStatusViewModel> (
        onModelReady: (model) => model.initializeData(),
       builder: (context, model, child) {
          return Scaffold(
         appBar: AppBar(
+          
+              brightness: Brightness.dark,
           backgroundColor: AppColors.appThemeColor,
           title: Text("Stock Update Status",
           style: TextStyle(color: AppColors.whiteColor)),

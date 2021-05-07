@@ -10,6 +10,8 @@ import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart';
+
 class CheckAndAssignOrder extends StatefulWidget {
   @override
   _CheckAndAssignOrderState createState() => _CheckAndAssignOrderState();
@@ -150,10 +152,12 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
   }
   @override
   Widget build(BuildContext context) {
-    
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     SizeConfig.sizeConfigInit(context);
     return Scaffold(
       appBar: AppBar(
+        
+              brightness: Brightness.dark,
         backgroundColor: AppColors.appThemeColor,
         title: Text("Check Order And Assign Stock",
         style: TextStyle(

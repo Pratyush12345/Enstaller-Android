@@ -14,6 +14,7 @@ import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/stock_request_reply_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class StockCheckRequestScreen extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<StockCheckRequestViewModel>(
       onModelReady: (model) => model.initializeData(),
       builder: (context, model, child) {
@@ -35,6 +37,8 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

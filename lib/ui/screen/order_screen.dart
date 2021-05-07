@@ -12,6 +12,7 @@ import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'add_order_screen.dart';
 import 'order_detail_screen.dart';
@@ -26,6 +27,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<OrderScreenViewModel>(
       onModelReady: (model) => model.initializeData(),
       builder: (context, model, child) {
@@ -36,6 +38,8 @@ class _OrderScreenState extends State<OrderScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

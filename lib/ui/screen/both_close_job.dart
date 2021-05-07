@@ -7,6 +7,7 @@ import 'package:enstaller/ui/screen/elec_close_job.dart';
 import 'package:enstaller/ui/screen/gas_close_job.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 class BothCloseJob extends StatefulWidget {
   final List<CheckTable> list;
   final DetailsScreenViewModel dsmodel;
@@ -22,13 +23,17 @@ class BothCloseJob extends StatefulWidget {
 class _BothCloseJobState extends State<BothCloseJob> {
   bool _showIndicator = false;
   
+  
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return DefaultTabController(
       length: 2,
           child: Scaffold(
             resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          
+              brightness: Brightness.dark,
          backgroundColor: AppColors.appThemeColor,
          title: Text("Close Jobs",
          style: TextStyle(color: Colors.white)),),

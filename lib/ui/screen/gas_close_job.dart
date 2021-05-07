@@ -26,6 +26,7 @@ class GasCloseJob extends StatefulWidget {
 }
 
 class _GasCloseJobState extends State<GasCloseJob> {
+  
   showDateTimePicker(TextEditingController controller, String question) async{
     
     DateTime date = await showDatePicker(
@@ -970,6 +971,8 @@ String _updateConnectionStatus(ConnectivityResult result) {
   Widget build(BuildContext context) {
     return Scaffold(
      appBar: !widget.fromTab? AppBar(
+       
+              brightness: Brightness.dark,
        backgroundColor: AppColors.appThemeColor,
        title: Text("Gas Close Job",
        style: TextStyle(color: Colors.white),),

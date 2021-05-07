@@ -12,6 +12,7 @@ import 'package:enstaller/core/viewmodel/elec_job_viewmodel.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class ElecCloseJob extends StatefulWidget {
   final List<CheckTable> list;
@@ -621,8 +622,11 @@ class _ElecCloseJobState extends State<ElecCloseJob> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       appBar: !widget.fromTab? AppBar(
+        
+              brightness: Brightness.dark,
         backgroundColor: AppColors.appThemeColor,
         title: Text("Electricity Close Job",
         style: TextStyle(color: Colors.white)),

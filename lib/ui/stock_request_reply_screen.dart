@@ -9,6 +9,7 @@ import 'package:enstaller/core/viewmodel/stock_request_reply_viewmodel.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class StockRequestReplyScreen extends StatefulWidget {
   final int intRequestId;
@@ -25,6 +26,7 @@ class _StockRequestReplyScreenState extends State<StockRequestReplyScreen> {
   final form = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<StockRequestReplyViewModel>(
       onModelReady: (model) => model.initializeData(widget.intRequestId),
       builder: (context, model, child) {
@@ -33,6 +35,8 @@ class _StockRequestReplyScreenState extends State<StockRequestReplyScreen> {
             key: _scaffoldKey,
 
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               title: Text(
                 "${AppStrings.REPLY_TO_REQUEST}",

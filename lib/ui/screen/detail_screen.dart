@@ -33,6 +33,7 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 
 class DetailScreenArguments {
   String appointmentID;
@@ -137,8 +138,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-  
+    //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<DetailsScreenViewModel>(
       onModelReady: (model) => model.initializeData(
           widget.arguments.appointmentID, widget.arguments.customerID),
@@ -150,6 +150,8 @@ class _DetailScreenState extends State<DetailScreen> {
               child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

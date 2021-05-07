@@ -2,6 +2,7 @@ import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BarCodeRender extends StatefulWidget {
   final String number;
@@ -14,8 +15,11 @@ class BarCodeRender extends StatefulWidget {
 class _BarCodeRenderState extends State<BarCodeRender> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       appBar: AppBar(
+        
+              brightness: Brightness.dark,
         backgroundColor: AppColors.appThemeColor,
               
         title: Text("Bar Code Image",

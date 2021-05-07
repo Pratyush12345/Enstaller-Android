@@ -10,6 +10,7 @@ import 'package:enstaller/core/viewmodel/check_request_viewmodel.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CheckRequestScreen extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
   
   @override
   Widget build(BuildContext context) {
-    
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<CheckRequestViewModel>(
       onModelReady: (model) => model.initializeData(),
       builder: (context, model, child) {
@@ -32,6 +33,8 @@ class _CheckRequestScreenState extends State<CheckRequestScreen> {
               child: AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),

@@ -27,6 +27,7 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -162,9 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     
-    // FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
-    
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    //FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
+
     SizeConfig.sizeConfigInit(context);
     return SafeArea(
       child: BaseView<HomeScreenViewModel>(
@@ -179,6 +180,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GlobalVar.roleId == 5 ? WareHouseDrawerWidget() :  AppDrawerWidget(),
             ),
             appBar: AppBar(
+              
+              brightness: Brightness.dark,
               backgroundColor: AppColors.appThemeColor,
               leading: Padding(
                 padding: const EdgeInsets.all(18.0),
