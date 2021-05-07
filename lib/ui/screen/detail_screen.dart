@@ -31,6 +31,7 @@ import 'package:flutter_google_maps/flutter_google_maps.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 
 class DetailScreenArguments {
   String appointmentID;
@@ -133,6 +134,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<DetailsScreenViewModel>(
       onModelReady: (model) => model.initializeData(
           widget.arguments.appointmentID, widget.arguments.customerID),

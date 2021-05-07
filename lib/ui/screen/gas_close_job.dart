@@ -970,7 +970,9 @@ String _updateConnectionStatus(ConnectivityResult result) {
   }
 
   @override
-  void initState() {
+  void initState(){
+    
+    // print(' gas closed job called');
     _list = [];
     _metermap = {};
     _registermap = {};

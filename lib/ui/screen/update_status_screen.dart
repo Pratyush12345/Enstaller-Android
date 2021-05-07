@@ -14,6 +14,7 @@ import 'package:enstaller/ui/shared/custom_expanded_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class UpdateStatusScreen extends StatelessWidget {
   static const String routeName = '/updateStatusScreen';
@@ -34,6 +35,7 @@ class UpdateStatusScreen extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<UpdateStatusViewModel>(
       onModelReady: (model)=>model.initializeData(),
       builder: (context,model,child){

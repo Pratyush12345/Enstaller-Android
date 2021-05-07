@@ -11,6 +11,7 @@ import 'package:enstaller/core/viewmodel/order_detail_viewmodel.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OrderDetailScreen extends StatefulWidget {
 
@@ -27,6 +28,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<OrderDetailViewModel>(
       onModelReady: (model)=>model.initializeData(widget.intId),
       builder: (context,model,child){

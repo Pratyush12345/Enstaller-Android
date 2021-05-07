@@ -4,6 +4,7 @@ import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 
 
 class PImageFullView extends StatelessWidget {
@@ -15,6 +16,7 @@ class PImageFullView extends StatelessWidget {
     print("%%%%%%");
     print(imageUrl);
     print("%%%%%%");
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(

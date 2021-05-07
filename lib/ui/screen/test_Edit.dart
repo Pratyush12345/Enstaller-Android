@@ -1,5 +1,6 @@
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class loginDesign extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _loginDesignState extends State<loginDesign> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.fromLTRB(25, 150, 25, 0),

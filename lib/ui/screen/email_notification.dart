@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class EmailNotificationScreen extends StatefulWidget {
   @override
@@ -30,6 +31,7 @@ class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<EmailNotificationViewModel>(
       onModelReady: (model) => model.getEmailNotificationList(),
       builder: (context, model, child) {

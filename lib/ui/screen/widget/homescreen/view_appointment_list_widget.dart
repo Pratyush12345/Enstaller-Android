@@ -11,6 +11,7 @@ import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
 
 class ViewAppointmentListWidget extends StatelessWidget {
   final List<AppTable>tables;
@@ -50,6 +51,7 @@ class ViewAppointmentListWidget extends StatelessWidget {
                 customerID:  tables[childrenIndex].intCustomerId.toString()
             )).then((value) {
               FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
+              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
               if(GlobalVar.isloadDashboard){
               homeScreenViewModel.getAppointmentList();
               GlobalVar.isloadDashboard = false;

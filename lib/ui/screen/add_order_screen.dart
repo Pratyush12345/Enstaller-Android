@@ -9,6 +9,7 @@ import 'package:enstaller/core/viewmodel/add_order_screen_viewmodel.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddOrderScreen extends StatefulWidget {
 
@@ -27,6 +28,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<AddOrderScreenViewModel>(
       onModelReady: (model)=>model.initializeData(widget.intOrderId),
       builder: (context,model,child){

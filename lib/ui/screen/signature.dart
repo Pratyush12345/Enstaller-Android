@@ -6,6 +6,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_signature_pad/flutter_signature_pad.dart';
+import 'package:flutter/services.dart';
 
 class SignatureScreen extends StatefulWidget {
   
@@ -45,6 +46,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return WillPopScope(
       onWillPop: ()async{
         Navigator.pop(context,"hello");
