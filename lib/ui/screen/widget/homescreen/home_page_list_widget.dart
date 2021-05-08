@@ -37,7 +37,7 @@ class HomePageListWidget extends StatelessWidget {
                 Text(dateString,style: AppStyles.BlackStyleWithBold_Font36(context).copyWith(
                   fontWeight: FontWeight.w400
                 ),),
-                SizedBox(child: Image.asset(expanded?ImageFile.downArrow:ImageFile.rightArrow),
+                SizedBox(child: !expanded?Image.asset(ImageFile.rightArrow):RotatedBox(quarterTurns:1,child:Image.asset(ImageFile.rightArrow)),
                 height: SizeConfig.screenHeight*0.02,),
               ],
             ),

@@ -27,7 +27,7 @@ class ImageFile{
   static String order = "asserts/icon/status/order.svg";
   static String stock_check_request = "asserts/icon/status/stock-check-request.svg";
   
-  static String rightArrow='asserts/icon/right-arrow.png';
+  static String rightArrow='asserts/icon/next.png';
   static String downArrow='asserts/icon/down-arrow.png';
   static String time='asserts/icon/time.png';
   static String notification='asserts/icon/drawer/notification.png';
@@ -36,8 +36,8 @@ class ImageFile{
   static String updateStatus='asserts/icon/drawer/stock-update-status.svg';
   static String myProfile='asserts/icon/my_profile.svg';
   static String logout='asserts/icon/drawer/logout.svg';
-  static String loginUser='asserts/icon/login-user.png';
-  static String loginPass='asserts/icon/login-pass.png';
+  static String loginUser='asserts/icon/login-user.svg';
+  static String loginPass='asserts/icon/login-pass.svg';
   static String appointment='asserts/icon/drawer/appointments.svg';
   static String direction='asserts/icon/direction.png';
 

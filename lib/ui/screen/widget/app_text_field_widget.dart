@@ -1,6 +1,7 @@
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AppTextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -29,7 +30,12 @@ class AppTextFieldWidget extends StatelessWidget {
           prefixIcon: SizedBox(
               height: 20,child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(assetPath),
+                child: !assetPath.endsWith(".svg")? Image(
+                  image: AssetImage(assetPath),
+                  ): SvgPicture.asset( 
+                                      assetPath,
+                                      ),
+                  
               ))
         ),
         validator: (value){
