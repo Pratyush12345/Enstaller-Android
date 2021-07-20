@@ -136,6 +136,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               key: Key('builder ${model.selected.toString()}'),
                               itemCount: model.sectionQuestions.keys.length,
                               itemBuilder: (BuildContext ctxt, int index) {
+                                String _headertext = _getHeaderText(index, model);
                                 return CustomExpandedTile(
                                   expanded: model.selected == index,
                                   firstChild: InkWell(
@@ -149,7 +150,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Text(
-                                              _getHeaderText(index, model),
+                                              _headertext,
                                               style: getTextStyle(
                                                   color: Colors.white,
                                                   isBold: true,
@@ -178,7 +179,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Text(
-                                                  _getHeaderText(index, model),
+                                                  _headertext,
                                                   style: getTextStyle(
                                                       color: Colors.white,
                                                       isBold: true,
@@ -202,7 +203,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                       .length &&
                                               model.selected == index
                                           ? _getChildrenWidget(
-                                              model.selected, model)
+                                              model.selected, model, _headertext )
                                           : Container()
                                     ],
                                   ),
@@ -239,7 +240,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   //get widgets data  as per text
-  Widget _getChildrenWidget(int index, SurveyScreenViewModel model) {
+  Widget _getChildrenWidget(int index, SurveyScreenViewModel model, String _headerText) {
     print('object');
     int i = 0;
     for (int j = 0; j < model.sectionQuestions.keys.length; j++) {
@@ -248,7 +249,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
         return _getData(
             model.sectionQuestions[model.sectionQuestions.keys.toList()[index]],
             model,
-            model.sectionAnswers[model.sectionAnswers.keys.toList()[index]]);
+            model.sectionAnswers[model.sectionAnswers.keys.toList()[index]],
+            _headerText);
       }
 
       i++;
@@ -267,7 +269,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   Widget _getData(List<SurveyResponseModel> questions,
-      SurveyScreenViewModel model, List<QuestionAnswer> answers) {
+      SurveyScreenViewModel model, List<QuestionAnswer> answers, String _headertext) {
     if (!widget.arguments.edit) {
       print('line 270' + questions.length.toString());
       return questions.length == 0
@@ -524,7 +526,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, 1);
                                 },
                               )
-                            : widget.arguments.edit && widget.arguments.dsmodel.appointmentDetails.appointment.appointmentEventType=="OnSite"?
+                            : widget.arguments.edit && widget.arguments.dsmodel.appointmentDetails.appointment.appointmentEventType=="OnSite"
+                            && _headertext!="Abort"?
                           AppButton(
                             
                             

@@ -84,19 +84,31 @@ class _DetailScreenState extends State<DetailScreen> {
     6: "EICOM for Electricity Generated+GICOM for Gas Generated",
     7: "EICOM for Electricity Generated"
   };
+  Map<String, int> _appointmenttype = {
+    "Electric SMETS2 Meter Exchange" : 0,
+      "Dual SMETS2 Meter Exchange" : 2,
+      "Gas SMETS2 Meter Exchange" : 1,
+      "Emergency Exchange Electric" : 0,
+      "Emergency Exchange Gas" : 1
+  };
   Map<String, Map<String, int>> _appointmentandjobtype = {
-    "Meter removal, Scheduled Exchange, Emergency Exchange": {
-      "SMETS2 1ph Elec": 0,
-      "SMETS2 Gas": 1,
-      "SMETS2 Dual": 2,
-      "SMETS2 3ph Elec": 3,
+    "Meter removal, Scheduled Exchange, Emergency Exchange, New Connection": {
+      // "SMETS2 1ph Elec": 0,
+      // "SMETS2 Gas": 1,
+      // "SMETS2 Dual": 2,
+      // "SMETS2 3ph Elec": 3,
+      // "Electric SMETS2 Meter Exchange" : 0,
+      // "Dual SMETS2 Meter Exchange" : 2,
+      // "Gas SMETS2 Meter Exchange" : 1,
+      // "Emergency Exchange Electric" : 0,
+      // "Emergency Exchange Gas" : 1
     },
-    "New Connection": {
-      "SMETS2 1ph Elec": 4,
-      "SMETS2 Gas": 5,
-      "SMETS2 Dual": 6,
-      "SMETS2 3ph Elec": 7
-    }
+    // "New Connection": {
+    //   "SMETS2 1ph Elec": 4,
+    //   "SMETS2 Gas": 5,
+    //   "SMETS2 Dual": 6,
+    //   "SMETS2 3ph Elec": 7
+    // }
   };
   ApiService _apiService = ApiService();
   
@@ -533,21 +545,28 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   int _checkbuttonindex(DetailsScreenViewModel model) {
+    print("------------------------------");
+    print("app type =============== ${model.appointmentDetails.appointment.strAppointmentType}");
+    print("job type =============== ${model.appointmentDetails.appointment.strJobType}");
+    print("------------------------------");
     int id;
-    _appointmentandjobtype.forEach((key, value) {
-      
-      if (key
-          .contains(model.appointmentDetails.appointment.strAppointmentType.trim())) {
-            
-        id = value[model.appointmentDetails.appointment.strJobType.trim()];
+    id = _appointmenttype[model.appointmentDetails.appointment.strJobType.trim()];
         
-              }
-    });
+    // _appointmentandjobtype.forEach((key, value) {
+      
+    //   if (key
+    //       .contains(model.appointmentDetails.appointment.strAppointmentType.trim())) {
+            
+    //     id = value[model.appointmentDetails.appointment.strJobType.trim()];
+        
+    //           }
+    // });
     
     return id;
   }
 
   Widget _getDisplayButton(int id, DetailsScreenViewModel model) {
+    print("id ================================id ===============$id");
     if (id != null) {
       return Column(
         children: [

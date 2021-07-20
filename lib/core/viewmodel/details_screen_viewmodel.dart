@@ -35,19 +35,31 @@ class DetailsScreenViewModel extends BaseModel {
     6: "EICOM+GICOM",
     7: "EICOM"
   };
+  Map<String, int> _appointmenttype = {
+    "Electric SMETS2 Meter Exchange" : 0,
+      "Dual SMETS2 Meter Exchange" : 2,
+      "Gas SMETS2 Meter Exchange" : 1,
+      "Emergency Exchange Electric" : 0,
+      "Emergency Exchange Gas" : 1
+  };
   Map<String, Map<String, int>> _appointmentandjobtype = {
-    "Meter removal, Scheduled Exchange, Emergency Exchange": {
-      "SMETS2 1ph Elec": 0,
-      "SMETS2 Gas": 1,
-      "SMETS2 Dual": 2,
-      "SMETS2 3ph Elec": 3,
+    "Meter removal, Scheduled Exchange, Emergency Exchange, New Connection": {
+      // "SMETS2 1ph Elec": 0,
+      // "SMETS2 Gas": 1,
+      // "SMETS2 Dual": 2,
+      // "SMETS2 3ph Elec": 3,
+      // "Electric SMETS2 Meter Exchange" : 0,
+      // "Dual SMETS2 Meter Exchange" : 2,
+      // "Gas SMETS2 Meter Exchange" : 1,
+      // "Emergency Exchange Electric" : 0,
+      // "Emergency Exchange Gas" : 1
     },
-    "New Connection": {
-      "SMETS2 1ph Elec": 4,
-      "SMETS2 Gas": 5,
-      "SMETS2 Dual": 6,
-      "SMETS2 3ph Elec": 7
-    }
+    // "New Connection": {
+    //   "SMETS2 1ph Elec": 4,
+    //   "SMETS2 Gas": 5,
+    //   "SMETS2 Dual": 6,
+    //   "SMETS2 3ph Elec": 7
+    // }
   };
   CheckCloseJobModel  checkCloseJobModel;
   String pincode;
@@ -128,15 +140,16 @@ class DetailsScreenViewModel extends BaseModel {
 
   int _checkbuttonindex(appointmentDetails) {
     int id;
-    _appointmentandjobtype.forEach((key, value) {
+    id = _appointmenttype[appointmentDetails.appointment.strJobType.trim()];
        
-      if (key
-          .contains(appointmentDetails.appointment.strAppointmentType.trim())) {
+    // _appointmentandjobtype.forEach((key, value) {
+       
+    //   if (key
+    //       .contains(appointmentDetails.appointment.strAppointmentType.trim())) {
             
-        id = value[appointmentDetails.appointment.strJobType.trim()];
-        
-      }
-    });
+         
+    //   }
+    // });
     return id;
   }
 

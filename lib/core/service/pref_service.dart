@@ -9,6 +9,7 @@ class Prefs{
     String token_type= preferences.getString('token_type');
     String expires_in= preferences.getString('expires_in');
     String id= preferences.getString('id');
+    //String intCompanyId = preferences.getString('intCompanyId');
     String username= preferences.getString('username');
     String name= preferences.getString('name');
     String email= preferences.getString('email');
@@ -56,6 +57,7 @@ class Prefs{
     preferences.setString("token_type", userModel.tokenType);
     preferences.setString("expires_in", userModel.expiresIn.toString());
     preferences.setString("id", userModel.id);
+    //preferences.setString("intCompanyId", userModel.intCompanyId);
     preferences.setString("username", userModel.username);
     preferences.setString("email", userModel.email);
     preferences.setString("name", userModel.name);
@@ -79,6 +81,7 @@ class Prefs{
     preferences.setString("token_type", null);
     preferences.setString("expires_in", null);
     preferences.setString("id", null);
+    //preferences.setString("intCompanyId", null);
     preferences.setString("username", null);
     preferences.setString("name", null);
     preferences.setString('role', null);
@@ -88,7 +91,6 @@ class Prefs{
     preferences.setString('.expires', null);
     preferences.setInt('roleId', null);
     preferences.setString('wareHouseId', null);
-    
     preferences.commit();
   }
   static void setFirstTime()async{

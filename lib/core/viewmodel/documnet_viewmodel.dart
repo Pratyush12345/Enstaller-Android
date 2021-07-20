@@ -28,7 +28,9 @@ class DocumnetViewModel extends BaseModel{
     _documentList = [];
     setState(ViewState.Busy);
     UserModel user=await Prefs.getUser();
-     DocumentModel documentModel = DocumentModel(intCreatedBy: user.intEngineerId.toString() , intSupplierId: "0", strDocUser: "Engineer", strKey: "GetDocumentWeb");
+     DocumentModel documentModel = DocumentModel(intCreatedBy: user.intEngineerId.toString() , intSupplierId: "0", strDocUser: "Engineer", strKey: "GetDocumentWeb",
+    
+     );
     _documentList =await _apiService.getDocumentList(documentModel);
     documentList = _documentList;
     for(int i=0;i<documentList.length;i++){

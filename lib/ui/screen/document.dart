@@ -168,7 +168,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
               color: (document.bisEngineerRead ||
                                     model.isfileopened[
-                                        document.intId.toString()])?Colors.white: AppColors.green,
+                                        document.intId.toString()])?Colors.white: AppColors.darkBlue,
               border: Border(
                   bottom: BorderSide(color: AppColors.lightGrayDotColor))),
           child: Padding(
@@ -180,7 +180,12 @@ class _DocumentScreenState extends State<DocumentScreen> {
                     child: Text(
                       AppStrings.documentType,
                       textAlign: TextAlign.end,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+
+                      style: TextStyle(fontWeight: FontWeight.bold,
+                      color: (document.bisEngineerRead ||
+                                    model.isfileopened[
+                                        document.intId.toString()])?Colors.black: AppColors.whiteColor,
+              ),
                     )),
                 SizeConfig.horizontalSpaceMedium(),
                 Expanded(

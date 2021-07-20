@@ -56,7 +56,7 @@ class LogInViewModel extends BaseModel{
         response.userDetails.strEngineerName = decodedToken["EngineerName"];
         response.userDetails.role = decodedToken["role"];
         response.userDetails.email = decodedToken["email"];
-        response.userDetails.id=decodedToken['nameid'];
+        response.userDetails.id = decodedToken['nameid'];
       }
        response.userDetails.rememberMe=true;
 

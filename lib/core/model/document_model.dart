@@ -9,7 +9,8 @@ class DocumentModel{
         this.strDocUser,
         this.intCreatedBy,
         this.intSupplierId,
-        this.strKey});
+        this.strKey,
+        });
 
   DocumentModel.fromJson(Map<String, dynamic> json) {
     strDocUser = json['strDocUser'];
