@@ -46,6 +46,10 @@ class ApiService extends BaseApi{
 
   Future<dynamic> loginWithUserNamePassword(LoginCredential loginCredential){
     return postRequest(ApiUrls.logInUrl, (r) {
+      
+        print("++++++++++++");
+        print(json.decode(r.body));
+        print("++++++++++++");
       final responseError = json.decode(r.body)['error_description'];
       if (responseError != null) {
         return LoginResponseModel(errorMessage: responseError);
@@ -58,7 +62,7 @@ class ApiService extends BaseApi{
     },loginCredential.toJson());
   }
   Future <dynamic> getAppointmentList(String userID){
-    if(userID == null){
+    if(userID == null ||userID == "null" ){
       userID = "4";
     }
     print("------------------------");

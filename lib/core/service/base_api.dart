@@ -9,10 +9,10 @@ import 'api_error.dart';
 
 GetIt getIt = GetIt.instance;
 
-abstract class BaseApi {
+abstract class BaseApi { 
   // TODO: Move the endpoint to some settings file?
-  static const _ENDPOINT = 'https://enstallapi.enpaas.com/api/';
-  static const _ENDPOINT1 = 'https://enstallapi.boshposh.com/api/';
+  static const _ENDPOINT1 = 'https://enstallapi.enpaas.com/api/';
+  static const _ENDPOINT = 'https://enstallapi.boshposh.com/api/';//testing
 
   final client = http.Client();
   // HttpClient client1 = HttpClient()
@@ -28,7 +28,7 @@ abstract class BaseApi {
    @protected
   Future<dynamic> getRequestwithoutParam(String path, Function(Response) success) async {
 
-    return _processResponse(await client.get('https://enstallapi.enpaas.com/api/Stock/BindStockStatus',
+    return _processResponse(await client.get('${_ENDPOINT}Stock/BindStockStatus',
         ), success);
   }
   @protected

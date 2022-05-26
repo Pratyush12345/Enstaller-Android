@@ -65,10 +65,10 @@ class AppDrawerWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(model.user.username,style: AppStyles.WhiteStyle_Font20.copyWith(
+                          Text(model.user.username??"",style: AppStyles.WhiteStyle_Font20.copyWith(
                             fontWeight: FontWeight.bold
                           ),),
-                          Text(model.user.email,style: AppStyles.WhiteStyle_Font20,)
+                          Text(model.user.email??"",style: AppStyles.WhiteStyle_Font20,)
                         ],
                       ),
                       onTap: (){

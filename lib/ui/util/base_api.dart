@@ -15,7 +15,8 @@ class BaseApi {
   BaseApi._internal() {
 
     BaseOptions baseOptions = BaseOptions(
-      baseUrl: "http://enstallapi.enpaas.com/api/",
+      //baseUrl: "http://enstallapi.enpaas.com/api/",
+      baseUrl : "http://enstallapi.boshposh.com/api/"
       connectTimeout: 35000,
       receiveTimeout: 35000,
     );

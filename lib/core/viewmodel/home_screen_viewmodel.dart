@@ -32,6 +32,7 @@ class HomeScreenViewModel extends BaseModel{
     UserModel userModel = await Prefs.getUser();
     
     setState(ViewState.Busy);
+    print("int engineer id-------------${userModel.intEngineerId}");
     appointMentList = await _apiService.getAppointmentList(userModel.intEngineerId.toString());
     setState(ViewState.Idle);
 

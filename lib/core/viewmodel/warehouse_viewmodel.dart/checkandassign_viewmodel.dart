@@ -1,6 +1,5 @@
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/model/checkAndAssignModel.dart';
-import 'package:enstaller/core/model/order_line_detail_model.dart';
 import 'package:enstaller/core/model/response_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_model.dart';
@@ -18,6 +17,7 @@ class CheckAndAssignOrderVM extends BaseModel {
   List<OrderLineDetail> orderLineDetailList;
   List<CheckSerialModel> checkSerialModelList;
   List<CheckSerialModel> showListView = [];
+  List<CheckSerialModel> _dupshowListView = [];
   List<StockList> stockList = [];
  
   Future<bool> checkValidity(BuildContext context, String reference) async{
@@ -51,6 +51,24 @@ class CheckAndAssignOrderVM extends BaseModel {
       print(e); 
     }
   }
+
+  search({
+    String text
+  }) {
+    text = text.toLowerCase();
+    if(text.isNotEmpty){
+      if(text.length==1 && _dupshowListView.isEmpty){
+         _dupshowListView = List.from(showListView);
+         showListView = []; 
+      }
+     showListView = _dupshowListView.where((element) => element.strSerialNo.toLowerCase().contains(text) ||
+     element.strItemName.toLowerCase().contains(text) || element.strContainerName.toLowerCase().contains(text) ).toList(); 
+    }
+    else{
+      showListView = List.from(_dupshowListView);
+      } 
+   }
+
 
   Future<bool> checkSerialValidty(BuildContext context, String serialNo, String orderID) async{
     checkSerialModelList = [];

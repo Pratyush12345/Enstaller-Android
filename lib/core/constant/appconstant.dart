@@ -318,13 +318,17 @@ class AppConstants{
     }
   }
   static String nameTitle(String value){
+    if(value != null){
     List<String>list=value.split(' ');
     if(list.length>1){
       return list[0][0]+list[1][0];
     }else{
       return list[0][0];
     }
-
+    }
+    else{
+      return "";
+    }
   }
 
 }

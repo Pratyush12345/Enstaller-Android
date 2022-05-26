@@ -10,7 +10,6 @@ import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; 
-import 'package:flutter/services.dart';
 
 class CheckAndAssignOrder extends StatefulWidget {
   @override
@@ -21,6 +20,7 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
 
   final TextEditingController ordercontroller = TextEditingController();
   final TextEditingController serialcontroller = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   List<CheckAndAssignDataRow> _listOrderLinedetail;
   bool _showOrderErrorMsg;
   bool _showSerialErrorMsg;
@@ -109,6 +109,39 @@ class _CheckAndAssignOrderState extends State<CheckAndAssignOrder> {
   _showListofSerial(){
     return Column(
       children: [
+           if(CheckAndAssignOrderVM.instance.showListView.isNotEmpty)
+           TextField(
+                                controller: searchController,
+                                onChanged: (val) {
+                                 CheckAndAssignOrderVM.instance.search(text :val); 
+                                 setState(() {});
+                                },
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  hintText: "Search orders",
+                                  contentPadding:
+                                      EdgeInsets.only(top: 5, right: 10),
+                                  prefixIcon: Icon(
+                                    Icons.search_rounded,
+                                    color: AppColors.appThemeColor,
+                                    size: 20,
+                                  ),
+                                  border: InputBorder.none,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(60.0)),
+                                      borderSide: BorderSide(color: AppColors.appThemeColor)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(60.0)),
+                                      borderSide: BorderSide(color: AppColors.appThemeColor)),
+                                  hintStyle: TextStyle(fontSize: 14),
+                                ),
+                                style: TextStyle(fontSize: 14),
+                                cursorColor: Colors.black,
+                              ),
+           SizedBox(height: 15.0,),                   
            if(CheckAndAssignOrderVM.instance.showListView.isNotEmpty)
            Container(
              height: MediaQuery.of(context).size.height*0.5,
